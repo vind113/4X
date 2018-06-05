@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace My4X.Properties {
+namespace GameLogic.Properties {
 
 
     /// <summary>

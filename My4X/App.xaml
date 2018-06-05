@@ -1,7 +1,7 @@
-﻿<Application x:Class="My4X.App"
+﻿<Application x:Class="GameLogic.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:My4X"
+             xmlns:local="clr-namespace:GameLogic"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
