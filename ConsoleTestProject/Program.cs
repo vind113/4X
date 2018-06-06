@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using GameLogic.Space_Objects;
+using Logic.Space_Objects;
 
 namespace ConsoleTestProject {
     class Program {
         static void Main(string[] args) {
-            Planet planet = Planet.GeneratePlanet();
+
+            Planet planet = new Planet("ACX", 9000, PlanetType.Continental, 1_000_000);
             Console.WriteLine(planet);
+
+            for (int i = 0; i < 2400; i++) {
+                planet.NextTurn();
+                Console.WriteLine($"{planet.Population}");
+            }
         }
     }
 }

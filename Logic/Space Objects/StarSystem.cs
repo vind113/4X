@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameLogic.Space_Objects {
+namespace Logic.Space_Objects {
     public class StarSystem {
         Planet[] systemPlanets;
 

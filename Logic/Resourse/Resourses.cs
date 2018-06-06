@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GameLogic.Resourse {
-    struct Resourses {
+﻿namespace Logic.Resourse {
+    public struct Resourses {
         double hydrogen;
         double commonMetals;
         double rareEarthElements;
@@ -15,5 +9,10 @@ namespace GameLogic.Resourse {
             this.commonMetals = commonMetals;
             this.rareEarthElements = rareEarthElements;
         }
+
+        public double Hydrogen { get => this.hydrogen; set => this.hydrogen = value; }
+        public double CommonMetals { get => this.commonMetals; set => this.commonMetals = value; }
+        public double RareEarthElements { get => this.rareEarthElements; set => this.rareEarthElements = value; }
+
     }
 }

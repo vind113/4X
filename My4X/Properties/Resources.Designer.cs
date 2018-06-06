@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GameLogic.Properties {
+namespace Logic.Properties {
 
 
     /// <summary>

@@ -40,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Buildings\Building.cs" />
+    <Compile Include="Player\CitizenHub.cs" />
+    <Compile Include="Player\Player.cs" />
     <Compile Include="Player\Stockpile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resourse\Resourses.cs" />
