@@ -1,7 +1,7 @@
 ﻿using Logic.Resourse;
 
 namespace Logic.PlayerClasses {
-    internal class Stockpile {
+    public class Stockpile {
         private double money = 0;               //деньги, доступные игроку
         private Resourses playerResourses;  //ресурсы на складе
 

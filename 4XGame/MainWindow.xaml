@@ -43,7 +43,7 @@
         <TreeView x:Name="PlayerSystemsTree"
                   HorizontalAlignment="Left" Height="370"
                   Margin="5,35,0,0"
-                  VerticalAlignment="Top" Width="165"
+                  VerticalAlignment="Top" Width="200"
                   RenderTransformOrigin="-1.7,-0.21"
                   ScrollViewer.VerticalScrollBarVisibility="Visible">
         

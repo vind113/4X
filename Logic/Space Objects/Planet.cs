@@ -45,10 +45,9 @@ namespace Logic.Space_Objects {
             this.population = Math.Floor(population);
         }
 
-
         public double Population {
             get => this.population;
-            //private set нужен для централизованой проверки на допустимость значения
+            //private set нужен для централизованой проверки на допустимость значения внутри класса
             private set {
                 if (this.maximumPopulation > value && value > 0) {
                     this.population = value;
@@ -92,23 +91,23 @@ namespace Logic.Space_Objects {
         }
 
         private void CitizensToTheHub(Player player) {
-            double travellersExpected = Math.Floor(this.Population * 0.002);
+            /*double travellersExpected = Math.Floor(this.Population * 0.002);
 
             double travellersReal =
                 Math.Ceiling(travellersExpected * HelperRandomFunctions.GetRandomDouble());
             double newPopulation = this.Population - travellersReal;
 
-            player.PlayerCitizenHub += travellersReal;
+            player.PlayerCitizenHub.CitizensInHub += travellersReal;
 
-            this.Population = newPopulation; 
+            this.Population = newPopulation; */
         }
 
         private void CitizensFromTheHub(Player player) {
-            double addedPopulation =
-                Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub);
+            /*double addedPopulation =
+                Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
 
-            player.PlayerCitizenHub -= addedPopulation;
-            this.Population += addedPopulation;
+            player.PlayerCitizenHub.CitizensInHub -= addedPopulation;
+            this.Population += addedPopulation;*/
         }
         #endregion
 

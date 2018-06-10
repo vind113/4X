@@ -37,6 +37,10 @@ namespace WpfTest {
 
             PlayerSystemsTree.Items.Refresh();
         }
+
+        private void GetObjButton_Click(object sender, RoutedEventArgs e) {
+            MessageBox.Show((PlayerSystemsTree.SelectedItem is FamilyMember).ToString());
+        }
     }
 
     public class Family {
@@ -53,5 +57,9 @@ namespace WpfTest {
         public string Name { get; set; }
 
         public int Age { get; set; }
+
+        public override string ToString() {
+            return $"{Name}:{Age}";
+        }
     }
 }

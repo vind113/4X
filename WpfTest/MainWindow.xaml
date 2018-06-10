@@ -32,6 +32,7 @@
                 </DataTemplate>
             </TreeView.Resources>
         </TreeView>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="706,388,0,0" VerticalAlignment="Top" Width="75" Click="TestButton_Click"/>
+        <Button Content="New Node" HorizontalAlignment="Left" Margin="706,388,0,0" VerticalAlignment="Top" Width="75" Click="TestButton_Click"/>
+        <Button Content="Get obj" HorizontalAlignment="Left" Margin="706,350,0,0" VerticalAlignment="Top" Width="75" Click="GetObjButton_Click"/>
     </Grid>
 </Window>

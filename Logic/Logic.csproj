@@ -47,6 +47,11 @@
     <Compile Include="Player\Stockpile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resourse\Resourses.cs" />
+    <Compile Include="Space Objects\CelestialBody.cs" />
+    <Compile Include="Space Objects\Planet.cs" />
+    <Compile Include="Space Objects\Star.cs" />
+    <Compile Include="Space Objects\StarSystem.cs" />
+    <Compile Include="SupportClasses\HelperMathFunctions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

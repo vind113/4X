@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Logic.Space_Objects {
-    class Star : CelestialBody {
+    public class Star : CelestialBody {
 
     }
 }

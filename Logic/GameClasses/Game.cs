@@ -1,5 +1,6 @@
 ﻿using Logic.PlayerClasses;
 using Logic.Resourse;
+using Logic.Space_Objects;
 
 namespace Logic.GameClasses {
     public static class Game {
