@@ -1,11 +1,25 @@
 ﻿using Logic.Resourse;
 
-namespace Logic.Player {
-    internal static class Stockpile {
-        static double money = 0;               //деньги, доступные игроку
-        static Resourses playerResourses;  //ресурсы на складе
+namespace Logic.PlayerClasses {
+    internal class Stockpile {
+        private double money = 0;               //деньги, доступные игроку
+        private Resourses playerResourses;  //ресурсы на складе
 
-        public static double Money { get => money; set => money = value; }
-        public static Resourses PlayerResourses { get => playerResourses; set => playerResourses = value; }
+        public double Money {
+            get => money;
+            set => money = value;
+        }
+
+        public Resourses PlayerResourses {
+            get => playerResourses;
+            set {
+                if (value.CommonMetals >= 0 &&
+                    value.Hydrogen >= 0 &&
+                    value.RareEarthElements >= 0) {
+
+                    playerResourses = value;
+                }
+            }
+        }
     }
 }

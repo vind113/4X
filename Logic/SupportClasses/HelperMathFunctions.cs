@@ -17,5 +17,9 @@ namespace Logic.SupportClasses {
         public static double GetRandomDouble() {
             return randomizer.NextDouble();
         }
+
+        public static int GetRandomInt(int minValue, int maxValue) {
+            return randomizer.Next(minValue, maxValue);
+        }
     }
 }

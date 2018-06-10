@@ -1,9 +1,24 @@
-﻿namespace Logic.Player {
-    internal static class CitizenHub {
-        static double citizensInHub = 0;
-        static double maximumCount;
+﻿namespace Logic.PlayerClasses {
+    public class CitizenHub {
+        double citizensInHub = 0;
+        double maximumCount = 1E8;
 
-        public static double CitizensInHub { get => citizensInHub; set => citizensInHub = value; }
-        public static double MaximumCount { get => maximumCount; set => maximumCount = value; }
+        public double CitizensInHub {
+            get => citizensInHub;
+            set {
+                if (value <= maximumCount && value >= 0) {
+                    citizensInHub = value;
+                }
+            }
+        }
+
+        public double MaximumCount {
+            get => maximumCount;
+            set {
+                if (value >= 0) {
+                    maximumCount = value;
+                }
+            }
+        }
     }
 }

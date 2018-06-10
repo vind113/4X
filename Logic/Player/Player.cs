@@ -1,36 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Logic.Resourse;
 
-using Logic.Resourse;
+namespace Logic.PlayerClasses {
+    public class Player {
+        private Stockpile stockpile;
+        private CitizenHub hub;
 
-namespace Logic.Player {
-    public static class Player {
-        public static double PlayerCitizenHub {
-            get => CitizenHub.CitizensInHub;
-            set => CitizenHub.CitizensInHub = value;
+        public Player() {
+            this.stockpile = new Stockpile();
+            this.hub = new CitizenHub();
         }
 
-        public static Resourses PlayerResourses {
-            get => Stockpile.PlayerResourses;
-            set => Stockpile.PlayerResourses = value;
+        #region Properties
+        public CitizenHub PlayerCitizenHub {
+            get => this.hub;
+            set => this.hub = value;
         }
 
-        public static double PlayerMoney {
-            get => Stockpile.Money;
-            set => Stockpile.Money = value;
+        public Resourses PlayerResourses {
+            get => this.stockpile.PlayerResourses;
+            set => this.stockpile.PlayerResourses = value;
         }
 
-        public static void InitGame() {
-            Stockpile.PlayerResourses = new Resourses(0, 0, 0);
-            Stockpile.Money = 0;
-            CitizenHub.CitizensInHub = 0;
+        public double PlayerMoney {
+            get => this.stockpile.Money;
+            set => this.stockpile.Money = value;
         }
-
-        public static void NextTurn() {
-
-        }
+        #endregion
     }
 }
