@@ -29,7 +29,8 @@ namespace _4XGame {
         }
 
         private void SetItemsSource() {
-            PlayerSystemsTree.ItemsSource = Game.Player.StarSystems;
+            PlayerPlanetsTree.ItemsSource = Game.Player.StarSystems;
+            PlayerStarsTree.ItemsSource = Game.Player.StarSystems;
         }
 
         private void NextTurnButton_Click(object sender, RoutedEventArgs e) {
@@ -55,7 +56,26 @@ namespace _4XGame {
                     MessageBox.Show(planet.ToString());
                 }
             }*/
-            MessageBox.Show(PlayerSystemsTree.SelectedItem.ToString());
+        }
+
+        private void PlayerStarsTree_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
+            if (PlayerStarsTree.SelectedItem == null) {
+#if DEBUG
+                MessageBox.Show("No object");
+#endif
+                return;
+            }
+            MessageBox.Show(PlayerStarsTree.SelectedItem.ToString());
+        }
+
+        private void PlayerPlanetsTree_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
+            if (PlayerPlanetsTree.SelectedItem == null) {
+#if DEBUG
+                MessageBox.Show("No object");
+#endif
+                return;
+            }
+            MessageBox.Show(PlayerPlanetsTree.SelectedItem.ToString());
         }
     }
 }

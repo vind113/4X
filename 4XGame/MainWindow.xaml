@@ -18,50 +18,74 @@
             <Label x:Name="DateLabel" Content="Date: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,0,0,0"/>
             <Label x:Name="ShowDateLabel" Content="1.2500" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0"/>
         </Grid>
-        <Button x:Name="NextTurnButton" Content="Next Turn"
-                HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Height="30" Width="170" Margin="0,0,5,5"
-                Click="NextTurnButton_Click"/>
         <Grid HorizontalAlignment="Left" Height="30"
               Margin="5,0,0,0"
               VerticalAlignment="Top" Width="600">
             <Border BorderBrush="Black" BorderThickness="1"/>
             <Label x:Name="PlayerMoney" Content="Money:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Label x:Name="ShowPlayerMoney" Content="1.234E12" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,0,0,0"/>
-            
+
             <Label x:Name="CitizenHub" Content="In Hub:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="95,0,0,0"/>
             <Label x:Name="ShowCitizenHub" Content="1.234E8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,0,0,0"/>
-            
+
             <Label x:Name="PlayerHydrogen" Content="Hydorgen:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="185,0,0,0" Foreground="Blue"/>
             <Label x:Name="ShowPlayerHydrogen" Content="1.234E20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="242,0,0,0" Foreground="Blue"/>
-            
+
             <Label x:Name="PlayerMetals" Content="Metals:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,0,0,0" Foreground="DimGray"/>
             <Label x:Name="ShowPlayerMetals" Content="1.234E20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="340,0,0,0" Foreground="DimGray"/>
-            
+
             <Label x:Name="PlayerRareMetals" Content="Rare metals:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="395,0,0,0" Foreground="DarkGreen"/>
             <Label x:Name="ShowPlayerRareMetals" Content="1.234E20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="462,0,0,0" Foreground="DarkGreen"/>
         </Grid>
-        <TreeView x:Name="PlayerSystemsTree"
-                  HorizontalAlignment="Left" Height="370"
-                  Margin="5,35,0,0"
-                  VerticalAlignment="Top" Width="200"
-                  RenderTransformOrigin="-1.7,-0.21"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible">
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type celestial:StarSystem}" ItemsSource="{Binding CompositeBodies}">
-                    <Label Content="{Binding Name}"/>
-                    <HierarchicalDataTemplate.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type CompositeCollection}" ItemsSource="{Binding}">
-                            <Label Content="{Binding Name}"/>
-                        </HierarchicalDataTemplate>
-                    </HierarchicalDataTemplate.ItemTemplate>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-
-        </TreeView>
-        <Button x:Name="GetPlayerSystems" Content="Get Player systmes"
+        <Button x:Name="GetPlayerSystems" Content="Get Object Info"
                 HorizontalAlignment="Right" Margin="0,0,187,5"
                 VerticalAlignment="Bottom" Width="189" Height="30"
                 Click="GetPlayerSystems_Click"/>
+        <Button x:Name="NextTurnButton" Content="Next Turn"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Height="30" Width="170" Margin="0,0,5,5"
+                Click="NextTurnButton_Click"/>
+        
+        <TabControl HorizontalAlignment="Left" Height="370" Margin="5,35,0,0" VerticalAlignment="Top" Width="210">
+            <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25*"/>
+                        <ColumnDefinition Width="179*"/>
+                    </Grid.ColumnDefinitions>
+                    <TreeView x:Name="PlayerPlanetsTree"
+                  HorizontalAlignment="Center" Height="340"
+                  VerticalAlignment="Top" Width="204"
+                  RenderTransformOrigin="-1.7,-0.21"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  MouseDoubleClick="PlayerPlanetsTree_MouseDoubleClick" Grid.ColumnSpan="2">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type celestial:StarSystem}" ItemsSource="{Binding SystemPlanets}">
+                                <Label Content="{Binding Name}"/>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+
+                    </TreeView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Stars" Width="100" HorizontalAlignment="Right">
+                <Grid Background="#FFE5E5E5">
+                    <TreeView x:Name="PlayerStarsTree"
+                  HorizontalAlignment="Center" Height="340"
+                  Margin="0,0,0,-28"
+                  VerticalAlignment="Top" Width="205"
+                  RenderTransformOrigin="-1.7,-0.21"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  MouseDoubleClick="PlayerStarsTree_MouseDoubleClick">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type celestial:StarSystem}" ItemsSource="{Binding SystemStars}">
+                                <Label Content="{Binding Name}"/>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+
+                    </TreeView>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

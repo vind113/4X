@@ -5,22 +5,6 @@ using Logic.PlayerClasses;
 using System.Collections.Generic;
 
 namespace Logic.Space_Objects {
-    //описывает тип планеты
-    //Dictionary or hash table
-    /*public enum PlanetType {
-        Continental = 100,
-        Desert = 30,
-        Ocean = 50,
-        Paradise = 200,
-        Barren = 0,
-        GasGiant = 0,
-        Ice = 0,
-        Tropical = 70,
-        Tundra = 65
-    }*/
-
-
-    //тестируй структуру
     public struct PlanetType {
         private int quality;
         private string name;
@@ -41,7 +25,6 @@ namespace Logic.Space_Objects {
         }
     }
 
-    //тестируй
     static public class PlanetTypeContainer {
         static Dictionary<string, PlanetType> planetTypes = new Dictionary<string, PlanetType>();
 
@@ -49,6 +32,12 @@ namespace Logic.Space_Objects {
             planetTypes.Add("Continental", new PlanetType(100, "Continental"));
             planetTypes.Add("Barren", new PlanetType(0, "Barren"));
             planetTypes.Add("Desert", new PlanetType(30, "Desert"));
+            planetTypes.Add("Paradise", new PlanetType(200, "Paradise"));
+            planetTypes.Add("Ocean", new PlanetType(50, "Ocean"));
+            planetTypes.Add("Gas giant", new PlanetType(0, "Gas giant"));
+            planetTypes.Add("Ice world", new PlanetType(0, "Ice world"));
+            planetTypes.Add("Tropical", new PlanetType(70, "Tropical"));
+            planetTypes.Add("Tundra", new PlanetType(65, "Tundra"));
         }
 
         public static PlanetType GetPlanetType(string key) {
@@ -101,7 +90,6 @@ namespace Logic.Space_Objects {
         public double MaximumPopulation { get => this.maximumPopulation; }
         public PlanetType Type { get => this.type; }
 
-
         public static Planet GeneratePlanet(string name, string planetType) {
             string planetName = name;
             double population = 0;
@@ -133,7 +121,7 @@ namespace Logic.Space_Objects {
         }
 
         private void CitizensToTheHub(Player player) {
-            /*double travellersExpected = Math.Floor(this.Population * 0.002);
+            double travellersExpected = Math.Floor(this.Population * 0.002);
 
             double travellersReal =
                 Math.Ceiling(travellersExpected * HelperRandomFunctions.GetRandomDouble());
@@ -141,15 +129,15 @@ namespace Logic.Space_Objects {
 
             player.PlayerCitizenHub.CitizensInHub += travellersReal;
 
-            this.Population = newPopulation; */
+            this.Population = newPopulation; 
         }
 
         private void CitizensFromTheHub(Player player) {
-            /*double addedPopulation =
+            double addedPopulation =
                 Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
 
             player.PlayerCitizenHub.CitizensInHub -= addedPopulation;
-            this.Population += addedPopulation;*/
+            this.Population += addedPopulation;
         }
         #endregion
 
