@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Logic.Space_Objects {
     //описывает тип планеты
     //Dictionary or hash table
-    public enum PlanetType {
+    /*public enum PlanetType {
         Continental = 100,
         Desert = 30,
         Ocean = 50,
@@ -17,6 +17,48 @@ namespace Logic.Space_Objects {
         Ice = 0,
         Tropical = 70,
         Tundra = 65
+    }*/
+
+
+    //тестируй структуру
+    public struct PlanetType {
+        private int quality;
+        private string name;
+
+        public PlanetType(int quality, string name) {
+            this.quality = quality;
+            this.name = name ?? throw new ArgumentNullException(nameof(name));
+        }
+
+        public int Quality {
+            get => this.quality;
+            set => this.quality = value;
+        }
+
+        public string Name {
+            get => this.name;
+            set => this.name = value;
+        }
+    }
+
+    //тестируй
+    static public class PlanetTypeContainer {
+        static Dictionary<string, PlanetType> planetTypes = new Dictionary<string, PlanetType>();
+
+        static PlanetTypeContainer() {
+            planetTypes.Add("Continental", new PlanetType(100, "Continental"));
+            planetTypes.Add("Barren", new PlanetType(0, "Barren"));
+            planetTypes.Add("Desert", new PlanetType(30, "Desert"));
+        }
+
+        public static PlanetType GetPlanetType(string key) {
+            if (planetTypes.ContainsKey(key)) {
+                return planetTypes[key];
+            }
+            else {
+                return planetTypes["Barren"];
+            }
+        }
     }
 
     [Serializable]
@@ -29,18 +71,18 @@ namespace Logic.Space_Objects {
         //коллекция станций на орбите
 
         public Planet() {
-
+            
         }
 
-        public Planet(string name, double radius, PlanetType type, double population) {
+        public Planet(string name, double radius, string type, double population) {
             this.name = name;
             this.radius = radius;
-            this.type = type;
+            this.type = PlanetTypeContainer.GetPlanetType(type);
 
             this.area = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
             this.buildingSites = (int)(this.area / 1_000_000d);
             this.availableSites = this.buildingSites;
-            this.maximumPopulation = (double)this.type * this.area;
+            this.maximumPopulation = (double)this.type.Quality * this.area;
 
             this.population = Math.Floor(population);
         }
@@ -60,7 +102,7 @@ namespace Logic.Space_Objects {
         public PlanetType Type { get => this.type; }
 
 
-        public static Planet GeneratePlanet(string name, PlanetType planetType) {
+        public static Planet GeneratePlanet(string name, string planetType) {
             string planetName = name;
             double population = 0;
             double radius = 0;
@@ -69,7 +111,7 @@ namespace Logic.Space_Objects {
         }
 
         public override string ToString() {
-            return $"{this.Name} is a {this.Type} world with radius of {this.radius} km " +
+            return $"{this.Name} is a {this.Type.Name} world with radius of {this.radius} km " +
                 $"and area of {this.Area:E4} km^2. " +
                 $"Here lives {this.Population:E4} intelligent creatures. " +
                 $"On this planet can live {this.maximumPopulation} people. " +
@@ -85,7 +127,7 @@ namespace Logic.Space_Objects {
         #region Next turn functions 
         private void AddPopulation() {
             double growthCoef = (this.MaximumPopulation / this.Population) / 500_000;
-            double newPopulation = HelperRandomFunctions.GetRandomDouble() * growthCoef * (double)this.Type * this.population;
+            double newPopulation = HelperRandomFunctions.GetRandomDouble() * growthCoef * (double)this.Type.Quality * this.population;
             newPopulation = Math.Floor(newPopulation);
             this.Population += newPopulation;
         }

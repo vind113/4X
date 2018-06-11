@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_4XGame"
+        xmlns:celestial="clr-namespace:Logic.Space_Objects;assembly=Logic"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450" Width="800"
@@ -46,7 +47,21 @@
                   VerticalAlignment="Top" Width="200"
                   RenderTransformOrigin="-1.7,-0.21"
                   ScrollViewer.VerticalScrollBarVisibility="Visible">
-        
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type celestial:StarSystem}" ItemsSource="{Binding CompositeBodies}">
+                    <Label Content="{Binding Name}"/>
+                    <HierarchicalDataTemplate.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type CompositeCollection}" ItemsSource="{Binding}">
+                            <Label Content="{Binding Name}"/>
+                        </HierarchicalDataTemplate>
+                    </HierarchicalDataTemplate.ItemTemplate>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+
         </TreeView>
+        <Button x:Name="GetPlayerSystems" Content="Get Player systmes"
+                HorizontalAlignment="Right" Margin="0,0,187,5"
+                VerticalAlignment="Bottom" Width="189" Height="30"
+                Click="GetPlayerSystems_Click"/>
     </Grid>
 </Window>

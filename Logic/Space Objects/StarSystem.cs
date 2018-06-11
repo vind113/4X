@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace Logic.Space_Objects {
     public class StarSystem {
@@ -23,16 +24,19 @@ namespace Logic.Space_Objects {
         }
 
         public string Name { get => this.name; set => this.name = value; }
-        internal List<Star> SystemStars { get => this.systemStars; }
-        internal List<Planet> SystemPlanets { get => this.systemPlanets; }
+        public List<Star> SystemStars { get => this.systemStars; }
+        public List<Planet> SystemPlanets { get => this.systemPlanets; }
+        public CompositeCollection CompositeBodies {
+            get => new CompositeCollection() { systemStars, systemPlanets };
+        }
 
         public static StarSystem GetSolarSystem() {
             List<Planet> planets = new List<Planet>();
 
-            planets.Add(new Planet("Mercury", 2440, PlanetType.Barren, 0));
-            planets.Add(new Planet("Venus", 6051, PlanetType.Barren, 0));
-            planets.Add(new Planet("Earth", 6371, PlanetType.Continental, 7_500_000_000d));
-            planets.Add(new Planet("Mars", 3389, PlanetType.Desert, 0));
+            planets.Add(new Planet("Mercury", 2440, "Barren", 0d));
+            planets.Add(new Planet("Venus", 6051, "Barren", 0d));
+            planets.Add(new Planet("Earth", 6371, "Continental", 7_500_000_000d));
+            planets.Add(new Planet("Mars", 3389, "Desert", 0d));
 
             List<Star> stars = new List<Star> { new Star() { Name = "Sun" } };
 

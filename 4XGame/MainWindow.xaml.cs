@@ -15,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Logic.GameClasses;
+using Logic.PlayerClasses;
+using Logic.Space_Objects;
 
 namespace _4XGame {
     /// <summary>
@@ -23,6 +25,11 @@ namespace _4XGame {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
+            SetItemsSource();
+        }
+
+        private void SetItemsSource() {
+            PlayerSystemsTree.ItemsSource = Game.Player.StarSystems;
         }
 
         private void NextTurnButton_Click(object sender, RoutedEventArgs e) {
@@ -39,7 +46,15 @@ namespace _4XGame {
             ShowDateLabel.Content = Game.GameDate;
         }
 
-        private void WorkWithNode() {
+        private void GetPlayerSystems_Click(object sender, RoutedEventArgs e) {
+            /*foreach (var system in Game.Player.StarSystems) {
+                foreach (var star in system.SystemStars) {
+                    MessageBox.Show(star.ToString());
+                }
+                foreach (var planet in system.SystemPlanets) {
+                    MessageBox.Show(planet.ToString());
+                }
+            }*/
             MessageBox.Show(PlayerSystemsTree.SelectedItem.ToString());
         }
     }
