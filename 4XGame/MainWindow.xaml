@@ -37,16 +37,16 @@
             <Label x:Name="PlayerRareMetals" Content="Rare metals:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="395,0,0,0" Foreground="DarkGreen"/>
             <Label x:Name="ShowPlayerRareMetals" Content="1.234E20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="462,0,0,0" Foreground="DarkGreen"/>
         </Grid>
-        <Button x:Name="GetPlayerSystems" Content="Get Object Info"
+        <Button x:Name="ColonizeButton" Content="Colonize"
                 HorizontalAlignment="Right" Margin="0,0,187,5"
                 VerticalAlignment="Bottom" Width="189" Height="30"
-                Click="GetPlayerSystems_Click"/>
+                Click="Colonize_Click"/>
         <Button x:Name="NextTurnButton" Content="Next Turn"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Height="30" Width="170" Margin="0,0,5,5"
                 Click="NextTurnButton_Click"/>
         
-        <TabControl HorizontalAlignment="Left" Height="370" Margin="5,35,0,0" VerticalAlignment="Top" Width="210">
+        <TabControl HorizontalAlignment="Left" Height="370" Margin="5,35,0,0" VerticalAlignment="Top" Width="350">
             <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
@@ -54,8 +54,8 @@
                         <ColumnDefinition Width="179*"/>
                     </Grid.ColumnDefinitions>
                     <TreeView x:Name="PlayerPlanetsTree"
-                  HorizontalAlignment="Center" Height="340"
-                  VerticalAlignment="Top" Width="204"
+                  HorizontalAlignment="Left" Height="340"
+                  VerticalAlignment="Top" Width="180"
                   RenderTransformOrigin="-1.7,-0.21"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   MouseDoubleClick="PlayerPlanetsTree_MouseDoubleClick" Grid.ColumnSpan="2">
@@ -71,9 +71,9 @@
             <TabItem Header="Stars" Width="100" HorizontalAlignment="Right">
                 <Grid Background="#FFE5E5E5">
                     <TreeView x:Name="PlayerStarsTree"
-                  HorizontalAlignment="Center" Height="340"
+                  HorizontalAlignment="Left" Height="340"
                   Margin="0,0,0,-28"
-                  VerticalAlignment="Top" Width="205"
+                  VerticalAlignment="Top" Width="180"
                   RenderTransformOrigin="-1.7,-0.21"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   MouseDoubleClick="PlayerStarsTree_MouseDoubleClick">

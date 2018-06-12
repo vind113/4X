@@ -47,7 +47,7 @@ namespace _4XGame {
             ShowDateLabel.Content = Game.GameDate;
         }
 
-        private void GetPlayerSystems_Click(object sender, RoutedEventArgs e) {
+        private void Colonize_Click(object sender, RoutedEventArgs e) {
             /*foreach (var system in Game.Player.StarSystems) {
                 foreach (var star in system.SystemStars) {
                     MessageBox.Show(star.ToString());
@@ -56,6 +56,9 @@ namespace _4XGame {
                     MessageBox.Show(planet.ToString());
                 }
             }*/
+            if (PlayerPlanetsTree.SelectedItem != null && PlayerPlanetsTree.SelectedItem is Planet p) {
+                p.Colonize();
+            }
         }
 
         private void PlayerStarsTree_MouseDoubleClick(object sender, MouseButtonEventArgs e) {

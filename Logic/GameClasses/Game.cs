@@ -11,7 +11,6 @@ namespace Logic.GameClasses {
             player = new Player();
             currentDate = new CurrentDate();
             player.StarSystems.Add(StarSystem.GetSolarSystem());
-            player.StarSystems.Add(StarSystem.GetSolarSystem());
         }
 
         #region Properties
@@ -30,6 +29,9 @@ namespace Logic.GameClasses {
 
         public static void NextTurn() {
             currentDate.NextTurn();
+            foreach(StarSystem system in player.StarSystems) {
+                system.NextTurn(player);
+            }
         }
        
         public static void ResetDate() {

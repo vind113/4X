@@ -69,10 +69,12 @@ namespace Logic.Space_Objects {
             this.type = PlanetTypeContainer.GetPlanetType(type);
 
             this.area = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
-            this.buildingSites = (int)(this.area / 1_000_000d);
-            this.availableSites = this.buildingSites;
+
             this.maximumPopulation = (double)this.type.Quality * this.area;
 
+            this.buildingSites = (int)(this.MaximumPopulation / 100_000_000d);
+            this.availableSites = this.buildingSites;
+           
             this.population = Math.Floor(population);
         }
 
@@ -102,7 +104,7 @@ namespace Logic.Space_Objects {
             return $"{this.Name} is a {this.Type.Name} world with radius of {this.radius} km " +
                 $"and area of {this.Area:E4} km^2. " +
                 $"Here lives {this.Population:E4} intelligent creatures. " +
-                $"On this planet can live {this.maximumPopulation} people. " +
+                $"On this planet can live {this.maximumPopulation:E4} people. " +
                 $"We can build {this.buildingSites} buildings here. ";
         }
 
@@ -121,23 +123,27 @@ namespace Logic.Space_Objects {
         }
 
         private void CitizensToTheHub(Player player) {
-            double travellersExpected = Math.Floor(this.Population * 0.002);
+            if (this.Population > 0) {
+                double travellersExpected = Math.Floor(this.Population * 0.002);
 
-            double travellersReal =
-                Math.Ceiling(travellersExpected * HelperRandomFunctions.GetRandomDouble());
-            double newPopulation = this.Population - travellersReal;
+                double travellersReal =
+                    Math.Ceiling(travellersExpected * HelperRandomFunctions.GetRandomDouble());
+                double newPopulation = this.Population - travellersReal;
 
-            player.PlayerCitizenHub.CitizensInHub += travellersReal;
+                player.PlayerCitizenHub.CitizensInHub += travellersReal;
 
-            this.Population = newPopulation; 
+                this.Population = newPopulation;
+            }
         }
 
         private void CitizensFromTheHub(Player player) {
-            double addedPopulation =
-                Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
+            if (this.Population > 0) {
+                double addedPopulation =
+                    Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
 
-            player.PlayerCitizenHub.CitizensInHub -= addedPopulation;
-            this.Population += addedPopulation;
+                player.PlayerCitizenHub.CitizensInHub -= addedPopulation;
+                this.Population += addedPopulation;
+            }
         }
         #endregion
 

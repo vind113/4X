@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 using Logic.GameClasses;
 using Logic.Resourse;
+using Logic.Space_Objects;
 
 namespace UnitTest4X {
     [TestFixture]
@@ -115,6 +116,50 @@ namespace UnitTest4X {
             Assert.AreEqual(Game.Player.PlayerResourses, resourses);
         }
 
+        #endregion
+
+        #region Star Luminosity
+        [TestCase]
+        public void GetLuminosityClass_OClassPassed_StarIsOClass() {
+            Star oStar = new Star("O star", 696_392d * 6.7);
+            Assert.AreEqual(oStar.LumClass, LuminosityClass.O);
+        }
+
+        [TestCase]
+        public void GetLuminosityClass_BClassPassed_StarIsBClass() {
+            Star oStar = new Star("B star", 696_392d * 6.5);
+            Assert.AreEqual(oStar.LumClass, LuminosityClass.B);
+        }
+
+        [TestCase]
+        public void GetLuminosityClass_AClassPassed_StarIsAClass() {
+            Star oStar = new Star("A star", 696_392d * 1.7);
+            Assert.AreEqual(oStar.LumClass, LuminosityClass.A);
+        }
+
+        [TestCase]
+        public void GetLuminosityClass_FClassPassed_StarIsFClass() {
+            Star oStar = new Star("F star", 696_392d * 1.3);
+            Assert.AreEqual(oStar.LumClass, LuminosityClass.F);
+        }
+
+        [TestCase]
+        public void GetLuminosityClass_GClassPassed_StarIsGClass() {
+            Star oStar = new Star("G star", 696_392d * 1.14);
+            Assert.AreEqual(oStar.LumClass, LuminosityClass.G);
+        }
+
+        [TestCase]
+        public void GetLuminosityClass_KClassPassed_StarIsKClass() {
+            Star oStar = new Star("K star", 696_392d * 0.95);
+            Assert.AreEqual(oStar.LumClass, LuminosityClass.K);
+        }
+
+        [TestCase]
+        public void GetLuminosityClass_MClassPassed_StarIsMClass() {
+            Star oStar = new Star("M star", 696_392d * 0.699);
+            Assert.AreEqual(oStar.LumClass, LuminosityClass.M);
+        }
         #endregion
     }
 }
