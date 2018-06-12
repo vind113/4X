@@ -11,6 +11,7 @@ namespace Logic.GameClasses {
             player = new Player();
             currentDate = new CurrentDate();
             player.StarSystems.Add(StarSystem.GetSolarSystem());
+            player.StarSystems.Add(StarSystem.GetSolarSystem());
         }
 
         #region Properties

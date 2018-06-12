@@ -35,6 +35,13 @@ namespace _4XGame {
 
         private void NextTurnButton_Click(object sender, RoutedEventArgs e) {
             Game.NextTurn();
+            
+            //сворачивает вкладку, исправь
+            PlayerStarsTree.Items.Refresh();
+            PlayerPlanetsTree.Items.Refresh();
+
+            WriteStarInfoToBox();
+            WritePlanetInfoToBox();
 
             ShowPlayerMoney.Content = $"{Game.Player.PlayerMoney:0.0000E0}";
             ShowCitizenHub.Content = $"{Game.Player.PlayerCitizenHub.CitizensInHub:0.0000E0}";
@@ -47,38 +54,35 @@ namespace _4XGame {
             ShowDateLabel.Content = Game.GameDate;
         }
 
-        private void Colonize_Click(object sender, RoutedEventArgs e) {
-            /*foreach (var system in Game.Player.StarSystems) {
-                foreach (var star in system.SystemStars) {
-                    MessageBox.Show(star.ToString());
-                }
-                foreach (var planet in system.SystemPlanets) {
-                    MessageBox.Show(planet.ToString());
-                }
-            }*/
-            if (PlayerPlanetsTree.SelectedItem != null && PlayerPlanetsTree.SelectedItem is Planet p) {
-                p.Colonize();
+        private void PlayerStarsTree_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+            WriteStarInfoToBox();
+        }
+
+        private void WriteStarInfoToBox() {
+            if (PlayerStarsTree.SelectedItem != null && PlayerStarsTree.SelectedItem is Star star) {
+                StarNameValue.Content = star.Name;
+                StarRadiusValue.Content = $"{star.Radius} km";
+                StarAreaValue.Content = $"{star.Area:E4} km^2";
             }
         }
 
-        private void PlayerStarsTree_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
-            if (PlayerStarsTree.SelectedItem == null) {
-#if DEBUG
-                MessageBox.Show("No object");
-#endif
-                return;
-            }
-            MessageBox.Show(PlayerStarsTree.SelectedItem.ToString());
+        private void PlayerPlanetsTree_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+            WritePlanetInfoToBox();
         }
 
-        private void PlayerPlanetsTree_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
-            if (PlayerPlanetsTree.SelectedItem == null) {
-#if DEBUG
-                MessageBox.Show("No object");
-#endif
-                return;
+        private void WritePlanetInfoToBox() {
+            if (PlayerPlanetsTree.SelectedItem != null && PlayerPlanetsTree.SelectedItem is Planet planet) {
+                PlanetNameValue.Content = planet.Name;
+                PlanetRadiusValue.Content = $"{planet.Radius} km";
+                PlanetAreaValue.Content = $"{planet.Area:E4} km^2";
+                PlanetPopulationValue.Content = $"{planet.Population:E5}";
             }
-            MessageBox.Show(PlayerPlanetsTree.SelectedItem.ToString());
+        }
+
+        private void ColonizePlanet_Click(object sender, RoutedEventArgs e) {
+            if (PlayerPlanetsTree.SelectedItem != null && PlayerPlanetsTree.SelectedItem is Planet planet) {
+                planet.Colonize();
+            }
         }
     }
 }

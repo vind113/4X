@@ -148,7 +148,9 @@ namespace Logic.Space_Objects {
         #endregion
 
         public void Colonize() {
-            this.Population += 10_000_000;
+            if (this.Population == 0) {
+                this.Population += 10_000_000;
+            }
         }
     }
 }

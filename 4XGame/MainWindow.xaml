@@ -7,8 +7,8 @@
         xmlns:celestial="clr-namespace:Logic.Space_Objects;assembly=Logic"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450" Width="800"
-        MinHeight="450" MinWidth="800"
+        Height="450" Width="900"
+        MinHeight="450" MinWidth="900"
         Background="Azure" Foreground="Black">
     <Grid>
         <Grid HorizontalAlignment="Right" Height="30" VerticalAlignment="Top" Width="170">
@@ -20,52 +20,68 @@
         </Grid>
         <Grid HorizontalAlignment="Left" Height="30"
               Margin="5,0,0,0"
-              VerticalAlignment="Top" Width="600">
+              VerticalAlignment="Top" Width="690">
             <Border BorderBrush="Black" BorderThickness="1"/>
             <Label x:Name="PlayerMoney" Content="Money:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <Label x:Name="ShowPlayerMoney" Content="1.234E12" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,0,0,0"/>
+            <Label x:Name="ShowPlayerMoney" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,0,0,0"/>
 
             <Label x:Name="CitizenHub" Content="In Hub:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="95,0,0,0"/>
-            <Label x:Name="ShowCitizenHub" Content="1.234E8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,0,0,0"/>
+            <Label x:Name="ShowCitizenHub" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,0,0,0"/>
 
             <Label x:Name="PlayerHydrogen" Content="Hydorgen:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="185,0,0,0" Foreground="Blue"/>
-            <Label x:Name="ShowPlayerHydrogen" Content="1.234E20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="242,0,0,0" Foreground="Blue"/>
+            <Label x:Name="ShowPlayerHydrogen" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="242,0,0,0" Foreground="Blue"/>
 
             <Label x:Name="PlayerMetals" Content="Metals:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,0,0,0" Foreground="DimGray"/>
-            <Label x:Name="ShowPlayerMetals" Content="1.234E20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="340,0,0,0" Foreground="DimGray"/>
+            <Label x:Name="ShowPlayerMetals" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="340,0,0,0" Foreground="DimGray"/>
 
             <Label x:Name="PlayerRareMetals" Content="Rare metals:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="395,0,0,0" Foreground="DarkGreen"/>
-            <Label x:Name="ShowPlayerRareMetals" Content="1.234E20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="462,0,0,0" Foreground="DarkGreen"/>
+            <Label x:Name="ShowPlayerRareMetals" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="462,0,0,0" Foreground="DarkGreen"/>
+
+            <Label x:Name="PlayerTotalPopulation" Content="Population:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="520,0,0,0"/>
+            <Label x:Name="ShowPlayerTotalPopulation" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="585,0,0,0"/>
         </Grid>
-        <Button x:Name="ColonizeButton" Content="Colonize"
-                HorizontalAlignment="Right" Margin="0,0,187,5"
-                VerticalAlignment="Bottom" Width="189" Height="30"
-                Click="Colonize_Click"/>
         <Button x:Name="NextTurnButton" Content="Next Turn"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Height="30" Width="170" Margin="0,0,5,5"
                 Click="NextTurnButton_Click"/>
         
-        <TabControl HorizontalAlignment="Left" Height="370" Margin="5,35,0,0" VerticalAlignment="Top" Width="350">
+        <TabControl HorizontalAlignment="Left" Height="370" Margin="5,35,0,0" VerticalAlignment="Top" Width="400">
             <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
                 <Grid Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25*"/>
-                        <ColumnDefinition Width="179*"/>
-                    </Grid.ColumnDefinitions>
                     <TreeView x:Name="PlayerPlanetsTree"
                   HorizontalAlignment="Left" Height="340"
                   VerticalAlignment="Top" Width="180"
                   RenderTransformOrigin="-1.7,-0.21"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
-                  MouseDoubleClick="PlayerPlanetsTree_MouseDoubleClick" Grid.ColumnSpan="2">
+                  MouseLeftButtonUp="PlayerPlanetsTree_MouseLeftButtonUp" Grid.ColumnSpan="2">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type celestial:StarSystem}" ItemsSource="{Binding SystemPlanets}">
                                 <Label Content="{Binding Name}"/>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
-
                     </TreeView>
+                    <Grid Height="90" Width="200"
+                          HorizontalAlignment="Right" VerticalAlignment="Top"
+                          Margin="0,5,5,0" Background="Azure">
+                        <Border BorderBrush="Black" BorderThickness="1"/>
+                        
+                        <Label x:Name="PlanetName" Content="Name:"/>
+                        <Label x:Name="PlanetNameValue" Content="" Margin="40,0,0,0"/>
+                        
+                        <Label x:Name="PlanetRadius" Content="Radius:" Margin="0,20,0,0"/>
+                        <Label x:Name="PlanetRadiusValue" Content="" Margin="40,20,0,0"/>
+
+                        <Label x:Name="PlanetArea" Content="Area:" Margin="0,40,0,0"/>
+                        <Label x:Name="PlanetAreaValue" Content="" Margin="40,40,0,0"/>
+
+                        <Label x:Name="PlanetPopulation" Content="Population:" Margin="0,60,0,0"/>
+                        <Label x:Name="PlanetPopulationValue" Content="" Margin="65,60,0,0"/>
+                    </Grid>
+                    <Button Content="Colonize planet" HorizontalAlignment="Left"
+                            Margin="190,100,0,0" VerticalAlignment="Top"
+                            Width="95" Click="ColonizePlanet_Click"
+                            Background="LightGray"/>
+
                 </Grid>
             </TabItem>
             <TabItem Header="Stars" Width="100" HorizontalAlignment="Right">
@@ -76,14 +92,27 @@
                   VerticalAlignment="Top" Width="180"
                   RenderTransformOrigin="-1.7,-0.21"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
-                  MouseDoubleClick="PlayerStarsTree_MouseDoubleClick">
+                  MouseLeftButtonUp="PlayerStarsTree_MouseLeftButtonUp">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type celestial:StarSystem}" ItemsSource="{Binding SystemStars}">
                                 <Label Content="{Binding Name}"/>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
-
                     </TreeView>
+                    <Grid Height="70" Width="200"
+                          HorizontalAlignment="Right" VerticalAlignment="Top"
+                          Margin="0,5,5,0" Background="Azure">
+                        <Border BorderBrush="Black" BorderThickness="1"/>
+
+                        <Label x:Name="StarName" Content="Name:"/>
+                        <Label x:Name="StarNameValue" Content="" Margin="40,0,0,0"/>
+
+                        <Label x:Name="StarRadius" Content="Radius:" Margin="0,20,0,0"/>
+                        <Label x:Name="StarRadiusValue" Content="" Margin="40,20,0,0"/>
+
+                        <Label x:Name="StarArea" Content="Area:" Margin="0,40,0,0"/>
+                        <Label x:Name="StarAreaValue" Content="" Margin="40,40,0,0"/>
+                    </Grid>
                 </Grid>
             </TabItem>
         </TabControl>
