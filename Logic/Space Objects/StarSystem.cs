@@ -28,22 +28,19 @@ namespace Logic.Space_Objects {
         public string Name { get => this.name; set => this.name = value; }
         public List<Star> SystemStars { get => this.systemStars; }
         public List<Planet> SystemPlanets { get => this.systemPlanets; }
-        /*public CompositeCollection CompositeBodies {
-            get => new CompositeCollection() { systemStars, systemPlanets };
-        }*/
 
         public static StarSystem GetSolarSystem() {
             List<Planet> planets = new List<Planet>();
 
-            planets.Add(new Planet("Mercury", 2440, "Barren", 0d));
-            planets.Add(new Planet("Venus", 6051, "Barren", 0d));
-            planets.Add(new Planet("Earth", 6371, "Continental", 7_500_000_000d));
-            planets.Add(new Planet("Mars", 3389, "Desert", 0d));
+            planets.Add(new Planet("Mercury", 2440, PlanetTypeValue.Barren, 0d));
+            planets.Add(new Planet("Venus", 6051, PlanetTypeValue.Barren, 0d));
+            planets.Add(new Planet("Earth", 6371, PlanetTypeValue.Continental, 7_500_000_000d));
+            planets.Add(new Planet("Mars", 3389, PlanetTypeValue.Desert, 0d));
 
-            planets.Add(new Planet("Jupiter", 71_492, "Gas giant", 0d));
-            planets.Add(new Planet("Saturn", 60_268, "Gas giant", 0d));
-            planets.Add(new Planet("Uranus", 25_559, "Gas giant", 0d));
-            planets.Add(new Planet("Neptune", 24_764, "Gas giant", 0d));
+            planets.Add(new Planet("Jupiter", 71_492, PlanetTypeValue.GasGiant, 0d));
+            planets.Add(new Planet("Saturn", 60_268, PlanetTypeValue.GasGiant, 0d));
+            planets.Add(new Planet("Uranus", 25_559, PlanetTypeValue.GasGiant, 0d));
+            planets.Add(new Planet("Neptune", 24_764, PlanetTypeValue.GasGiant, 0d));
 
             List<Star> stars = new List<Star> { new Star("Sun", 696_392d) };
 

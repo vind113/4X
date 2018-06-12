@@ -25,27 +25,32 @@ namespace Logic.Space_Objects {
         }
     }
 
+    //тестируй
+    public enum PlanetTypeValue {
+        Continental, Barren, Desert, Paradise, Ocean, GasGiant, IceWorld, Tropical, Tundra
+    }
+
     static public class PlanetTypeContainer {
-        static Dictionary<string, PlanetType> planetTypes = new Dictionary<string, PlanetType>();
+        static Dictionary<PlanetTypeValue, PlanetType> planetTypes = new Dictionary<PlanetTypeValue, PlanetType>();
 
         static PlanetTypeContainer() {
-            planetTypes.Add("Continental", new PlanetType(100, "Continental"));
-            planetTypes.Add("Barren", new PlanetType(0, "Barren"));
-            planetTypes.Add("Desert", new PlanetType(30, "Desert"));
-            planetTypes.Add("Paradise", new PlanetType(200, "Paradise"));
-            planetTypes.Add("Ocean", new PlanetType(50, "Ocean"));
-            planetTypes.Add("Gas giant", new PlanetType(0, "Gas giant"));
-            planetTypes.Add("Ice world", new PlanetType(0, "Ice world"));
-            planetTypes.Add("Tropical", new PlanetType(70, "Tropical"));
-            planetTypes.Add("Tundra", new PlanetType(65, "Tundra"));
+            planetTypes.Add(PlanetTypeValue.Continental, new PlanetType(100, "Continental"));
+            planetTypes.Add(PlanetTypeValue.Barren, new PlanetType(0, "Barren"));
+            planetTypes.Add(PlanetTypeValue.Desert, new PlanetType(30, "Desert"));
+            planetTypes.Add(PlanetTypeValue.Paradise, new PlanetType(200, "Paradise"));
+            planetTypes.Add(PlanetTypeValue.Ocean, new PlanetType(50, "Ocean"));
+            planetTypes.Add(PlanetTypeValue.GasGiant, new PlanetType(0, "Gas giant"));
+            planetTypes.Add(PlanetTypeValue.IceWorld, new PlanetType(0, "Ice world"));
+            planetTypes.Add(PlanetTypeValue.Tropical, new PlanetType(70, "Tropical"));
+            planetTypes.Add(PlanetTypeValue.Tundra, new PlanetType(65, "Tundra"));
         }
 
-        public static PlanetType GetPlanetType(string key) {
+        public static PlanetType GetPlanetType(PlanetTypeValue key) {
             if (planetTypes.ContainsKey(key)) {
                 return planetTypes[key];
             }
             else {
-                return planetTypes["Barren"];
+                return planetTypes[PlanetTypeValue.Barren];
             }
         }
     }
@@ -63,7 +68,7 @@ namespace Logic.Space_Objects {
             
         }
 
-        public Planet(string name, double radius, string type, double population) {
+        public Planet(string name, double radius, PlanetTypeValue type, double population) {
             this.name = name;
             this.radius = radius;
             this.type = PlanetTypeContainer.GetPlanetType(type);
@@ -92,13 +97,49 @@ namespace Logic.Space_Objects {
         public double MaximumPopulation { get => this.maximumPopulation; }
         public PlanetType Type { get => this.type; }
 
-        public static Planet GeneratePlanet(string name, string planetType) {
+        #region Planet Generation
+        public static Planet GeneratePlanet(string name, PlanetTypeValue planetType) {
             string planetName = name;
             double population = 0;
             double radius = 0;
-            radius = (double)HelperRandomFunctions.GetRandomInt(4000, 10000);
+
+            if(planetType == PlanetTypeValue.GasGiant) {
+                radius = GasGiantRadiusGeneration();
+            }
+            else {
+                radius = RockyPlanetRadiusGeneration();
+            }
+
             return new Planet(planetName, radius, planetType, population);
         }
+
+        private static double RockyPlanetRadiusGeneration() {
+            double radius;
+
+            if (HelperRandomFunctions.GetProbableBool(3)) {
+                radius = (double)HelperRandomFunctions.GetRandomInt(11_000, 13_000);
+            }
+            else if (HelperRandomFunctions.GetProbableBool(10)) {
+                radius = (double)HelperRandomFunctions.GetRandomInt(9_000, 11_000);
+            }
+            else {
+                radius = (double)HelperRandomFunctions.GetRandomInt(3_000, 9_000);
+            }
+
+            return radius;
+        }
+
+        private static double GasGiantRadiusGeneration() {
+            double radius;
+            if (HelperRandomFunctions.GetProbableBool(15)) {
+                radius = (double)HelperRandomFunctions.GetRandomInt(100_000, 150_000);
+            }
+            else {
+                radius = (double)HelperRandomFunctions.GetRandomInt(20_000, 100_000);
+            }
+            return radius;
+        }
+        #endregion
 
         public override string ToString() {
             return $"{this.Name} is a {this.Type.Name} world with radius of {this.radius} km " +

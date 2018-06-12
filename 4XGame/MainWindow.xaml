@@ -60,7 +60,7 @@
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
-                    <Grid Height="90" Width="200"
+                    <Grid Height="110" Width="200"
                           HorizontalAlignment="Right" VerticalAlignment="Top"
                           Margin="0,5,5,0" Background="Azure">
                         <Border BorderBrush="Black" BorderThickness="1"/>
@@ -76,9 +76,12 @@
 
                         <Label x:Name="PlanetPopulation" Content="Population:" Margin="0,60,0,0"/>
                         <Label x:Name="PlanetPopulationValue" Content="" Margin="65,60,0,0"/>
+
+                        <Label x:Name="PlanetType" Content="Type:" Margin="0,80,0,0"/>
+                        <Label x:Name="PlanetTypeValue" Content="" Margin="40,80,0,0"/>
                     </Grid>
                     <Button Content="Colonize planet" HorizontalAlignment="Left"
-                            Margin="190,100,0,0" VerticalAlignment="Top"
+                            Margin="190,120,0,0" VerticalAlignment="Top"
                             Width="95" Click="ColonizePlanet_Click"
                             Background="LightGray"/>
 
@@ -99,7 +102,7 @@
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
-                    <Grid Height="70" Width="200"
+                    <Grid Height="90" Width="200"
                           HorizontalAlignment="Right" VerticalAlignment="Top"
                           Margin="0,5,5,0" Background="Azure">
                         <Border BorderBrush="Black" BorderThickness="1"/>
@@ -112,6 +115,9 @@
 
                         <Label x:Name="StarArea" Content="Area:" Margin="0,40,0,0"/>
                         <Label x:Name="StarAreaValue" Content="" Margin="40,40,0,0"/>
+
+                        <Label x:Name="StarType" Content="Type:" Margin="0,60,0,0"/>
+                        <Label x:Name="StarTypeValue" Content="" Margin="40,60,0,0"/>
                     </Grid>
                 </Grid>
             </TabItem>

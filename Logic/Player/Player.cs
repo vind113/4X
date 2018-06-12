@@ -42,6 +42,19 @@ namespace Logic.PlayerClasses {
             get => this.starSystems;
             set => this.starSystems = value;
         }
+
+        public double TotalPopulation {
+            get {
+                double population = 0;
+                foreach(var system in StarSystems) {
+                    foreach(var planet in system.SystemPlanets) {
+                        population += planet.Population;
+                    }
+                }
+                population += this.PlayerCitizenHub.CitizensInHub;
+                return population;
+            }
+        }
         #endregion
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Logic.GameClasses;
+using Logic.Space_Objects;
 
 namespace ConsoleTestProject {
     class Program {
         static void Main(string[] args) {
             //TestGrowthMultipleTimes();
-            TestDate();
-
+            //TestDate();
+            GenPlanets();
         }
 
         #region Test growth
@@ -57,6 +58,19 @@ namespace ConsoleTestProject {
                 Game.NextTurn();
             }
             
+        }
+
+        static void GenPlanets() {
+            List<Planet> planets = new List<Planet>();
+
+            for (int i = 0; i < 100; i++) {
+                planets.Add(Planet.GeneratePlanet($"Planet {i}", PlanetTypeValue.Continental));
+            }
+
+            foreach (var p in planets) {
+                //Console.WriteLine($"{p.Name} {p.Type.Name} {p.Radius}");
+                Console.WriteLine(p);
+            }
         }
     }
 }

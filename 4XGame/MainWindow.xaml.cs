@@ -45,6 +45,7 @@ namespace _4XGame {
 
             ShowPlayerMoney.Content = $"{Game.Player.PlayerMoney:0.0000E0}";
             ShowCitizenHub.Content = $"{Game.Player.PlayerCitizenHub.CitizensInHub:0.0000E0}";
+            ShowPlayerTotalPopulation.Content = $"{Game.Player.TotalPopulation:E4}";
 
             ShowPlayerHydrogen.Content = $"{Game.Player.PlayerResourses.Hydrogen:0.0000E0}";
             ShowPlayerMetals.Content = $"{Game.Player.PlayerResourses.CommonMetals:0.0000E0}";
@@ -63,6 +64,7 @@ namespace _4XGame {
                 StarNameValue.Content = star.Name;
                 StarRadiusValue.Content = $"{star.Radius} km";
                 StarAreaValue.Content = $"{star.Area:E4} km^2";
+                StarTypeValue.Content = star.LumClass;
             }
         }
 
@@ -76,6 +78,7 @@ namespace _4XGame {
                 PlanetRadiusValue.Content = $"{planet.Radius} km";
                 PlanetAreaValue.Content = $"{planet.Area:E4} km^2";
                 PlanetPopulationValue.Content = $"{planet.Population:E5}";
+                PlanetTypeValue.Content = planet.Type.Name;
             }
         }
 

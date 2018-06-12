@@ -7,6 +7,8 @@ namespace Logic.GameClasses {
         private static Player player;
         private static CurrentDate currentDate;
 
+        private static string lastGameMessage;
+
         static Game() {
             player = new Player();
             currentDate = new CurrentDate();
@@ -28,13 +30,23 @@ namespace Logic.GameClasses {
         }
         #endregion
 
+        #region Next Turn Functionality
         public static void NextTurn() {
             currentDate.NextTurn();
-            foreach(StarSystem system in player.StarSystems) {
+            foreach (StarSystem system in player.StarSystems) {
                 system.NextTurn(player);
             }
+            SetPlayerCitizenHubCapacity();
         }
-       
+
+        private static void SetPlayerCitizenHubCapacity() {
+            double newHubCapacity = player.TotalPopulation / 1000;
+            if (newHubCapacity > player.PlayerCitizenHub.CitizensInHub) {
+                player.PlayerCitizenHub.MaximumCount = newHubCapacity;
+            }
+        }
+        #endregion
+
         public static void ResetDate() {
             currentDate = new CurrentDate();
         }
