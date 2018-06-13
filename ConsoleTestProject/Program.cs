@@ -8,7 +8,8 @@ namespace ConsoleTestProject {
         static void Main(string[] args) {
             //TestGrowthMultipleTimes();
             //TestDate();
-            GenPlanets();
+            //GenStars();
+            CheckTurns();
         }
 
         #region Test growth
@@ -60,16 +61,28 @@ namespace ConsoleTestProject {
             
         }
 
-        static void GenPlanets() {
-            List<Planet> planets = new List<Planet>();
+        static void GenStars() {
+            List<Star> stars = new List<Star>();
 
-            for (int i = 0; i < 100; i++) {
-                planets.Add(Planet.GeneratePlanet($"Planet {i}", PlanetTypeValue.Continental));
+            for (int i = 0; i < 100_000; i++) {
+                stars.Add(Star.GenerateStar($"{i}"));
             }
 
-            foreach (var p in planets) {
+            foreach (var p in stars) {
                 //Console.WriteLine($"{p.Name} {p.Type.Name} {p.Radius}");
-                Console.WriteLine(p);
+                if (p.LumClass == LuminosityClass.A) {
+                    Console.WriteLine(p);
+                }
+            }
+        }
+
+        static void CheckTurns() {
+            for (int i = 0; i < 100_000; i++) {
+                Game.NextTurn();
+                if(Game.Player.TotalPopulation != 7_500_000_000) {
+                    Console.WriteLine("Incorrect "+ Game.Player.TotalPopulation);
+                    break;
+                }
             }
         }
     }

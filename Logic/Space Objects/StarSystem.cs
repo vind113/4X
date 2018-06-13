@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 
 using Logic.PlayerClasses;
+using Logic.SupportClasses;
 
 namespace Logic.Space_Objects {
     public class StarSystem {
@@ -42,12 +43,50 @@ namespace Logic.Space_Objects {
             planets.Add(new Planet("Uranus", 25_559, PlanetTypeValue.GasGiant, 0d));
             planets.Add(new Planet("Neptune", 24_764, PlanetTypeValue.GasGiant, 0d));
 
-            List<Star> stars = new List<Star> { new Star("Sun", 696_392d) };
+            List<Star> stars = new List<Star> { new Star("Sun", 696_392d, LuminosityClass.G) };
 
             StarSystem solarSystem = new StarSystem("Solar System", stars, planets);
 
             return solarSystem;
         }
+
+        #region Generate Star System
+        public static StarSystem GenerateSystem(string name) {
+            List<Star> stars = new List<Star>();
+            List<Planet> planets = new List<Planet>();
+
+            int planetCount = 0;
+
+            stars.Add(Star.GenerateStar($"{name} Sun"));
+
+            int barrenCount = HelperRandomFunctions.GetRandomInt(0, 5);
+            for (int index = 0; index < barrenCount; index++) {
+                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Barren));
+                planetCount++;
+            }
+
+            LuminosityClass systemStarClass = stars[0].LumClass;
+
+            if(systemStarClass == LuminosityClass.G 
+            || systemStarClass == LuminosityClass.K
+            || systemStarClass == LuminosityClass.F) {
+
+                int continentalCount = HelperRandomFunctions.GetRandomInt(0, 2);
+                for (int index = 0; index < continentalCount; index++) {
+                    planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Continental));
+                    planetCount++;
+                }
+            }
+
+            int gasGiantCount = HelperRandomFunctions.GetRandomInt(0, 5);
+            for (int index = 0; index < gasGiantCount; index++) {
+                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.GasGiant));
+                planetCount++;
+            }
+
+            return new StarSystem(name, stars, planets);
+        }
+        #endregion
 
         public void NextTurn(Player player) {
             foreach(Planet planet in this.SystemPlanets) {

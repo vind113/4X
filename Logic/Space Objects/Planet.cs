@@ -25,7 +25,6 @@ namespace Logic.Space_Objects {
         }
     }
 
-    //тестируй
     public enum PlanetTypeValue {
         Continental, Barren, Desert, Paradise, Ocean, GasGiant, IceWorld, Tropical, Tundra
     }
@@ -116,10 +115,10 @@ namespace Logic.Space_Objects {
         private static double RockyPlanetRadiusGeneration() {
             double radius;
 
-            if (HelperRandomFunctions.GetProbableBool(3)) {
+            if (HelperRandomFunctions.PercentProbableBool(3)) {
                 radius = (double)HelperRandomFunctions.GetRandomInt(11_000, 13_000);
             }
-            else if (HelperRandomFunctions.GetProbableBool(10)) {
+            else if (HelperRandomFunctions.PercentProbableBool(10)) {
                 radius = (double)HelperRandomFunctions.GetRandomInt(9_000, 11_000);
             }
             else {
@@ -131,7 +130,7 @@ namespace Logic.Space_Objects {
 
         private static double GasGiantRadiusGeneration() {
             double radius;
-            if (HelperRandomFunctions.GetProbableBool(15)) {
+            if (HelperRandomFunctions.PercentProbableBool(15)) {
                 radius = (double)HelperRandomFunctions.GetRandomInt(100_000, 150_000);
             }
             else {
@@ -150,17 +149,27 @@ namespace Logic.Space_Objects {
         }
 
         public void NextTurn(Player player) {
-            AddPopulation();
+            //AddPopulation();
+
+            //тестируй
             CitizensToTheHub(player);
             CitizensFromTheHub(player);
         }
 
         #region Next turn functions 
         private void AddPopulation() {
-            double growthCoef = (this.MaximumPopulation / this.Population) / 500_000;
-            double newPopulation = HelperRandomFunctions.GetRandomDouble() * growthCoef * (double)this.Type.Quality * this.population;
-            newPopulation = Math.Floor(newPopulation);
-            this.Population += newPopulation;
+
+            double partOfGrowth = 5_000d;
+
+            if (this.Population > 0) {
+                double growthCoef = (this.MaximumPopulation / this.Population) / (partOfGrowth);
+
+                double newPopulation =
+                    HelperRandomFunctions.GetRandomDouble() * growthCoef * ((double)this.Type.Quality/100d) * this.population;
+
+                newPopulation = Math.Ceiling(newPopulation);
+                this.Population += newPopulation;
+            }
         }
 
         private void CitizensToTheHub(Player player) {
@@ -169,11 +178,15 @@ namespace Logic.Space_Objects {
 
                 double travellersReal =
                     Math.Ceiling(travellersExpected * HelperRandomFunctions.GetRandomDouble());
-                double newPopulation = this.Population - travellersReal;
 
-                player.PlayerCitizenHub.CitizensInHub += travellersReal;
+                bool canTravelFromPlanet = this.Population > travellersReal;
+                bool canTravelToHub =
+                    (player.PlayerCitizenHub.CitizensInHub + travellersReal) < player.PlayerCitizenHub.MaximumCount;
 
-                this.Population = newPopulation;
+                if (canTravelFromPlanet && canTravelToHub) {
+                    this.Population -= travellersReal;
+                    player.PlayerCitizenHub.CitizensInHub += travellersReal;
+                }
             }
         }
 
@@ -182,8 +195,14 @@ namespace Logic.Space_Objects {
                 double addedPopulation =
                     Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
 
-                player.PlayerCitizenHub.CitizensInHub -= addedPopulation;
-                this.Population += addedPopulation;
+                bool canTravelToPlanet = (this.Population + addedPopulation) < this.MaximumPopulation;
+                bool canTravelFromHub = (player.PlayerCitizenHub.CitizensInHub > addedPopulation);
+
+                if (canTravelToPlanet && canTravelFromHub) {
+
+                    player.PlayerCitizenHub.CitizensInHub -= addedPopulation;
+                    this.Population += addedPopulation;
+                }
             }
         }
         #endregion

@@ -22,11 +22,15 @@ namespace Logic.SupportClasses {
             return randomizer.Next(minValue, maxValue);
         }
 
-        public static bool GetProbableBool(int percentage) {
+        public static bool PercentProbableBool(int percentage) {
             if(percentage >= 0 && percentage <= 100) {
                 return GetRandomInt(1, 101) < percentage;
             }
             return false;
+        }
+
+        public static bool ProbableBool(double probability) {
+            return GetRandomDouble() < probability;
         }
     }
 }

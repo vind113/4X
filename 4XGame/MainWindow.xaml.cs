@@ -35,7 +35,11 @@ namespace _4XGame {
 
         private void NextTurnButton_Click(object sender, RoutedEventArgs e) {
             Game.NextTurn();
-            
+
+            RefreshGUI();
+        }
+
+        private void RefreshGUI() {
             //сворачивает вкладку, исправь
             PlayerStarsTree.Items.Refresh();
             PlayerPlanetsTree.Items.Refresh();

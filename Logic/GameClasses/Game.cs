@@ -1,6 +1,9 @@
 ﻿using Logic.PlayerClasses;
 using Logic.Resourse;
 using Logic.Space_Objects;
+using Logic.SupportClasses;
+
+using System;
 
 namespace Logic.GameClasses {
     public static class Game {
@@ -12,7 +15,6 @@ namespace Logic.GameClasses {
         static Game() {
             player = new Player();
             currentDate = new CurrentDate();
-            player.StarSystems.Add(StarSystem.GetSolarSystem());
             player.StarSystems.Add(StarSystem.GetSolarSystem());
         }
 
@@ -33,18 +35,32 @@ namespace Logic.GameClasses {
         #region Next Turn Functionality
         public static void NextTurn() {
             currentDate.NextTurn();
+            //DiscoverNewStarSystem();
+
             foreach (StarSystem system in player.StarSystems) {
                 system.NextTurn(player);
             }
             SetPlayerCitizenHubCapacity();
         }
 
+        private static void DiscoverNewStarSystem() {
+            //с такой вероятностью каждый ход будет открываться новая система
+            //возможно добавить зависимость от уровня технологий
+            double discoveryProbability = 0.05; 
+            
+            if (HelperRandomFunctions.ProbableBool(discoveryProbability)) {
+                player.StarSystems.Add(StarSystem.GenerateSystem($"System {currentDate.Date}"));
+            }
+        }
+
         private static void SetPlayerCitizenHubCapacity() {
-            double newHubCapacity = player.TotalPopulation / 1000;
+            double newHubCapacity = Math.Ceiling(player.TotalPopulation / 1000);
+            
             if (newHubCapacity > player.PlayerCitizenHub.CitizensInHub) {
                 player.PlayerCitizenHub.MaximumCount = newHubCapacity;
             }
         }
+
         #endregion
 
         public static void ResetDate() {
