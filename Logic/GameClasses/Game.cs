@@ -46,7 +46,7 @@ namespace Logic.GameClasses {
         private static void DiscoverNewStarSystem() {
             //с такой вероятностью каждый ход будет открываться новая система
             //возможно добавить зависимость от уровня технологий
-            double discoveryProbability = 0.05; 
+            double discoveryProbability = 1; 
             
             if (HelperRandomFunctions.ProbableBool(discoveryProbability)) {
                 player.StarSystems.Add(StarSystem.GenerateSystem($"System {currentDate.Date}"));

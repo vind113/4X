@@ -10,7 +10,8 @@ namespace ConsoleTestProject {
             //TestDate();
             //GenStars();
             //CheckTurns();
-            CheckPlanets();
+            //CheckPlanets();
+            CreateHabitablePlanets();
         }
 
         #region Test growth
@@ -107,11 +108,29 @@ namespace ConsoleTestProject {
                     smaCount++;
                 }
             }
+
             Console.WriteLine(bigCount);
             Console.WriteLine(midCount);
             Console.WriteLine(smaCount);
             Console.WriteLine();
             Console.WriteLine(bigCount+midCount+smaCount);
+        }
+
+        static void CreateHabitablePlanets() {
+            List<Planet> planets = new List<Planet>();
+            for (int index = 0; index < 100_000; index++) {
+                StarSystem.GenerateHabitablePlanets("ABC", planets, 0);
+            }
+
+            int continentalCount = 0;
+      
+            foreach (var planet in planets) {
+                if(planet.Type.Name == "Tropical") {
+                    continentalCount++;
+                }
+            }
+
+            Console.WriteLine(continentalCount);
         }
     }
 }

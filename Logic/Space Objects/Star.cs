@@ -56,12 +56,14 @@ namespace Logic.Space_Objects {
                 luminosityClass = LuminosityClass.F;
 
             }
-            else if (starFraction < 0.076) {
+            //реальное соотношение 0.076
+            else if (starFraction < 0.1) {
                 radius = HelperRandomFunctions.GetRandomInt(672_000, 728_000);
                 luminosityClass = LuminosityClass.G;
 
             }
-            else if (starFraction < 0.12) {
+            //реальное соотношение 0.12
+            else if (starFraction < 0.20) {
                 radius = HelperRandomFunctions.GetRandomInt(490_000, 672_000);
                 luminosityClass = LuminosityClass.K;
 

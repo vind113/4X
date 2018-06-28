@@ -71,20 +71,48 @@ namespace Logic.Space_Objects {
             || systemStarClass == LuminosityClass.K
             || systemStarClass == LuminosityClass.F) {
 
-                int continentalCount = HelperRandomFunctions.GetRandomInt(0, 2);
-                for (int index = 0; index < continentalCount; index++) {
-                    planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Continental));
+                int habitablePlanetCount = HelperRandomFunctions.GetRandomInt(0, 2);
+                for (int index = 0; index < habitablePlanetCount; index++) {
+                    GenerateHabitablePlanets(name, planets, planetCount);
                     planetCount++;
                 }
             }
 
-            int gasGiantCount = HelperRandomFunctions.GetRandomInt(0, 5);
+            int gasGiantCount = HelperRandomFunctions.GetRandomInt(0, 7);
             for (int index = 0; index < gasGiantCount; index++) {
                 planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.GasGiant));
                 planetCount++;
             }
 
             return new StarSystem(name, stars, planets);
+        }
+
+        public static void GenerateHabitablePlanets(string name, List<Planet> planets, int planetCount) {
+            int probabilityIndex = HelperRandomFunctions.GetRandomInt(1, 101);
+
+            if (probabilityIndex <= 30) {
+                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Continental));
+
+            }
+            else if (probabilityIndex <= 50) {
+                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Tundra));
+
+            }
+            else if (probabilityIndex <= 70) {
+                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Ocean));
+
+            }
+            else if (probabilityIndex <= 80) {
+                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Paradise));
+
+            }
+            else if (probabilityIndex <= 90) {
+                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Tropical));
+
+            }
+            else {
+                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Desert));
+            }
         }
         #endregion
 
