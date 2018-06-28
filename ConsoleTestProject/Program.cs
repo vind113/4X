@@ -9,7 +9,8 @@ namespace ConsoleTestProject {
             //TestGrowthMultipleTimes();
             //TestDate();
             //GenStars();
-            CheckTurns();
+            //CheckTurns();
+            CheckPlanets();
         }
 
         #region Test growth
@@ -84,6 +85,33 @@ namespace ConsoleTestProject {
                     break;
                 }
             }
+        }
+
+        static void CheckPlanets() {
+            Planet[] planets = new Planet[1_000_000];
+            for (int index = 0; index < planets.Length; index++) {
+                planets[index] = Planet.GeneratePlanet("PLA", PlanetTypeValue.Barren);
+            }
+            int bigCount = 0;
+            int midCount = 0;
+            int smaCount = 0;
+
+            foreach (var planet in planets) {
+                if(planet.Radius >= 11_000) {
+                    bigCount++;
+                }
+                else if(planet.Radius >= 9_000) {
+                    midCount++;
+                }
+                else {
+                    smaCount++;
+                }
+            }
+            Console.WriteLine(bigCount);
+            Console.WriteLine(midCount);
+            Console.WriteLine(smaCount);
+            Console.WriteLine();
+            Console.WriteLine(bigCount+midCount+smaCount);
         }
     }
 }

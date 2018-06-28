@@ -35,7 +35,7 @@ namespace Logic.GameClasses {
         #region Next Turn Functionality
         public static void NextTurn() {
             currentDate.NextTurn();
-            //DiscoverNewStarSystem();
+            DiscoverNewStarSystem();
 
             foreach (StarSystem system in player.StarSystems) {
                 system.NextTurn(player);

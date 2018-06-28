@@ -26,6 +26,8 @@ namespace _4XGame {
         public MainWindow() {
             InitializeComponent();
             SetItemsSource();
+
+            RefreshGUI();
         }
 
         private void SetItemsSource() {

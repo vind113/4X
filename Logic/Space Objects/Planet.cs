@@ -54,6 +54,9 @@ namespace Logic.Space_Objects {
         }
     }
 
+    /// <summary>
+    /// Представляет планету
+    /// </summary>
     [Serializable]
     public class Planet : CelestialBody {
         PlanetType type;            //тип планеты
@@ -63,15 +66,32 @@ namespace Logic.Space_Objects {
         double maximumPopulation;   //максимальное население планеты
         //коллекция станций на орбите
 
+        /// <summary>
+        /// Инициализирует экземпляр класса планеты с значениями по умолчанию
+        /// </summary>
         public Planet() {
             
         }
 
+        /// <summary>
+        /// Инициализирует экземпляр класса планеты
+        /// </summary>
+        /// <param name="name">
+        ///     Имя планеты
+        /// </param>
+        /// <param name="radius">
+        ///     Радуис планеты
+        /// </param>
+        /// <param name="type">
+        ///     Тип планеты(пустынная, океаническая, газовый гигант и т.д)
+        /// </param>
+        /// <param name="population">
+        ///     Изначальное население планеты
+        /// </param>
         public Planet(string name, double radius, PlanetTypeValue type, double population) {
             this.name = name;
             this.radius = radius;
             this.type = PlanetTypeContainer.GetPlanetType(type);
-
             this.area = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
 
             this.maximumPopulation = (double)this.type.Quality * this.area;
@@ -82,6 +102,9 @@ namespace Logic.Space_Objects {
             this.population = Math.Floor(population);
         }
 
+        /// <summary>
+        /// Население планеты
+        /// </summary>
         public double Population {
             get => this.population;
             //private set нужен для централизованой проверки на допустимость значения внутри класса
@@ -91,9 +114,25 @@ namespace Logic.Space_Objects {
                 };
             }
         }
+
+        /// <summary>
+        /// Общее количество строительных площадок
+        /// </summary>
         public int BuildingSites { get => this.buildingSites; }
+
+        /// <summary>
+        /// Количество доступных для строительства площадок
+        /// </summary>
         public int AvailableSites { get => this.availableSites; }
+
+        /// <summary>
+        /// Максимально возможное количество жителей на планете
+        /// </summary>
         public double MaximumPopulation { get => this.maximumPopulation; }
+
+        /// <summary>
+        /// Тип планеты
+        /// </summary>
         public PlanetType Type { get => this.type; }
 
         #region Planet Generation
@@ -115,10 +154,10 @@ namespace Logic.Space_Objects {
         private static double RockyPlanetRadiusGeneration() {
             double radius;
 
-            if (HelperRandomFunctions.PercentProbableBool(3)) {
+            if (HelperRandomFunctions.PercentProbableBool(8)) {
                 radius = (double)HelperRandomFunctions.GetRandomInt(11_000, 13_000);
             }
-            else if (HelperRandomFunctions.PercentProbableBool(10)) {
+            else if (HelperRandomFunctions.PercentProbableBool(15)) {
                 radius = (double)HelperRandomFunctions.GetRandomInt(9_000, 11_000);
             }
             else {
@@ -130,8 +169,11 @@ namespace Logic.Space_Objects {
 
         private static double GasGiantRadiusGeneration() {
             double radius;
-            if (HelperRandomFunctions.PercentProbableBool(15)) {
-                radius = (double)HelperRandomFunctions.GetRandomInt(100_000, 150_000);
+            if (HelperRandomFunctions.PercentProbableBool(10)) {
+                radius = (double)HelperRandomFunctions.GetRandomInt(110_000, 150_000);
+            }
+            else if (HelperRandomFunctions.PercentProbableBool(20)) {
+                radius = (double)HelperRandomFunctions.GetRandomInt(100_000, 110_000);
             }
             else {
                 radius = (double)HelperRandomFunctions.GetRandomInt(20_000, 100_000);
@@ -149,9 +191,8 @@ namespace Logic.Space_Objects {
         }
 
         public void NextTurn(Player player) {
-            //AddPopulation();
+            AddPopulation();
 
-            //тестируй
             CitizensToTheHub(player);
             CitizensFromTheHub(player);
         }
@@ -174,42 +215,42 @@ namespace Logic.Space_Objects {
 
         private void CitizensToTheHub(Player player) {
             if (this.Population > 0) {
-                double travellersExpected = Math.Floor(this.Population * 0.002);
+                double citizensToHubExpected = Math.Floor(this.Population * 0.002);
 
-                double travellersReal =
-                    Math.Ceiling(travellersExpected * HelperRandomFunctions.GetRandomDouble());
+                double citizensToHub =
+                    Math.Ceiling(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
 
-                bool canTravelFromPlanet = this.Population > travellersReal;
+                bool canTravelFromPlanet = citizensToHub < this.Population;
                 bool canTravelToHub =
-                    (player.PlayerCitizenHub.CitizensInHub + travellersReal) < player.PlayerCitizenHub.MaximumCount;
+                    (player.PlayerCitizenHub.CitizensInHub + citizensToHub) < player.PlayerCitizenHub.MaximumCount;
 
                 if (canTravelFromPlanet && canTravelToHub) {
-                    this.Population -= travellersReal;
-                    player.PlayerCitizenHub.CitizensInHub += travellersReal;
+                    this.Population -= citizensToHub;
+                    player.PlayerCitizenHub.CitizensInHub += citizensToHub;
                 }
             }
         }
 
         private void CitizensFromTheHub(Player player) {
             if (this.Population > 0) {
-                double addedPopulation =
+                double citizensFromHub =
                     Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
 
-                bool canTravelToPlanet = (this.Population + addedPopulation) < this.MaximumPopulation;
-                bool canTravelFromHub = (player.PlayerCitizenHub.CitizensInHub > addedPopulation);
+                bool canTravelToPlanet = (this.Population + citizensFromHub) < this.MaximumPopulation;
+                bool canTravelFromHub = citizensFromHub < player.PlayerCitizenHub.CitizensInHub;
 
                 if (canTravelToPlanet && canTravelFromHub) {
-
-                    player.PlayerCitizenHub.CitizensInHub -= addedPopulation;
-                    this.Population += addedPopulation;
+                    player.PlayerCitizenHub.CitizensInHub -= citizensFromHub;
+                    this.Population += citizensFromHub;
                 }
             }
         }
         #endregion
 
         public void Colonize() {
-            if (this.Population == 0) {
-                this.Population += 10_000_000;
+            double colonizers = 10_000_000;
+            if (this.Population == 0 && colonizers < this.MaximumPopulation) {
+                this.Population += colonizers;
             }
         }
     }

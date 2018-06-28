@@ -24,13 +24,13 @@ namespace Logic.SupportClasses {
 
         public static bool PercentProbableBool(int percentage) {
             if(percentage >= 0 && percentage <= 100) {
-                return GetRandomInt(1, 101) < percentage;
+                return GetRandomInt(1, 101) <= percentage;
             }
             return false;
         }
 
         public static bool ProbableBool(double probability) {
-            return GetRandomDouble() < probability;
+            return GetRandomDouble() <= probability;
         }
     }
 }
