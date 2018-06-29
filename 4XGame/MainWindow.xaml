@@ -38,7 +38,7 @@
             <Label x:Name="ShowPlayerRareMetals" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="462,0,0,0" Foreground="DarkGreen"/>
 
             <Label x:Name="PlayerTotalPopulation" Content="Population:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="520,0,0,0"/>
-            <Label x:Name="ShowPlayerTotalPopulation" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="585,0,0,0"/>
+            <Label x:Name="ShowPlayerTotalPopulation" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="585,0,0,0" MouseDoubleClick="ShowTotalPopulationInReadableFormat_MouseDoubleClick"/>
         </Grid>
         <Button x:Name="NextTurnButton" Content="Next Turn"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
@@ -90,6 +90,10 @@
                               Checked="AutoColonizeCheckBox_Checked"
                               Unchecked="AutoColonizeCheckBox_Unchecked"
                               Indeterminate="AutoColonizeCheckBox_Unchecked"/>
+                    <Label x:Name="ColonizedPlanets" Content="Colonized planets:" HorizontalAlignment="Left"
+                           Margin="190,140,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="ColonizedPlanetsValue" Content="1" HorizontalAlignment="Left"
+                           Margin="290,140,0,0" VerticalAlignment="Top"/>
 
                 </Grid>
             </TabItem>

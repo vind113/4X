@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Logic.SupportClasses {
     public class HelperMathFunctions {
         public static double SphereArea(double radius) {
             return 4 * Math.PI * Math.Pow(radius, 2);
+        }
+    }
+
+    public class HelperConvertFunctions {
+        public static string NumberToString(double number) {
+            return number.ToString("#,#", CultureInfo.InvariantCulture);
         }
     }
 

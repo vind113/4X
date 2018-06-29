@@ -247,10 +247,14 @@ namespace Logic.Space_Objects {
         }
         #endregion
 
-        public void Colonize() {
+        public void Colonize(Player player) {
             double colonizers = 10_000_000;
-            if (this.Population == 0 && colonizers < this.MaximumPopulation) {
+            if (this.Population == 0) {
                 this.Population += colonizers;
+
+                if (this.Population > 0) {
+                    player.ColonizedPlanets++;
+                }
             }
         }
     }

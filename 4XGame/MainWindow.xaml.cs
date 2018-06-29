@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using Logic.GameClasses;
 using Logic.PlayerClasses;
 using Logic.Space_Objects;
+using Logic.SupportClasses;
 
 namespace _4XGame {
     /// <summary>
@@ -43,19 +44,22 @@ namespace _4XGame {
 
         private void RefreshGUI() {
             //сворачивает вкладку, исправь
-            PlayerStarsTree.Items.Refresh();
-            PlayerPlanetsTree.Items.Refresh();
+            //PlayerStarsTree.Items.Refresh();
+            //PlayerPlanetsTree.Items.Refresh();
 
             WriteStarInfoToBox();
             WritePlanetInfoToBox();
 
             ShowPlayerMoney.Content = $"{Game.Player.PlayerMoney:0.0000E0}";
             ShowCitizenHub.Content = $"{Game.Player.PlayerCitizenHub.CitizensInHub:0.0000E0}";
-            ShowPlayerTotalPopulation.Content = $"{Game.Player.TotalPopulation:E4}";
+            //ShowCitizenHub.Content = $"{Game.Player.PlayerCitizenHub.MaximumCount:0.0000E0}";
+            ShowPlayerTotalPopulation.Content = $"{Game.Player.TotalPopulation:0.0000E0}";
 
             ShowPlayerHydrogen.Content = $"{Game.Player.PlayerResourses.Hydrogen:0.0000E0}";
             ShowPlayerMetals.Content = $"{Game.Player.PlayerResourses.CommonMetals:0.0000E0}";
             ShowPlayerRareMetals.Content = $"{Game.Player.PlayerResourses.RareEarthElements:0.0000E0}";
+
+            RefreshColonizedPlanetsValueLabel();
 
             ShowTurnLabel.Content = Game.GameTurn;
             ShowDateLabel.Content = Game.GameDate;
@@ -90,16 +94,27 @@ namespace _4XGame {
 
         private void ColonizePlanet_Click(object sender, RoutedEventArgs e) {
             if (PlayerPlanetsTree.SelectedItem != null && PlayerPlanetsTree.SelectedItem is Planet planet) {
-                planet.Colonize();
+                planet.Colonize(Game.Player);
+                RefreshColonizedPlanetsValueLabel();
             }
         }
 
-        private void AutoColonizeCheckBox_Checked(object sender, RoutedEventArgs e) {
+        private void RefreshColonizedPlanetsValueLabel() {
+            ColonizedPlanetsValue.Content = Game.Player.ColonizedPlanets;
+        }
 
+        private void AutoColonizeCheckBox_Checked(object sender, RoutedEventArgs e) {
+            Game.IsAutoColonizationEnabled = true;
         }
 
         private void AutoColonizeCheckBox_Unchecked(object sender, RoutedEventArgs e) {
+            Game.IsAutoColonizationEnabled = false;
+        }
 
+        private void ShowTotalPopulationInReadableFormat_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
+            if(sender != null && sender is Label valueLabel) {
+                MessageBox.Show(HelperConvertFunctions.NumberToString(Game.Player.TotalPopulation), valueLabel.Name);
+            }
         }
     }
 }
