@@ -93,5 +93,13 @@ namespace _4XGame {
                 planet.Colonize();
             }
         }
+
+        private void AutoColonizeCheckBox_Checked(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void AutoColonizeCheckBox_Unchecked(object sender, RoutedEventArgs e) {
+
+        }
     }
 }

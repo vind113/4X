@@ -84,6 +84,12 @@
                             Margin="190,120,0,0" VerticalAlignment="Top"
                             Width="95" Click="ColonizePlanet_Click"
                             Background="LightGray"/>
+                    <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
+                              HorizontalAlignment="Right" Margin="0,122,5,0"
+                              VerticalAlignment="Top" Height="20" Width="99"
+                              Checked="AutoColonizeCheckBox_Checked"
+                              Unchecked="AutoColonizeCheckBox_Unchecked"
+                              Indeterminate="AutoColonizeCheckBox_Unchecked"/>
 
                 </Grid>
             </TabItem>

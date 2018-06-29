@@ -46,10 +46,19 @@ namespace Logic.GameClasses {
         private static void DiscoverNewStarSystem() {
             //с такой вероятностью каждый ход будет открываться новая система
             //возможно добавить зависимость от уровня технологий
-            double discoveryProbability = 1; 
+            //оптимальное значение - 0.15
+            double discoveryProbability = 0.15; 
             
             if (HelperRandomFunctions.ProbableBool(discoveryProbability)) {
-                player.StarSystems.Add(StarSystem.GenerateSystem($"System {currentDate.Date}"));
+                int maxSystemsToGenerate = 0;
+                int systemsToGenerate = 0;
+                checked {
+                    maxSystemsToGenerate = (int)((Math.Sqrt(player.StarSystems.Count)) / 2);
+                    systemsToGenerate = HelperRandomFunctions.GetRandomInt(1, maxSystemsToGenerate + 1);
+                }
+                for (int index = 0; index < systemsToGenerate; index++) {
+                    player.StarSystems.Add(StarSystem.GenerateSystem($"System {currentDate.Date}-{index}"));
+                }
             }
         }
 

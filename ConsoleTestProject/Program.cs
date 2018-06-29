@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Logic.GameClasses;
 using Logic.Space_Objects;
+using Logic.SupportClasses;
 
 namespace ConsoleTestProject {
     class Program {
@@ -11,7 +12,8 @@ namespace ConsoleTestProject {
             //GenStars();
             //CheckTurns();
             //CheckPlanets();
-            CreateHabitablePlanets();
+            //CreateHabitablePlanets();
+            SystemsCheck();
         }
 
         #region Test growth
@@ -131,6 +133,32 @@ namespace ConsoleTestProject {
             }
 
             Console.WriteLine(continentalCount);
+        }
+
+        static void SystemsCheck() {
+            int systems = 1;
+            for (int i = 0; i < 120; i++) {
+                Console.WriteLine(systems);
+                systems += NewStarSystem(systems);
+            }
+        }
+
+        private static int NewStarSystem(int systems) {
+            //с такой вероятностью каждый ход будет открываться новая система
+            //возможно добавить зависимость от уровня технологий
+            double discoveryProbability = 0.15;
+
+            if (HelperRandomFunctions.ProbableBool(discoveryProbability)) {
+                int maxSystemsToGenerate = 0;
+                int systemsToGenerate = 0;
+                checked {
+                    maxSystemsToGenerate = (int)((Math.Sqrt(systems)) / 2);
+                    systemsToGenerate = HelperRandomFunctions.GetRandomInt(1, maxSystemsToGenerate + 1);
+                }
+                return systemsToGenerate;
+            }
+
+            return 0;
         }
     }
 }
