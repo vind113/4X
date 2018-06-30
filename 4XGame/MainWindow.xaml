@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_4XGame"
         xmlns:celestial="clr-namespace:Logic.Space_Objects;assembly=Logic"
-        xmlns:fsttree="clr-namespace:FastTreeNS;assembly=FastTree"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450" Width="900"
