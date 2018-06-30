@@ -38,7 +38,6 @@ namespace _4XGame {
 
         private void NextTurnButton_Click(object sender, RoutedEventArgs e) {
             Game.NextTurn();
-
             RefreshGUI();
         }
 
@@ -60,6 +59,8 @@ namespace _4XGame {
             ShowPlayerRareMetals.Content = $"{Game.Player.PlayerResourses.RareEarthElements:0.0000E0}";
 
             RefreshColonizedPlanetsValueLabel();
+            RefreshOwnedPlanetsValueLabel();
+            RefreshOwnedStarsValueLabel();
 
             ShowTurnLabel.Content = Game.GameTurn;
             ShowDateLabel.Content = Game.GameDate;
@@ -103,6 +104,14 @@ namespace _4XGame {
             ColonizedPlanetsValue.Content = Game.Player.ColonizedPlanets;
         }
 
+        private void RefreshOwnedPlanetsValueLabel() {
+            OwnedPlanetsValue.Content = Game.Player.OwnedPlanets;
+        }
+
+        private void RefreshOwnedStarsValueLabel() {
+            OwnedStarsValue.Content = Game.Player.OwnedStars;
+        }
+
         private void AutoColonizeCheckBox_Checked(object sender, RoutedEventArgs e) {
             Game.IsAutoColonizationEnabled = true;
         }
@@ -115,6 +124,13 @@ namespace _4XGame {
             if(sender != null && sender is Label valueLabel) {
                 MessageBox.Show(HelperConvertFunctions.NumberToString(Game.Player.TotalPopulation), valueLabel.Name);
             }
+        }
+
+        private void NextHunderedTurnButton_Click(object sender, RoutedEventArgs e) {
+            for (int i = 0; i < 100; i++) {
+                Game.NextTurn();
+            }
+            RefreshGUI();
         }
     }
 }

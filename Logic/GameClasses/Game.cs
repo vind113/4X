@@ -52,7 +52,7 @@ namespace Logic.GameClasses {
             //с такой вероятностью каждый ход будет открываться новая система
             //возможно добавить зависимость от уровня технологий
             //оптимальное значение - 0.15
-            double discoveryProbability = 1; 
+            double discoveryProbability = 0.15; 
             
             if (HelperRandomFunctions.ProbableBool(discoveryProbability)) {
                 int maxSystemsToGenerate = 0;
@@ -65,6 +65,9 @@ namespace Logic.GameClasses {
                 for (int index = 0; index < systemsToGenerate; index++) {
                     //player.StarSystems.Add(StarSystem.GenerateSystem($"System {currentDate.Date}-{index}"));
                     generatedSystem = StarSystem.GenerateSystem($"System {currentDate.Date}-{index}");
+
+                    player.OwnedStars += generatedSystem.SystemStars.Count;
+                    player.OwnedPlanets += generatedSystem.SystemPlanets.Count;
 
                     if (isAutoColonizationEnabled) {
                         foreach (var planet in generatedSystem.SystemPlanets) {

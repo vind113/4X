@@ -9,7 +9,9 @@ namespace Logic.PlayerClasses {
         private Stockpile stockpile;
         private CitizenHub hub;
         private List<StarSystem> starSystems;
+        private int ownedStars = 1;
         private int colonizedPlanets = 1;
+        private int ownedPlanets = 8;
 
         public Player() {
             this.stockpile = new Stockpile();
@@ -60,6 +62,16 @@ namespace Logic.PlayerClasses {
         public int ColonizedPlanets {
             get => this.colonizedPlanets;
             set => this.colonizedPlanets = value;
+        }
+
+        public int OwnedPlanets {
+            get => this.ownedPlanets;
+            set => this.ownedPlanets = value;
+        }
+
+        public int OwnedStars {
+            get => this.ownedStars;
+            set => this.ownedStars = value;
         }
         #endregion
     }
