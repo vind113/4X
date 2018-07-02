@@ -22,7 +22,7 @@
         </Grid>
         <Grid HorizontalAlignment="Left" Height="30"
               Margin="5,0,0,0"
-              VerticalAlignment="Top" Width="690">
+              VerticalAlignment="Top" Width="670">
             <Border BorderBrush="Black" BorderThickness="1"/>
             <Label x:Name="PlayerMoney" Content="Money:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Label x:Name="ShowPlayerMoney" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,0,0,0"/>
@@ -46,20 +46,37 @@
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Height="30" Width="170" Margin="0,0,5,5"
                 Click="NextTurnButton_Click"/>
-        <Button x:Name="NextHunderedTurnButton" Content="Next 100 Turn"
+        
+        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right"
+                   Height="36" Margin="0,0,177,2"
+                   Stroke="Black" VerticalAlignment="Bottom"
+                   Width="222"/>
+        <Button x:Name="NextNTurnButton" Content="Next N Turns"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Height="30" Width="170" Margin="0,0,180,5"
-                Click="NextHunderedTurnButton_Click"/>
+                Height="30" Width="160" Margin="0,0,180,5"
+                Click="NextNTurnButton_Click"/>
+        <TextBox x:Name="TurnsNumberTextBox"
+                 HorizontalAlignment="Right"
+                 Height="30" Margin="0,0,345,5"
+                 TextWrapping="Wrap" Text=""
+                 VerticalAlignment="Bottom" Width="50"
+                 RenderTransformOrigin="-0.083,0.522"
+                 MaxLength="5" FontSize="16"/>
 
-        <TabControl HorizontalAlignment="Left" Height="370" Margin="5,35,0,0" VerticalAlignment="Top" Width="620">
+        <TabControl HorizontalAlignment="Left"
+                    Height="370" Margin="5,35,0,0"
+                    VerticalAlignment="Top" Width="670">
             <TabItem Header="Systems" Width="100" HorizontalAlignment="Left">
                 <Grid>
                     <DataGrid x:Name="SystemsGrid"
-                              Height="335" Width="200"
+                              Height="335" Width="246"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Top"
                               Margin="5,0,0,0"
                               IsReadOnly="True"
+                              BorderThickness="2"
+                              AutoGenerateColumns="False"
+                              VerticalScrollBarVisibility="Visible"
                               MouseLeftButtonUp="SystemsGrid_MouseLeftButtonUp"/>
                     <TabControl HorizontalAlignment="Right" Height="335"
                                 VerticalAlignment="Top" Width="400"
@@ -72,6 +89,7 @@
                                          RenderTransformOrigin="-1.7,-0.21"
                                          ScrollViewer.VerticalScrollBarVisibility="Visible"
                                          MouseLeftButtonUp="PlayerPlanetsTree_MouseLeftButtonUp"
+                                         BorderThickness="2"
                                          Grid.ColumnSpan="2">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
@@ -119,6 +137,7 @@
                                          VerticalAlignment="Top" Width="180"
                                          RenderTransformOrigin="-1.7,-0.21"
                                          ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                         BorderThickness="2"
                                          MouseLeftButtonUp="PlayerStarsTree_MouseLeftButtonUp">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>

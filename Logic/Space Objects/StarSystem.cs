@@ -30,6 +30,43 @@ namespace Logic.Space_Objects {
         public List<Star> SystemStars { get => this.systemStars; }
         public List<Planet> SystemPlanets { get => this.systemPlanets; }
 
+
+        public int PlanetsCount {
+            get {
+                return this.SystemPlanets.Count;
+            }
+        }
+
+        public int StarsCount {
+            get {
+                return this.SystemStars.Count;
+            }
+        }
+
+        public int ColonizedCount {
+            get {
+                int count = 0;
+                foreach (var planet in this.SystemPlanets) {
+                    if (planet.Population > 0) {
+                        count++;
+                    }
+                }
+                return count;
+            }
+        }
+
+        public double SystemPopulation {
+            get {
+                double population = 0;
+                foreach (var planet in this.SystemPlanets) {
+                    if (planet.Population > 0) {
+                        population += planet.Population;
+                    }
+                }
+                return population;
+            }
+        }
+
         public static StarSystem GetSolarSystem() {
             List<Planet> planets = new List<Planet>();
 
