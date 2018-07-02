@@ -7,16 +7,18 @@
         xmlns:celestial="clr-namespace:Logic.Space_Objects;assembly=Logic"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450" Width="900"
-        MinHeight="450" MinWidth="900"
+        Height="450" Width="1100"
+        MinHeight="450" MinWidth="1100"
         Background="Azure" Foreground="Black">
     <Grid>
-        <Grid HorizontalAlignment="Right" Height="30" VerticalAlignment="Top" Width="170">
+        <Grid x:Name="TurnGrid"
+              HorizontalAlignment="Right" Height="30"
+              VerticalAlignment="Top" Width="170">
             <Border BorderBrush="Black" BorderThickness="1"/>
             <Label x:Name="TurnLabel" Content="Turn: " HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <Label x:Name="ShowTurnLabel" Content="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,0,0,0"/>
+            <Label x:Name="TurnLabelValue" Content="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,0,0,0"/>
             <Label x:Name="DateLabel" Content="Date: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,0,0,0"/>
-            <Label x:Name="ShowDateLabel" Content="1.2500" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0"/>
+            <Label x:Name="DateLabelValue" Content="1.2500" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0"/>
         </Grid>
         <Grid HorizontalAlignment="Left" Height="30"
               Margin="5,0,0,0"
@@ -48,99 +50,125 @@
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Height="30" Width="170" Margin="0,0,180,5"
                 Click="NextHunderedTurnButton_Click"/>
-        
-        <TabControl HorizontalAlignment="Left" Height="370" Margin="5,35,0,0" VerticalAlignment="Top" Width="400">
-            <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
-                <Grid Background="#FFE5E5E5">
-                    <TreeView x:Name="PlayerPlanetsTree"
-                  HorizontalAlignment="Left" Height="340"
-                  VerticalAlignment="Top" Width="180"
-                  RenderTransformOrigin="-1.7,-0.21"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible"
-                  MouseLeftButtonUp="PlayerPlanetsTree_MouseLeftButtonUp" Grid.ColumnSpan="2">
-                        <TreeView.ItemTemplate>
-                            <HierarchicalDataTemplate DataType="{x:Type celestial:StarSystem}" ItemsSource="{Binding SystemPlanets}">
-                                <Label Content="{Binding Name}"/>
-                            </HierarchicalDataTemplate>
-                        </TreeView.ItemTemplate>
-                    </TreeView>
-                    <Grid Height="110" Width="200"
-                          HorizontalAlignment="Right" VerticalAlignment="Top"
-                          Margin="0,5,5,0" Background="Azure">
-                        <Border BorderBrush="Black" BorderThickness="1"/>
-                        
-                        <Label x:Name="PlanetName" Content="Name:"/>
-                        <Label x:Name="PlanetNameValue" Content="" Margin="40,0,0,0"/>
-                        
-                        <Label x:Name="PlanetRadius" Content="Radius:" Margin="0,20,0,0"/>
-                        <Label x:Name="PlanetRadiusValue" Content="" Margin="40,20,0,0"/>
 
-                        <Label x:Name="PlanetArea" Content="Area:" Margin="0,40,0,0"/>
-                        <Label x:Name="PlanetAreaValue" Content="" Margin="40,40,0,0"/>
+        <TabControl HorizontalAlignment="Left" Height="370" Margin="5,35,0,0" VerticalAlignment="Top" Width="620">
+            <TabItem Header="Systems" Width="100" HorizontalAlignment="Left">
+                <Grid>
+                    <DataGrid x:Name="SystemsGrid"
+                              Height="335" Width="200"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Margin="5,0,0,0"
+                              IsReadOnly="True"
+                              MouseLeftButtonUp="SystemsGrid_MouseLeftButtonUp"/>
+                    <TabControl HorizontalAlignment="Right" Height="335"
+                                VerticalAlignment="Top" Width="400"
+                                Margin="0,0,5,0">
+                        <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
+                            <Grid Background="#FFE5E5E5">
+                                <ListBox x:Name="SystemPlanetsListBox"
+                                         HorizontalAlignment="Left" Height="300"
+                                         VerticalAlignment="Top" Width="180"
+                                         RenderTransformOrigin="-1.7,-0.21"
+                                         ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                         MouseLeftButtonUp="PlayerPlanetsTree_MouseLeftButtonUp"
+                                         Grid.ColumnSpan="2">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Name}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <Grid Height="110" Width="200"
+                                      HorizontalAlignment="Right" VerticalAlignment="Top"
+                                      Margin="0,5,5,0" Background="Azure">
+                                    <Border BorderBrush="Black" BorderThickness="1"/>
 
-                        <Label x:Name="PlanetPopulation" Content="Population:" Margin="0,60,0,0"/>
-                        <Label x:Name="PlanetPopulationValue" Content="" Margin="65,60,0,0"/>
+                                    <Label x:Name="PlanetName" Content="Name:"/>
+                                    <Label x:Name="PlanetNameValue" Content="" Margin="40,0,0,0"/>
 
-                        <Label x:Name="PlanetType" Content="Type:" Margin="0,80,0,0"/>
-                        <Label x:Name="PlanetTypeValue" Content="" Margin="40,80,0,0"/>
-                    </Grid>
-                    <Button Content="Colonize planet" HorizontalAlignment="Left"
-                            Margin="190,120,0,0" VerticalAlignment="Top"
-                            Width="95" Click="ColonizePlanet_Click"
-                            Background="LightGray"/>
-                    <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
-                              HorizontalAlignment="Right" Margin="0,122,5,0"
-                              VerticalAlignment="Top" Height="20" Width="99"
-                              Checked="AutoColonizeCheckBox_Checked"
-                              Unchecked="AutoColonizeCheckBox_Unchecked"
-                              Indeterminate="AutoColonizeCheckBox_Unchecked"/>
-                    <Label x:Name="ColonizedPlanets" Content="Colonized planets:" HorizontalAlignment="Left"
-                           Margin="190,140,0,0" VerticalAlignment="Top"/>
-                    <Label x:Name="ColonizedPlanetsValue" Content="1" HorizontalAlignment="Left"
-                           Margin="290,140,0,0" VerticalAlignment="Top"/>
-                    <Label x:Name="OwnedPlanets" Content="Owned planets:" HorizontalAlignment="Left"
-                           Margin="190,160,0,0" VerticalAlignment="Top"/>
-                    <Label x:Name="OwnedPlanetsValue" Content="8" HorizontalAlignment="Left"
-                           Margin="290,160,0,0" VerticalAlignment="Top"/>
+                                    <Label x:Name="PlanetRadius" Content="Radius:" Margin="0,20,0,0"/>
+                                    <Label x:Name="PlanetRadiusValue" Content="" Margin="40,20,0,0"/>
 
+                                    <Label x:Name="PlanetArea" Content="Area:" Margin="0,40,0,0"/>
+                                    <Label x:Name="PlanetAreaValue" Content="" Margin="40,40,0,0"/>
+
+                                    <Label x:Name="PlanetPopulation" Content="Population:" Margin="0,60,0,0"/>
+                                    <Label x:Name="PlanetPopulationValue" Content="" Margin="65,60,0,0"/>
+
+                                    <Label x:Name="PlanetType" Content="Type:" Margin="0,80,0,0"/>
+                                    <Label x:Name="PlanetTypeValue" Content="" Margin="40,80,0,0"/>
+                                </Grid>
+                                <Button Content="Colonize planet" HorizontalAlignment="Left"
+                                        Margin="190,120,0,0" VerticalAlignment="Top"
+                                        Width="95" Click="ColonizePlanet_Click"
+                                        Background="LightGray"/>
+                                <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
+                                          HorizontalAlignment="Right" Margin="0,122,5,0"
+                                          VerticalAlignment="Top" Height="20" Width="99"
+                                          Checked="AutoColonizeCheckBox_Checked"
+                                          Unchecked="AutoColonizeCheckBox_Unchecked"
+                                          Indeterminate="AutoColonizeCheckBox_Unchecked"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Stars" Width="100" HorizontalAlignment="Right">
+                            <Grid Background="#FFE5E5E5">
+                                <ListBox x:Name="SystemStarsListBox"
+                                         HorizontalAlignment="Left" Height="300"
+                                         Margin="0,0,0,-28"
+                                         VerticalAlignment="Top" Width="180"
+                                         RenderTransformOrigin="-1.7,-0.21"
+                                         ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                         MouseLeftButtonUp="PlayerStarsTree_MouseLeftButtonUp">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Name}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <Grid Height="90" Width="200"
+                                      HorizontalAlignment="Right" VerticalAlignment="Top"
+                                      Margin="0,5,5,0" Background="Azure">
+                                    <Border BorderBrush="Black" BorderThickness="1"/>
+
+                                    <Label x:Name="StarName" Content="Name:"/>
+                                    <Label x:Name="StarNameValue" Content="" Margin="40,0,0,0"/>
+
+                                    <Label x:Name="StarRadius" Content="Radius:" Margin="0,20,0,0"/>
+                                    <Label x:Name="StarRadiusValue" Content="" Margin="40,20,0,0"/>
+
+                                    <Label x:Name="StarArea" Content="Area:" Margin="0,40,0,0"/>
+                                    <Label x:Name="StarAreaValue" Content="" Margin="40,40,0,0"/>
+
+                                    <Label x:Name="StarType" Content="Type:" Margin="0,60,0,0"/>
+                                    <Label x:Name="StarTypeValue" Content="" Margin="40,60,0,0"/>
+                                </Grid>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
                 </Grid>
             </TabItem>
-            <TabItem Header="Stars" Width="100" HorizontalAlignment="Right">
-                <Grid Background="#FFE5E5E5">
-                    <TreeView x:Name="PlayerStarsTree"
-                  HorizontalAlignment="Left" Height="340"
-                  Margin="0,0,0,-28"
-                  VerticalAlignment="Top" Width="180"
-                  RenderTransformOrigin="-1.7,-0.21"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible"
-                  MouseLeftButtonUp="PlayerStarsTree_MouseLeftButtonUp">
-                        <TreeView.ItemTemplate>
-                            <HierarchicalDataTemplate DataType="{x:Type celestial:StarSystem}" ItemsSource="{Binding SystemStars}">
-                                <Label Content="{Binding Name}"/>
-                            </HierarchicalDataTemplate>
-                        </TreeView.ItemTemplate>
-                    </TreeView>
-                    <Grid Height="90" Width="200"
-                          HorizontalAlignment="Right" VerticalAlignment="Top"
-                          Margin="0,5,5,0" Background="Azure">
-                        <Border BorderBrush="Black" BorderThickness="1"/>
+            <TabItem Header="Info" Width="100">
+                <Grid>
+                    <Label x:Name="ColonizedPlanets" Content="Colonized planets:"
+                           HorizontalAlignment="Left"
+                           Margin="5,5,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="ColonizedPlanetsValue" Content="1"
+                           HorizontalAlignment="Left"
+                           Margin="105,5,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="OwnedPlanets" Content="Owned planets:"
+                           HorizontalAlignment="Left"
+                           Margin="5,25,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="OwnedPlanetsValue" Content="8"
+                           HorizontalAlignment="Left"
+                           Margin="105,25,0,0" VerticalAlignment="Top"/>
 
-                        <Label x:Name="StarName" Content="Name:"/>
-                        <Label x:Name="StarNameValue" Content="" Margin="40,0,0,0"/>
-
-                        <Label x:Name="StarRadius" Content="Radius:" Margin="0,20,0,0"/>
-                        <Label x:Name="StarRadiusValue" Content="" Margin="40,20,0,0"/>
-
-                        <Label x:Name="StarArea" Content="Area:" Margin="0,40,0,0"/>
-                        <Label x:Name="StarAreaValue" Content="" Margin="40,40,0,0"/>
-
-                        <Label x:Name="StarType" Content="Type:" Margin="0,60,0,0"/>
-                        <Label x:Name="StarTypeValue" Content="" Margin="40,60,0,0"/>
-                    </Grid>
-                    <Label x:Name="OwnedStars" Content="Owned stars:" HorizontalAlignment="Left"
-                           Margin="190,100,0,0" VerticalAlignment="Top"/>
-                    <Label x:Name="OwnedStarsValue" Content="1" HorizontalAlignment="Left"
-                           Margin="260,100,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="OwnedStars" Content="Owned stars:"
+                           HorizontalAlignment="Left"
+                           Margin="5,55,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="OwnedStarsValue" Content="1"
+                           HorizontalAlignment="Left"
+                           Margin="105,55,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
         </TabControl>

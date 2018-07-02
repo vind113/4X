@@ -6,33 +6,68 @@
         xmlns:local="clr-namespace:WpfTest"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <DockPanel>
         <TreeView x:Name="PlayerSystemsTree"
                   HorizontalAlignment="Left" Height="370"
                   Margin="5,5,0,0"
                   VerticalAlignment="Top" Width="165"
-                  RenderTransformOrigin="-1.7,-0.21"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible">
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  DockPanel.Dock="Left">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type local:Family}" ItemsSource="{Binding Members}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" />
-                        <TextBlock Text=" [" Foreground="Blue" />
-                        <TextBlock Text="{Binding Members.Count}" Foreground="Blue" />
-                        <TextBlock Text="]" Foreground="Blue" />
-                    </StackPanel>
+                    <Label>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Text=" [" Foreground="Blue" />
+                            <TextBlock Text="{Binding Members.Count}" Foreground="Blue" />
+                            <TextBlock Text="]" Foreground="Blue" />
+                        </StackPanel>
+                    </Label>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type local:FamilyMember}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" />
-                        <TextBlock Text=" (" Foreground="Green" />
-                        <TextBlock Text="{Binding Age}" Foreground="Green" />
-                        <TextBlock Text=" years)" Foreground="Green" />
-                    </StackPanel>
+                    <Label>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Text=" (" Foreground="Green" />
+                            <TextBlock Text="{Binding Age}" Foreground="Green" />
+                            <TextBlock Text=" years)" Foreground="Green" />
+                        </StackPanel>
+                    </Label>
                 </DataTemplate>
             </TreeView.Resources>
         </TreeView>
-        <Button Content="New Node" HorizontalAlignment="Left" Margin="706,388,0,0" VerticalAlignment="Top" Width="75" Click="TestButton_Click"/>
-        <Button Content="Get obj" HorizontalAlignment="Left" Margin="706,350,0,0" VerticalAlignment="Top" Width="75" Click="GetObjButton_Click"/>
-    </Grid>
+        <Button Content="New Node" HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                DockPanel.Dock="Bottom"
+                Width="75" Click="TestButton_Click"/>
+        <Button Content="Get obj" HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                DockPanel.Dock="Bottom"
+                Width="75" Click="GetObjButton_Click"/>
+        <Button HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                HorizontalContentAlignment="Left"
+                DockPanel.Dock="Bottom"
+                Width="75" Click="MinimizeButton_Click">
+            <StackPanel Orientation="Horizontal">
+                <Ellipse Fill="Red" Width="25" Height="25"/>
+                <Label Content = "OK!"/>
+            </StackPanel>
+        </Button>
+        <Button Content="Close" 
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                HorizontalContentAlignment="Left"
+                DockPanel.Dock="Bottom"
+                Width="75"
+                Click="CloseButton_Click"/>
+        <Button x:Name="ButtonInfo" Content="Info"
+                Height="40" Width="75"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right"
+                DockPanel.Dock="Top"/>
+        <DataGrid x:Name="PersonDataGrid"
+                  Height="280" VerticalAlignment="Top"
+                  Width="270" HorizontalAlignment="Left"/>
+    </DockPanel>
 </Window>
