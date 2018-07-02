@@ -29,7 +29,27 @@ namespace _4XGame {
             InitializeComponent();
             SetItemsSource();
 
+            this.Title = "4X Game";
+
+            InitializeSystemsGrid();
+
             RefreshGUI();
+        }
+
+        private void InitializeSystemsGrid() {
+            AddColumn("Name", "Name");
+            AddColumn("StarsCount", "Stars");
+            AddColumn("PlanetsCount", "Planets");
+            AddColumn("ColonizedCount", "Colonized");
+            AddColumn("SystemPopulation", "Population");
+        }
+
+        private void AddColumn(string path, string columnName) {
+            DataGridTextColumn column = new DataGridTextColumn();
+            Binding binding = new Binding(path);
+            column.Binding = binding;
+            column.Header = columnName;
+            SystemsGrid.Columns.Add(column);
         }
 
         private void SetItemsSource() {
@@ -117,11 +137,17 @@ namespace _4XGame {
             RefreshGUI();
         }
 
-        private void NextHunderedTurnButton_Click(object sender, RoutedEventArgs e) {
-            for (int i = 0; i < 100; i++) {
+        private void NextNTurnButton_Click(object sender, RoutedEventArgs e) {
+            int turns = 0;
+            if (!Int32.TryParse(TurnsNumberTextBox.Text, out turns)) {
+                TurnsNumberTextBox.Text = String.Empty;
+                return;
+            }
+            for (int i = 0; i < turns; i++) {
                 Game.NextTurn();
             }
             RefreshGUI();
+            //Console.Beep();
         }
         #endregion
 
@@ -136,10 +162,6 @@ namespace _4XGame {
             if(sender != null && sender is Label valueLabel) {
                 MessageBox.Show(HelperConvertFunctions.NumberToString(Game.Player.TotalPopulation), valueLabel.Name);
             }
-        }
-
-        private void UpdateSystemsGrid_Click(object sender, RoutedEventArgs e) {
-            SystemsGrid.Items.Refresh();
         }
 
         private void SystemsGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
