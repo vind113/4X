@@ -121,7 +121,7 @@ namespace ConsoleTestProject {
         static void CreateHabitablePlanets() {
             List<Planet> planets = new List<Planet>();
             for (int index = 0; index < 100_000; index++) {
-                StarSystem.GenerateHabitablePlanets("ABC", planets, 0);
+                StarSystem.GenerateHabitablePlanet("ABC", planets, 0);
             }
 
             int continentalCount = 0;

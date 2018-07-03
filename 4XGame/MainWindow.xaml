@@ -188,6 +188,23 @@
                     <Label x:Name="OwnedStarsValue" Content="1"
                            HorizontalAlignment="Left"
                            Margin="105,55,0,0" VerticalAlignment="Top"/>
+
+                    <Label x:Name="OwnedSystmesLabel" Content="Owned sytems"
+                           HorizontalAlignment="Left"
+                           Margin="5,85,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="OwnedSystemsValueLabel" Content="1"
+                           HorizontalAlignment="Left"
+                           Margin="105,85,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Debug Info" Width="100">
+                <Grid>
+                    <Label x:Name="ElapsedTurnTimeLabel" Content="Elapsed: "
+                           HorizontalAlignment="Left"
+                           Margin="5,5,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="ElapsedTurnTimeValueLabel" Content=""
+                           HorizontalAlignment="Left"
+                           Margin="65,5,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
         </TabControl>

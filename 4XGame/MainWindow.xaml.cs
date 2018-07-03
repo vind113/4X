@@ -15,10 +15,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+
 using Logic.GameClasses;
 using Logic.PlayerClasses;
 using Logic.Space_Objects;
 using Logic.SupportClasses;
+using System.Diagnostics;
 
 namespace _4XGame {
     /// <summary>
@@ -73,6 +75,7 @@ namespace _4XGame {
             RefreshColonizedPlanetsValueLabel();
             RefreshOwnedPlanetsValueLabel();
             RefreshOwnedStarsValueLabel();
+            RefreshOwnedSystemsValueLabel();
 
             TurnLabelValue.Content = Game.GameTurn;
             DateLabelValue.Content = Game.GameDate;
@@ -108,6 +111,10 @@ namespace _4XGame {
         #endregion
 
         #region Refresh Info Tab
+        private void RefreshOwnedSystemsValueLabel() {
+            OwnedSystemsValueLabel.Content = Game.Player.StarSystems.Count;
+        }
+
         private void RefreshColonizedPlanetsValueLabel() {
             ColonizedPlanetsValue.Content = Game.Player.ColonizedPlanets;
         }
@@ -138,6 +145,8 @@ namespace _4XGame {
         }
 
         private void NextNTurnButton_Click(object sender, RoutedEventArgs e) {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             int turns = 0;
             if (!Int32.TryParse(TurnsNumberTextBox.Text, out turns)) {
                 TurnsNumberTextBox.Text = String.Empty;
@@ -147,6 +156,10 @@ namespace _4XGame {
                 Game.NextTurn();
             }
             RefreshGUI();
+
+            stopwatch.Stop();
+            ElapsedTurnTimeValueLabel.Content = stopwatch.Elapsed;
+
             //Console.Beep();
         }
         #endregion

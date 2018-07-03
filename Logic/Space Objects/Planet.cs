@@ -199,10 +199,9 @@ namespace Logic.Space_Objects {
 
         #region Next turn functions 
         private void AddPopulation() {
-
-            double partOfGrowth = 5_000d;
-
             if (this.Population > 0) {
+                double partOfGrowth = 10_000d;
+
                 double growthCoef = (this.MaximumPopulation / this.Population) / (partOfGrowth);
 
                 double newPopulation =

@@ -72,7 +72,7 @@ namespace Logic.Space_Objects {
 
             planets.Add(new Planet("Mercury", 2440, PlanetTypeValue.Barren, 0d));
             planets.Add(new Planet("Venus", 6051, PlanetTypeValue.Barren, 0d));
-            planets.Add(new Planet("Earth", 6371, PlanetTypeValue.Continental, 7_500_000_000d));
+            planets.Add(new Planet("Earth", 6371, PlanetTypeValue.Continental, 12_500_000_000d));
             planets.Add(new Planet("Mars", 3389, PlanetTypeValue.Desert, 0d));
 
             planets.Add(new Planet("Jupiter", 71_492, PlanetTypeValue.GasGiant, 0d));
@@ -89,66 +89,104 @@ namespace Logic.Space_Objects {
 
         #region Generate Star System
         public static StarSystem GenerateSystem(string name) {
-            List<Star> stars = new List<Star>();
-            List<Planet> planets = new List<Planet>();
 
-            int planetCount = 0;
+            List<Star> stars = GenerateSystemStars(name);
 
-            stars.Add(Star.GenerateStar($"{name} Sun"));
-
-            int barrenCount = HelperRandomFunctions.GetRandomInt(0, 5);
-            for (int index = 0; index < barrenCount; index++) {
-                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Barren));
-                planetCount++;
-            }
-
-            LuminosityClass systemStarClass = stars[0].LumClass;
-
-            if(systemStarClass == LuminosityClass.G 
-            || systemStarClass == LuminosityClass.K
-            || systemStarClass == LuminosityClass.F) {
-
-                int habitablePlanetCount = HelperRandomFunctions.GetRandomInt(0, 2);
-                for (int index = 0; index < habitablePlanetCount; index++) {
-                    GenerateHabitablePlanets(name, planets, planetCount);
-                    planetCount++;
-                }
-            }
-
-            int gasGiantCount = HelperRandomFunctions.GetRandomInt(0, 7);
-            for (int index = 0; index < gasGiantCount; index++) {
-                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.GasGiant));
-                planetCount++;
-            }
+            List<Planet> planets = GenerateSystemPlanets(name, stars);
 
             return new StarSystem(name, stars, planets);
         }
 
-        public static void GenerateHabitablePlanets(string name, List<Planet> planets, int planetCount) {
+        private static List<Star> GenerateSystemStars(string name) {
+            List<Star> stars = new List<Star>();
+            int starsCount = 0;
+            int probabilityIndex = HelperRandomFunctions.GetRandomInt(1, 101);
+
+            if (probabilityIndex < 55) {
+                starsCount = 1;
+            }
+            else if (probabilityIndex < 100) {
+                starsCount = 2;
+            }
+            else {
+                starsCount = 3;
+            }
+
+            for (int index = 0; index < starsCount; index++) {
+                stars.Add(Star.GenerateStar($"{name} Sun-{index+1}"));
+            }
+            
+            return stars;
+        }
+
+        private static List<Planet> GenerateSystemPlanets(string name, List<Star> stars) {
+            List<Planet> planets = new List<Planet>();
+
+            int planetCount = 0;
+
+            GenerateBarrenPlanets(name, ref planetCount, planets);
+            GenerateHabitablePlanets(name, ref planetCount, stars, planets);
+            GenerateGasGiantPlanets(name, ref planetCount, planets);
+
+            return planets;
+        }
+
+        private static void GenerateBarrenPlanets(string name, ref int planetCount, List<Planet> planets) {
+            int barrenCount = HelperRandomFunctions.GetRandomInt(0, 5);
+            for (int index = 0; index < barrenCount; index++) {
+                planets.Add(Planet.GeneratePlanet($"{name}-{planetCount}", PlanetTypeValue.Barren));
+                planetCount++;
+            }
+        }
+
+        private static void GenerateHabitablePlanets(string name, ref int planetCount, List<Star> stars, List<Planet> planets) {
+            LuminosityClass systemStarClass = stars[0].LumClass;
+
+            if (systemStarClass == LuminosityClass.G
+             || systemStarClass == LuminosityClass.K
+             || systemStarClass == LuminosityClass.F) {
+
+                int habitablePlanetCount = HelperRandomFunctions.GetRandomInt(0, 2);
+                for (int index = 0; index < habitablePlanetCount; index++) {
+                    GenerateHabitablePlanet(name, planets, planetCount);
+                    planetCount++;
+                }
+            }
+        }
+
+        public static void GenerateHabitablePlanet(string name, List<Planet> planets, int planetCount) {
             int probabilityIndex = HelperRandomFunctions.GetRandomInt(1, 101);
 
             if (probabilityIndex <= 30) {
-                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Continental));
+                planets.Add(Planet.GeneratePlanet($"{name}-{planetCount}", PlanetTypeValue.Continental));
 
             }
             else if (probabilityIndex <= 50) {
-                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Tundra));
+                planets.Add(Planet.GeneratePlanet($"{name}-{planetCount}", PlanetTypeValue.Tundra));
 
             }
             else if (probabilityIndex <= 70) {
-                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Ocean));
+                planets.Add(Planet.GeneratePlanet($"{name}-{planetCount}", PlanetTypeValue.Ocean));
 
             }
             else if (probabilityIndex <= 80) {
-                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Paradise));
+                planets.Add(Planet.GeneratePlanet($"{name}-{planetCount}", PlanetTypeValue.Paradise));
 
             }
             else if (probabilityIndex <= 90) {
-                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Tropical));
+                planets.Add(Planet.GeneratePlanet($"{name}-{planetCount}", PlanetTypeValue.Tropical));
 
             }
             else {
-                planets.Add(Planet.GeneratePlanet($"{name} {planetCount}", PlanetTypeValue.Desert));
+                planets.Add(Planet.GeneratePlanet($"{name}-{planetCount}", PlanetTypeValue.Desert));
+            }
+        }
+
+        private static void GenerateGasGiantPlanets(string name, ref int planetCount, List<Planet> planets) {
+            int gasGiantCount = HelperRandomFunctions.GetRandomInt(0, 7);
+            for (int index = 0; index < gasGiantCount; index++) {
+                planets.Add(Planet.GeneratePlanet($"{name}-{planetCount}", PlanetTypeValue.GasGiant));
+                planetCount++;
             }
         }
         #endregion
