@@ -48,7 +48,7 @@
                 VerticalAlignment="Bottom"
                 HorizontalContentAlignment="Left"
                 DockPanel.Dock="Bottom"
-                Width="75" Click="MinimizeButton_Click">
+                Width="75" Click="InactiveButton_Click">
             <StackPanel Orientation="Horizontal">
                 <Ellipse Fill="Red" Width="25" Height="25"/>
                 <Label Content = "OK!"/>

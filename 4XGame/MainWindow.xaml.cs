@@ -106,6 +106,10 @@ namespace _4XGame {
                 PlanetAreaValue.Content = $"{planet.Area:E4} km^2";
                 PlanetPopulationValue.Content = $"{planet.Population:E5}";
                 PlanetTypeValue.Content = planet.Type.Name;
+
+                PlanetHydrogenValueLabel.Content = $"{planet.BodyResourse.Hydrogen:E4} t";
+                PlanetCommonMetalsValueLabel.Content = $"{planet.BodyResourse.CommonMetals:E4} t";
+                PlanetRareMetalsValueLabel.Content = $"{planet.BodyResourse.RareEarthElements:E4} t";
             }
         }
         #endregion
@@ -146,21 +150,37 @@ namespace _4XGame {
 
         private void NextNTurnButton_Click(object sender, RoutedEventArgs e) {
             Stopwatch stopwatch = Stopwatch.StartNew();
+            DisableUI();
+
+            TurnsProgressBar.Value = 0;
 
             int turns = 0;
             if (!Int32.TryParse(TurnsNumberTextBox.Text, out turns)) {
                 TurnsNumberTextBox.Text = String.Empty;
                 return;
             }
+
+            TurnsProgressBar.Maximum = turns;
             for (int i = 0; i < turns; i++) {
                 Game.NextTurn();
+                Dispatcher.Invoke(new Action(() => { TurnsProgressBar.Value++; }), DispatcherPriority.Background);
             }
+
             RefreshGUI();
+            EnableUI();
 
             stopwatch.Stop();
             ElapsedTurnTimeValueLabel.Content = stopwatch.Elapsed;
 
             //Console.Beep();
+        }
+
+        private void DisableUI() {
+            this.IsEnabled = false;
+        }
+
+        private void EnableUI() {
+            this.IsEnabled = true;
         }
         #endregion
 

@@ -3,6 +3,7 @@
 using Logic.SupportClasses;
 using Logic.PlayerClasses;
 using System.Collections.Generic;
+using Logic.Resourse;
 
 namespace Logic.Space_Objects {
     public struct PlanetType {
@@ -100,6 +101,14 @@ namespace Logic.Space_Objects {
             this.availableSites = this.buildingSites;
            
             this.population = Math.Floor(population);
+
+            this.BodyResourse = GetPlanetResourses();
+        }
+
+        private Resourses GetPlanetResourses() {
+            Resourses planetResourses = new Resourses(5E10, 2E9, 0);
+
+            return planetResourses;
         }
 
         /// <summary>
@@ -136,6 +145,16 @@ namespace Logic.Space_Objects {
         public PlanetType Type { get => this.type; }
 
         #region Planet Generation
+        /// <summary>
+        ///     Генерирует планету с заданым именем и типом
+        /// </summary>
+        /// <param name="name">
+        ///     Имя планеты
+        /// </param>
+        /// <param name="planetType">
+        ///     Тип планеты(пустынная, океаническая, газовый гигант и т.д)
+        /// </param>
+        /// <returns></returns>
         public static Planet GeneratePlanet(string name, PlanetTypeValue planetType) {
             string planetName = name;
             double population = 0;
@@ -190,14 +209,20 @@ namespace Logic.Space_Objects {
                 $"We can build {this.buildingSites} buildings here. ";
         }
 
+        #region Next turn functions
+        /// <summary>
+        ///     Выполняет все операции для перехода на следующий ход
+        /// </summary>
+        /// <param name="player">
+        ///     Игрок, которому принадлежит планета
+        /// </param>
         public void NextTurn(Player player) {
             AddPopulation();
 
             CitizensToTheHub(player);
             CitizensFromTheHub(player);
         }
-
-        #region Next turn functions 
+ 
         private void AddPopulation() {
             if (this.Population > 0) {
                 double partOfGrowth = 10_000d;
@@ -213,47 +238,56 @@ namespace Logic.Space_Objects {
         }
 
         private void CitizensToTheHub(Player player) {
-            if (this.Population > 0) {
-                double citizensToHubExpected = Math.Floor(this.Population * 0.002);
-
-                double citizensToHub =
-                    Math.Ceiling(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
-
-                bool canTravelFromPlanet = citizensToHub < this.Population;
-                bool canTravelToHub =
-                    (player.PlayerCitizenHub.CitizensInHub + citizensToHub) < player.PlayerCitizenHub.MaximumCount;
-
-                if (canTravelFromPlanet && canTravelToHub) {
-                    this.Population -= citizensToHub;
-                    player.PlayerCitizenHub.CitizensInHub += citizensToHub;
-                }
+            if (this.Population <= 0) {
+                return;
             }
+
+            double citizensToHubExpected = Math.Floor(this.Population * 0.002);
+
+            double citizensToHub =
+                Math.Ceiling(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
+
+            bool canTravelFromPlanet = citizensToHub < this.Population;
+            bool canTravelToHub =
+                (player.PlayerCitizenHub.CitizensInHub + citizensToHub) < player.PlayerCitizenHub.MaximumCount;
+
+            if (canTravelFromPlanet && canTravelToHub) {
+                this.Population -= citizensToHub;
+                player.PlayerCitizenHub.CitizensInHub += citizensToHub;
+            }      
         }
 
         private void CitizensFromTheHub(Player player) {
-            if (this.Population > 0) {
-                double citizensFromHub =
-                    Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
+            if (this.Population <= 0) {
+                return;
+            }
 
-                bool canTravelToPlanet = (this.Population + citizensFromHub) < this.MaximumPopulation;
-                bool canTravelFromHub = citizensFromHub < player.PlayerCitizenHub.CitizensInHub;
+            double citizensFromHub =
+                Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
 
-                if (canTravelToPlanet && canTravelFromHub) {
-                    player.PlayerCitizenHub.CitizensInHub -= citizensFromHub;
-                    this.Population += citizensFromHub;
-                }
+            bool canTravelToPlanet = (this.Population + citizensFromHub) < this.MaximumPopulation;
+            bool canTravelFromHub = citizensFromHub < player.PlayerCitizenHub.CitizensInHub;
+
+            if (canTravelToPlanet && canTravelFromHub) {
+                player.PlayerCitizenHub.CitizensInHub -= citizensFromHub;
+                this.Population += citizensFromHub;
             }
         }
         #endregion
 
+        /// <summary>
+        ///     Выполняет все операции для колонизации планеты(при соблюдении необходимых условий)
+        /// </summary>
+        /// <param name="player">
+        ///     Игрок, который колонизирует планету
+        /// </param>
         public void Colonize(Player player) {
             double colonizers = 10_000_000;
-            if (this.Population == 0) {
-                this.Population += colonizers;
 
-                if (this.Population > 0) {
-                    player.ColonizedPlanets++;
-                }
+            if (this.Population == 0 && this.MaximumPopulation > colonizers) {
+
+                this.Population += colonizers;
+                player.ColonizedPlanets++;
             }
         }
     }

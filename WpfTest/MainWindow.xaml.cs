@@ -54,12 +54,6 @@ namespace WpfTest {
             MessageBox.Show((PersonDataGrid.SelectedItem is Family).ToString());
         }
 
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e) {
-            foreach (Window window in Application.Current.Windows) {
-                window.WindowState = WindowState.Minimized;
-            }
-        }
-
         private void MainWindow_Closing(object sender, CancelEventArgs e) {
             string message = "Do you really want to close the program?";
 
@@ -87,6 +81,10 @@ namespace WpfTest {
         private void MainWindow_KeyDown(object sender, KeyEventArgs e) {
             //  Отобразить  на  кнопке  нажатую  клавишу.
             ButtonInfo.Content = e.Key.ToString();
+        }
+
+        private void InactiveButton_Click(object sender, RoutedEventArgs e) {
+
         }
     }
 
