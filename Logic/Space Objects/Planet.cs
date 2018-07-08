@@ -34,10 +34,10 @@ namespace Logic.Space_Objects {
         static Dictionary<PlanetTypeValue, PlanetType> planetTypes = new Dictionary<PlanetTypeValue, PlanetType>();
 
         static PlanetTypeContainer() {
-            planetTypes.Add(PlanetTypeValue.Continental, new PlanetType(100, "Continental"));
+            planetTypes.Add(PlanetTypeValue.Continental, new PlanetType(90, "Continental"));
             planetTypes.Add(PlanetTypeValue.Barren, new PlanetType(0, "Barren"));
             planetTypes.Add(PlanetTypeValue.Desert, new PlanetType(30, "Desert"));
-            planetTypes.Add(PlanetTypeValue.Paradise, new PlanetType(200, "Paradise"));
+            planetTypes.Add(PlanetTypeValue.Paradise, new PlanetType(150, "Paradise"));
             planetTypes.Add(PlanetTypeValue.Ocean, new PlanetType(50, "Ocean"));
             planetTypes.Add(PlanetTypeValue.GasGiant, new PlanetType(0, "Gas giant"));
             planetTypes.Add(PlanetTypeValue.IceWorld, new PlanetType(0, "Ice world"));
@@ -92,8 +92,12 @@ namespace Logic.Space_Objects {
         public Planet(string name, double radius, PlanetTypeValue type, double population) {
             this.name = name;
             this.radius = radius;
-            this.type = PlanetTypeContainer.GetPlanetType(type);
-            this.area = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
+
+            PlanetType planetType = PlanetTypeContainer.GetPlanetType(type);
+            this.type = planetType;
+
+            double planetArea = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
+            this.area = planetArea;
 
             this.maximumPopulation = (double)this.type.Quality * this.area;
 
@@ -102,11 +106,21 @@ namespace Logic.Space_Objects {
            
             this.population = Math.Floor(population);
 
-            this.BodyResourse = GetPlanetResourses();
+            this.BodyResourse = GetPlanetResourses(planetType, planetArea);
         }
 
-        private Resourses GetPlanetResourses() {
-            Resourses planetResourses = new Resourses(5E10, 2E9, 0);
+        private Resourses GetPlanetResourses(PlanetType planetType, double planetArea) {
+            double commonMetals = 0;
+            double rareEarthElements = 0;
+            double hydrogen = 0;
+
+            if(planetType.Name != "Gas giant") {
+                commonMetals = HelperRandomFunctions.GetRandomInt(70, 130) * planetArea * 10;
+                rareEarthElements = (HelperRandomFunctions.GetRandomInt(90, 110) * planetArea) / 2;
+                hydrogen = (HelperRandomFunctions.GetRandomInt(70, 100) * planetArea) / 10;
+            }
+
+            Resourses planetResourses = new Resourses(hydrogen, commonMetals, rareEarthElements);
 
             return planetResourses;
         }
@@ -221,24 +235,28 @@ namespace Logic.Space_Objects {
 
             CitizensToTheHub(player);
             CitizensFromTheHub(player);
+
+            ExtractResourses(player);
         }
- 
+
         private void AddPopulation() {
-            if (this.Population > 0) {
-                double partOfGrowth = 10_000d;
-
-                double growthCoef = (this.MaximumPopulation / this.Population) / (partOfGrowth);
-
-                double newPopulation =
-                    HelperRandomFunctions.GetRandomDouble() * growthCoef * ((double)this.Type.Quality/100d) * this.population;
-
-                newPopulation = Math.Ceiling(newPopulation);
-                this.Population += newPopulation;
+            if (this.Population == 0) {
+                return;
             }
+
+            double partOfGrowth = 10_000d;
+
+            double growthCoef = (this.MaximumPopulation / this.Population) / (partOfGrowth);
+
+            double newPopulation =
+                HelperRandomFunctions.GetRandomDouble() * growthCoef * ((double)this.Type.Quality / 100d) * this.population;
+
+            newPopulation = Math.Ceiling(newPopulation);
+            this.Population += newPopulation;
         }
 
         private void CitizensToTheHub(Player player) {
-            if (this.Population <= 0) {
+            if (this.Population == 0) {
                 return;
             }
 
@@ -258,7 +276,7 @@ namespace Logic.Space_Objects {
         }
 
         private void CitizensFromTheHub(Player player) {
-            if (this.Population <= 0) {
+            if (this.Population == 0) {
                 return;
             }
 
@@ -272,6 +290,58 @@ namespace Logic.Space_Objects {
                 player.PlayerCitizenHub.CitizensInHub -= citizensFromHub;
                 this.Population += citizensFromHub;
             }
+        }
+
+        private void ExtractResourses(Player player) {
+            if (this.Population == 0) {
+                return;
+            }
+
+            double partOfExtraction = (double)HelperRandomFunctions.GetRandomInt(1, 5) / 3;
+
+            //желаемое количество ходов до истощения ресурса
+            double turnsToDepletion = 3000;
+
+            //сложность добычи в зависимости от типа планеты
+            double miningDifficulty = (double)this.Type.Quality / 100;
+
+            //конечный коефициент добычи
+            double miningCoef = miningDifficulty * partOfExtraction / turnsToDepletion;
+
+            var resultTuple =
+               this.ExtractResourse(miningCoef, this.BodyResourse.Hydrogen, player.PlayerResourses.Hydrogen);
+            this.BodyResourse.Hydrogen = resultTuple.Item1;
+            player.PlayerResourses.Hydrogen = resultTuple.Item2;
+
+            resultTuple =
+                this.ExtractResourse(miningCoef, this.BodyResourse.CommonMetals, player.PlayerResourses.CommonMetals);
+            this.BodyResourse.CommonMetals = resultTuple.Item1;
+            player.PlayerResourses.CommonMetals = resultTuple.Item2;
+
+            resultTuple =
+                this.ExtractResourse(miningCoef, this.BodyResourse.RareEarthElements, player.PlayerResourses.RareEarthElements);
+            this.BodyResourse.RareEarthElements = resultTuple.Item1;
+            player.PlayerResourses.RareEarthElements = resultTuple.Item2;
+        }
+
+        private Tuple<double, double> ExtractResourse(double miningCoef, double resourseOnPlanet, double resourseInPosession) {
+            if (resourseOnPlanet <= 0) {
+                return new Tuple<double, double>(0, resourseInPosession);
+            }
+
+            double resourseExtracted = 0;
+            resourseExtracted = resourseOnPlanet * miningCoef;
+
+            if (resourseExtracted <= resourseOnPlanet && resourseExtracted > 1E5) {
+                resourseInPosession += resourseExtracted;
+                resourseOnPlanet -= resourseExtracted;
+            }
+            else {
+                resourseInPosession += resourseOnPlanet;
+                resourseOnPlanet = 0;
+            }
+
+            return new Tuple<double, double>(resourseOnPlanet, resourseInPosession);
         }
         #endregion
 

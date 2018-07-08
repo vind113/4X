@@ -1,5 +1,5 @@
 ﻿namespace Logic.Resourse {
-    public struct Resourses {
+    public class Resourses {
         double hydrogen;
         double commonMetals;
         double rareEarthElements;

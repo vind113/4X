@@ -8,28 +8,6 @@ using Logic.Space_Objects;
 namespace UnitTest4X {
     [TestFixture]
     public class UnitTest1 {
-        #region Next Turn
-        [TestCase]
-        public void NextTurn_PassTurn_DateIsCorrect() {
-            Game.ResetDate();
-            int months = 120000;
-            for (int index = 0; index < months; index++) {
-                Game.NextTurn();
-            }
-            Assert.AreEqual("1.12500", Game.GameDate);
-        }
-
-        [TestCase]
-        public void NextTurn_PassTurn_TurnIsCorrect() {
-            Game.ResetDate();
-            int months = 120;
-            for (int index = 1; index < months; index++) {
-                Game.NextTurn();
-            }
-            Assert.AreEqual(months, Game.GameTurn);
-        }
-        #endregion
-
         #region Citizen Hub People Property
         [TestCase]
         public void CitizenHubProperty_CorrectNumber_ValueIsSet() {
@@ -159,6 +137,42 @@ namespace UnitTest4X {
         public void GetLuminosityClass_MClassPassed_StarIsMClass() {
             Star oStar = new Star("M star", 696_392d * 0.699, LuminosityClass.M);
             Assert.AreEqual(oStar.LumClass, LuminosityClass.M);
+        }
+        #endregion
+
+        #region Resourse extraction
+        [TestCase]
+        public void ExtractResourses_ResourseOnPlanetIsZero_TupleFirstElementIsZero() {
+            var resultTuple = Planet.ExtractResourse(0.1, 0, 1E5);
+            Assert.AreEqual(resultTuple.Item1, 0);
+        }
+
+        [TestCase]
+        public void ExtractResourses_ResourseOnPlanetLowerThanResourseExtractedAndExtractedResoursesLowerThanThreshold_TotalExtraction() {
+            var resultTuple = Planet.ExtractResourse(2, 1E4, 0);
+            Assert.AreEqual(0, resultTuple.Item1);
+            Assert.AreEqual(1E4, resultTuple.Item2);
+        }
+
+        [TestCase]
+        public void ExtractResourses_ResourseOnPlanetGreaterThanResourseExtractedAndExtractedResoursesLowerThanThreshold_TotalExtraction() {
+            var resultTuple = Planet.ExtractResourse(0.5, 1E4, 0);
+            Assert.AreEqual(0, resultTuple.Item1);
+            Assert.AreEqual(1E4, resultTuple.Item2);
+        }
+
+        [TestCase]
+        public void ExtractResourses_ResourseOnPlanetLowerThanResourseExtractedAndExtractedResoursesGreaterThanThreshold_TotalExtraction() {
+            var resultTuple = Planet.ExtractResourse(2, 1E6, 0);
+            Assert.AreEqual(0, resultTuple.Item1);
+            Assert.AreEqual(1E6, resultTuple.Item2);
+        }
+
+        [TestCase]
+        public void ExtractResourses_ResourseOnPlanetGreaterThanResourseExtractedAndExtractedResourseGreaterThreshold_UsualExtraction() {
+            var resultTuple = Planet.ExtractResourse(0.1, 1E7, 1E8);
+            Assert.AreEqual(resultTuple.Item1, 1E7 - 1E6);
+            Assert.AreEqual(resultTuple.Item2, 1E8 + 1E6);
         }
         #endregion
     }
