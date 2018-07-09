@@ -42,6 +42,7 @@ namespace _4XGame {
             AddColumn("Name", "Name");
             AddColumn("StarsCount", "Stars");
             AddColumn("PlanetsCount", "Planets");
+            AddColumn("HabitablePlanets", "Habitable");
             AddColumn("ColonizedCount", "Colonized");
             AddColumn("SystemPopulation", "Population");
         }

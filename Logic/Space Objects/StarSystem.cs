@@ -67,6 +67,18 @@ namespace Logic.Space_Objects {
             }
         }
 
+        public int HabitablePlanets {
+            get {
+                int habitableCount = 0;
+                foreach (var planet in this.SystemPlanets) {
+                    if (planet.MaximumPopulation > 0) {
+                        habitableCount++;
+                    }
+                }
+                return habitableCount;
+            }
+        }
+
         public static StarSystem GetSolarSystem() {
             List<Planet> planets = new List<Planet>();
 

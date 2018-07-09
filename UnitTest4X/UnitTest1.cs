@@ -140,7 +140,7 @@ namespace UnitTest4X {
         }
         #endregion
 
-        #region Resourse extraction
+        /*#region Resourse extraction
         [TestCase]
         public void ExtractResourses_ResourseOnPlanetIsZero_TupleFirstElementIsZero() {
             var resultTuple = Planet.ExtractResourse(0.1, 0, 1E5);
@@ -174,6 +174,6 @@ namespace UnitTest4X {
             Assert.AreEqual(resultTuple.Item1, 1E7 - 1E6);
             Assert.AreEqual(resultTuple.Item2, 1E8 + 1E6);
         }
-        #endregion
+        #endregion*/
     }
 }
