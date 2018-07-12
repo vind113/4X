@@ -7,6 +7,8 @@ using Logic.Resourse;
 
 namespace Logic.Space_Objects {
     public struct PlanetType {
+        private const int goodWorldQuality = 100;
+
         private int quality;
         private string name;
 
@@ -24,6 +26,8 @@ namespace Logic.Space_Objects {
             get => this.name;
             set => this.name = value;
         }
+
+        public static int GoodWorldQuality { get => goodWorldQuality; }
     }
 
     public enum PlanetTypeValue {
@@ -249,7 +253,7 @@ namespace Logic.Space_Objects {
             double growthCoef = (this.MaximumPopulation / this.Population) / (partOfGrowth);
 
             double newPopulation =
-                HelperRandomFunctions.GetRandomDouble() * growthCoef * ((double)this.Type.Quality / 100d) * this.population;
+                HelperRandomFunctions.GetRandomDouble() * growthCoef * ((double)this.Type.Quality / (double)PlanetType.GoodWorldQuality) * this.population;
 
             newPopulation = Math.Ceiling(newPopulation);
             this.Population += newPopulation;
@@ -303,7 +307,7 @@ namespace Logic.Space_Objects {
             double partOfExtraction = (double)HelperRandomFunctions.GetRandomInt(1, 5) / 3;
 
             double gameTurnsToDepletion = 3000;
-            double miningDifficulty = (double)this.Type.Quality / 100;
+            double miningDifficulty = (double)this.Type.Quality / (double)PlanetType.GoodWorldQuality;
 
             double miningCoef = miningDifficulty * partOfExtraction / gameTurnsToDepletion;
             ExtractAllRseourses(player, miningCoef);

@@ -6,39 +6,32 @@ using Logic.SupportClasses;
 using System;
 
 namespace Logic.GameClasses {
-    public static class Game {
-        private static Player player;
-        private static CurrentDate currentDate;
-        private static bool isAutoColonizationEnabled = false;
+    public class Game {
+        private Player player;
+        private CurrentDate currentDate;
+        private bool isAutoColonizationEnabled = false;
 
-        private static string lastGameMessage;
+        private string lastGameMessage;
 
-        static Game() {
+        public Game() {
             player = new Player();
             currentDate = new CurrentDate();
             player.StarSystems.Add(StarSystem.GetSolarSystem());
         }
 
         #region Properties
-        public static int GameTurn {
-            get => currentDate.Turn;
-        }
+        public int GameTurn { get => currentDate.Turn; }
+        public string GameDate { get => currentDate.Date; }
+        public Player Player { get => player; }
 
-        public static string GameDate {
-            get => currentDate.Date;
-        }
-
-        public static Player Player {
-            get => player;
-        }
-        public static bool IsAutoColonizationEnabled {
+        public bool IsAutoColonizationEnabled {
             get => isAutoColonizationEnabled;
             set => isAutoColonizationEnabled = value;
         }
         #endregion
 
         #region Next Turn Functionality
-        public static void NextTurn() {
+        public void NextTurn() {
             currentDate.NextTurn();
             DiscoverNewStarSystem();
 
@@ -48,7 +41,7 @@ namespace Logic.GameClasses {
             SetPlayerCitizenHubCapacity();
         }
 
-        private static void DiscoverNewStarSystem() {
+        private void DiscoverNewStarSystem() {
             //с такой вероятностью каждый ход будет открываться новая система
             //возможно добавить зависимость от уровня технологий
             //оптимальное значение - 0.15
@@ -80,7 +73,7 @@ namespace Logic.GameClasses {
             }
         }
 
-        private static void SetPlayerCitizenHubCapacity() {
+        private void SetPlayerCitizenHubCapacity() {
             double newHubCapacity = Math.Ceiling(player.TotalPopulation / 1000);
             
             if (newHubCapacity > player.PlayerCitizenHub.CitizensInHub) {
@@ -90,11 +83,11 @@ namespace Logic.GameClasses {
 
         #endregion
 
-        public static void ResetDate() {
+        public void ResetDate() {
             currentDate = new CurrentDate();
         }
 
-        public static void GameReInit() {
+        public void ResetGame() {
             player = new Player();
             currentDate = new CurrentDate();
         }

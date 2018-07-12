@@ -161,7 +161,8 @@
                                             <Label x:Name="PlanetRareMetalsLabel" Content="Rare metals:" Margin="0,140,0,0" VerticalAlignment="Top" Height="30"/>
                                             <Label x:Name="PlanetRareMetalsValueLabel" Content="" Margin="70,140,0,0" VerticalAlignment="Top" Height="30"/>
                                         </Grid>
-                                        <Button Content="Colonize planet" HorizontalAlignment="Left"
+                                        <Button x:Name="ColonizePlanetButton"
+                                                Content="Colonize planet" HorizontalAlignment="Left"
                                                 VerticalAlignment="Top" Margin="3"
                                                 MinWidth="95" Click="ColonizePlanet_Click"
                                                 Background="LightGray" RenderTransformOrigin="0.495,3.2"/>

@@ -21,12 +21,16 @@ using Logic.PlayerClasses;
 using Logic.Space_Objects;
 using Logic.SupportClasses;
 using System.Diagnostics;
+using System.Threading;
 
 namespace _4XGame {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        private Game thisGame = new Game();
+        private UIViewModel viewModel = new UIViewModel();
+
         public MainWindow() {
             InitializeComponent();
             SetItemsSource();
@@ -56,7 +60,7 @@ namespace _4XGame {
         }
 
         private void SetItemsSource() {
-            SystemsGrid.ItemsSource = Game.Player.StarSystems;
+            SystemsGrid.ItemsSource = thisGame.Player.StarSystems;
         }
 
         #region Celestial Info Box
@@ -66,6 +70,55 @@ namespace _4XGame {
 
         private void PlayerPlanetsTree_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
             WritePlanetInfoToBox();
+        }
+        #endregion
+
+        #region Refresh Info Panels
+        private void RefreshGUI() {
+            SystemsGrid.Items.Refresh();
+
+            WriteStarInfoToBox();
+            WritePlanetInfoToBox();
+
+            RefreshTopPanel();
+
+            RefreshColonizedPlanetsValueLabel();
+            RefreshOwnedPlanetsValueLabel();
+            RefreshOwnedStarsValueLabel();
+            RefreshOwnedSystemsValueLabel();
+
+            RefreshDateTurnPanel();
+        }
+
+        private void RefreshTopPanel() {
+            ShowPlayerMoney.Content = $"{thisGame.Player.PlayerMoney:0.0000E0}";
+            ShowCitizenHub.Content = $"{thisGame.Player.PlayerCitizenHub.CitizensInHub:0.0000E0}";
+            ShowPlayerTotalPopulation.Content = $"{thisGame.Player.TotalPopulation:0.0000E0}";
+
+            ShowPlayerHydrogen.Content = $"{thisGame.Player.PlayerResourses.Hydrogen:0.0000E0}";
+            ShowPlayerMetals.Content = $"{thisGame.Player.PlayerResourses.CommonMetals:0.0000E0}";
+            ShowPlayerRareMetals.Content = $"{thisGame.Player.PlayerResourses.RareEarthElements:0.0000E0}";
+        }
+
+        private void RefreshOwnedSystemsValueLabel() {
+            OwnedSystemsValueLabel.Content = thisGame.Player.StarSystems.Count;
+        }
+
+        private void RefreshColonizedPlanetsValueLabel() {
+            ColonizedPlanetsValue.Content = thisGame.Player.ColonizedPlanets;
+        }
+
+        private void RefreshOwnedPlanetsValueLabel() {
+            OwnedPlanetsValue.Content = thisGame.Player.OwnedPlanets;
+        }
+
+        private void RefreshOwnedStarsValueLabel() {
+            OwnedStarsValue.Content = thisGame.Player.OwnedStars;
+        }
+
+        private void RefreshDateTurnPanel() {
+            TurnLabelValue.Content = thisGame.GameTurn;
+            DateLabelValue.Content = thisGame.GameDate;
         }
 
         private void WriteStarInfoToBox() {
@@ -90,76 +143,41 @@ namespace _4XGame {
                 PlanetRareMetalsValueLabel.Content = $"{planet.BodyResourse.RareEarthElements:E4} t";
             }
         }
-        #endregion
 
-        #region Refresh Info Panels
-        private void RefreshGUI() {
-            SystemsGrid.Items.Refresh();
-
-            WriteStarInfoToBox();
-            WritePlanetInfoToBox();
-
-            RefreshTopPanel();
-
-            RefreshColonizedPlanetsValueLabel();
-            RefreshOwnedPlanetsValueLabel();
-            RefreshOwnedStarsValueLabel();
-            RefreshOwnedSystemsValueLabel();
-
-            RefreshDateTurnPanel();
+        private void DisableUI() {
+            SetTurnCriticalElements(false);
         }
 
-        private void RefreshTopPanel() {
-            ShowPlayerMoney.Content = $"{Game.Player.PlayerMoney:0.0000E0}";
-            ShowCitizenHub.Content = $"{Game.Player.PlayerCitizenHub.CitizensInHub:0.0000E0}";
-            ShowPlayerTotalPopulation.Content = $"{Game.Player.TotalPopulation:0.0000E0}";
-
-            ShowPlayerHydrogen.Content = $"{Game.Player.PlayerResourses.Hydrogen:0.0000E0}";
-            ShowPlayerMetals.Content = $"{Game.Player.PlayerResourses.CommonMetals:0.0000E0}";
-            ShowPlayerRareMetals.Content = $"{Game.Player.PlayerResourses.RareEarthElements:0.0000E0}";
+        private void EnableUI() {
+            SetTurnCriticalElements(true);
         }
 
-        private void RefreshOwnedSystemsValueLabel() {
-            OwnedSystemsValueLabel.Content = Game.Player.StarSystems.Count;
-        }
-
-        private void RefreshColonizedPlanetsValueLabel() {
-            ColonizedPlanetsValue.Content = Game.Player.ColonizedPlanets;
-        }
-
-        private void RefreshOwnedPlanetsValueLabel() {
-            OwnedPlanetsValue.Content = Game.Player.OwnedPlanets;
-        }
-
-        private void RefreshOwnedStarsValueLabel() {
-            OwnedStarsValue.Content = Game.Player.OwnedStars;
-        }
-
-        private void RefreshDateTurnPanel() {
-            TurnLabelValue.Content = Game.GameTurn;
-            DateLabelValue.Content = Game.GameDate;
+        private void SetTurnCriticalElements(bool state) {
+            NextNTurnButton.IsEnabled = state;
+            NextTurnButton.IsEnabled = state;
+            ColonizePlanetButton.IsEnabled = state;
         }
         #endregion
 
         #region Auto Colonization
         private void AutoColonizeCheckBox_Checked(object sender, RoutedEventArgs e) {
-            Game.IsAutoColonizationEnabled = true;
+            thisGame.IsAutoColonizationEnabled = true;
         }
 
         private void AutoColonizeCheckBox_Unchecked(object sender, RoutedEventArgs e) {
-            Game.IsAutoColonizationEnabled = false;
+            thisGame.IsAutoColonizationEnabled = false;
         }
         #endregion
 
         #region Next Turn
         private void NextTurnButton_Click(object sender, RoutedEventArgs e) {
-            Game.NextTurn();
+            thisGame.NextTurn();
             RefreshGUI();
         }
 
         private void TurnsNumberTextBox_TextChanged(object sender, TextChangedEventArgs e) {
-            int turns = 0;
-            if (Int32.TryParse(TurnsNumberTextBox.Text, out turns)) {
+            uint turns = 0;
+            if (UInt32.TryParse(TurnsNumberTextBox.Text, out turns)) {
                 NextNTurnButton.Content = $"{turns} Turns";
             }
             else {
@@ -177,12 +195,12 @@ namespace _4XGame {
                 TurnsNumberTextBox.Text = String.Empty;
                 return;
             }
-
+            
             DisableUI();
 
             TurnsProgressBar.Maximum = turns;
             for (int i = 0; i < turns; i++) {
-                Game.NextTurn();
+                thisGame.NextTurn();
                 Dispatcher.Invoke(new Action(() => { TurnsProgressBar.Value++; }), DispatcherPriority.Background);
             }
 
@@ -194,26 +212,18 @@ namespace _4XGame {
 
             //Console.Beep();
         }
-
-        private void DisableUI() {
-            this.IsEnabled = false;
-        }
-
-        private void EnableUI() {
-            this.IsEnabled = true;
-        }
         #endregion
 
         private void ColonizePlanet_Click(object sender, RoutedEventArgs e) {
             if (SystemPlanetsListBox.SelectedItem != null && SystemPlanetsListBox.SelectedItem is Planet planet) {
-                planet.Colonize(Game.Player);
+                planet.Colonize(thisGame.Player);
                 RefreshColonizedPlanetsValueLabel();
             }
         }
 
         private void ShowTotalPopulationInReadableFormat_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
             if(sender != null && sender is Label valueLabel) {
-                MessageBox.Show(HelperConvertFunctions.NumberToString(Game.Player.TotalPopulation), "Total population:");
+                MessageBox.Show(HelperConvertFunctions.NumberToString(thisGame.Player.TotalPopulation), "Total population:");
             }
         }
 
