@@ -232,7 +232,7 @@ namespace Logic.Space_Objects {
         /// </param>
         public void NextTurn(Player player) {
             AddPopulation();
-
+        
             CitizensToTheHub(player);
             CitizensFromTheHub(player);
 
@@ -244,7 +244,7 @@ namespace Logic.Space_Objects {
                 return;
             }
 
-            double partOfGrowth = 10_000d;
+            double partOfGrowth = 7_000d;
 
             double growthCoef = (this.MaximumPopulation / this.Population) / (partOfGrowth);
 
@@ -260,7 +260,9 @@ namespace Logic.Space_Objects {
                 return;
             }
 
-            double citizensToHubExpected = Math.Floor(this.Population * 0.002);
+            double partOfTravellers = 1_000;
+
+            double citizensToHubExpected = Math.Floor(this.Population / partOfTravellers);
 
             double citizensToHub =
                 Math.Ceiling(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
@@ -297,34 +299,34 @@ namespace Logic.Space_Objects {
                 return;
             }
 
+            //случайный модификатор добычи
             double partOfExtraction = (double)HelperRandomFunctions.GetRandomInt(1, 5) / 3;
 
-            //желаемое количество ходов до истощения ресурса
-            double turnsToDepletion = 3000;
-
-            //сложность добычи в зависимости от типа планеты
+            double gameTurnsToDepletion = 3000;
             double miningDifficulty = (double)this.Type.Quality / 100;
 
-            //конечный коефициент добычи
-            double miningCoef = miningDifficulty * partOfExtraction / turnsToDepletion;
+            double miningCoef = miningDifficulty * partOfExtraction / gameTurnsToDepletion;
+            ExtractAllRseourses(player, miningCoef);
+        }
 
+        private void ExtractAllRseourses(Player player, double miningCoef) {
             var resultTuple =
-               this.ExtractResourse(miningCoef, this.BodyResourse.Hydrogen, player.PlayerResourses.Hydrogen);
+                this.ExtractOneResourse(miningCoef, this.BodyResourse.Hydrogen, player.PlayerResourses.Hydrogen);
             this.BodyResourse.Hydrogen = resultTuple.Item1;
             player.PlayerResourses.Hydrogen = resultTuple.Item2;
 
             resultTuple =
-                this.ExtractResourse(miningCoef, this.BodyResourse.CommonMetals, player.PlayerResourses.CommonMetals);
+                this.ExtractOneResourse(miningCoef, this.BodyResourse.CommonMetals, player.PlayerResourses.CommonMetals);
             this.BodyResourse.CommonMetals = resultTuple.Item1;
             player.PlayerResourses.CommonMetals = resultTuple.Item2;
 
             resultTuple =
-                this.ExtractResourse(miningCoef, this.BodyResourse.RareEarthElements, player.PlayerResourses.RareEarthElements);
+                this.ExtractOneResourse(miningCoef, this.BodyResourse.RareEarthElements, player.PlayerResourses.RareEarthElements);
             this.BodyResourse.RareEarthElements = resultTuple.Item1;
             player.PlayerResourses.RareEarthElements = resultTuple.Item2;
         }
 
-        private Tuple<double, double> ExtractResourse(double miningCoef, double resourseOnPlanet, double resourseInPosession) {
+        private Tuple<double, double> ExtractOneResourse(double miningCoef, double resourseOnPlanet, double resourseInPosession) {
             if (resourseOnPlanet <= 0) {
                 return new Tuple<double, double>(0, resourseInPosession);
             }

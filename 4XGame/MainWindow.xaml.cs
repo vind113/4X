@@ -59,29 +59,6 @@ namespace _4XGame {
             SystemsGrid.ItemsSource = Game.Player.StarSystems;
         }
 
-        private void RefreshGUI() {
-            SystemsGrid.Items.Refresh();
-
-            WriteStarInfoToBox();
-            WritePlanetInfoToBox();
-
-            ShowPlayerMoney.Content = $"{Game.Player.PlayerMoney:0.0000E0}";
-            ShowCitizenHub.Content = $"{Game.Player.PlayerCitizenHub.CitizensInHub:0.0000E0}";
-            ShowPlayerTotalPopulation.Content = $"{Game.Player.TotalPopulation:0.0000E0}";
-
-            ShowPlayerHydrogen.Content = $"{Game.Player.PlayerResourses.Hydrogen:0.0000E0}";
-            ShowPlayerMetals.Content = $"{Game.Player.PlayerResourses.CommonMetals:0.0000E0}";
-            ShowPlayerRareMetals.Content = $"{Game.Player.PlayerResourses.RareEarthElements:0.0000E0}";
-
-            RefreshColonizedPlanetsValueLabel();
-            RefreshOwnedPlanetsValueLabel();
-            RefreshOwnedStarsValueLabel();
-            RefreshOwnedSystemsValueLabel();
-
-            TurnLabelValue.Content = Game.GameTurn;
-            DateLabelValue.Content = Game.GameDate;
-        }
-
         #region Celestial Info Box
         private void PlayerStarsTree_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
             WriteStarInfoToBox();
@@ -115,7 +92,33 @@ namespace _4XGame {
         }
         #endregion
 
-        #region Refresh Info Tab
+        #region Refresh Info Panels
+        private void RefreshGUI() {
+            SystemsGrid.Items.Refresh();
+
+            WriteStarInfoToBox();
+            WritePlanetInfoToBox();
+
+            RefreshTopPanel();
+
+            RefreshColonizedPlanetsValueLabel();
+            RefreshOwnedPlanetsValueLabel();
+            RefreshOwnedStarsValueLabel();
+            RefreshOwnedSystemsValueLabel();
+
+            RefreshDateTurnPanel();
+        }
+
+        private void RefreshTopPanel() {
+            ShowPlayerMoney.Content = $"{Game.Player.PlayerMoney:0.0000E0}";
+            ShowCitizenHub.Content = $"{Game.Player.PlayerCitizenHub.CitizensInHub:0.0000E0}";
+            ShowPlayerTotalPopulation.Content = $"{Game.Player.TotalPopulation:0.0000E0}";
+
+            ShowPlayerHydrogen.Content = $"{Game.Player.PlayerResourses.Hydrogen:0.0000E0}";
+            ShowPlayerMetals.Content = $"{Game.Player.PlayerResourses.CommonMetals:0.0000E0}";
+            ShowPlayerRareMetals.Content = $"{Game.Player.PlayerResourses.RareEarthElements:0.0000E0}";
+        }
+
         private void RefreshOwnedSystemsValueLabel() {
             OwnedSystemsValueLabel.Content = Game.Player.StarSystems.Count;
         }
@@ -130,6 +133,11 @@ namespace _4XGame {
 
         private void RefreshOwnedStarsValueLabel() {
             OwnedStarsValue.Content = Game.Player.OwnedStars;
+        }
+
+        private void RefreshDateTurnPanel() {
+            TurnLabelValue.Content = Game.GameTurn;
+            DateLabelValue.Content = Game.GameDate;
         }
         #endregion
 
@@ -149,9 +157,18 @@ namespace _4XGame {
             RefreshGUI();
         }
 
+        private void TurnsNumberTextBox_TextChanged(object sender, TextChangedEventArgs e) {
+            int turns = 0;
+            if (Int32.TryParse(TurnsNumberTextBox.Text, out turns)) {
+                NextNTurnButton.Content = $"{turns} Turns";
+            }
+            else {
+                NextNTurnButton.Content = $"? Turns";
+            }
+        }
+
         private void NextNTurnButton_Click(object sender, RoutedEventArgs e) {
             Stopwatch stopwatch = Stopwatch.StartNew();
-            DisableUI();
 
             TurnsProgressBar.Value = 0;
 
@@ -160,6 +177,8 @@ namespace _4XGame {
                 TurnsNumberTextBox.Text = String.Empty;
                 return;
             }
+
+            DisableUI();
 
             TurnsProgressBar.Maximum = turns;
             for (int i = 0; i < turns; i++) {
@@ -194,7 +213,7 @@ namespace _4XGame {
 
         private void ShowTotalPopulationInReadableFormat_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
             if(sender != null && sender is Label valueLabel) {
-                MessageBox.Show(HelperConvertFunctions.NumberToString(Game.Player.TotalPopulation), valueLabel.Name);
+                MessageBox.Show(HelperConvertFunctions.NumberToString(Game.Player.TotalPopulation), "Total population:");
             }
         }
 

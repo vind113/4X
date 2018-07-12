@@ -15,6 +15,7 @@
             <ColumnDefinition MinWidth="200" Width="200"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid x:Name="TurnGrid" Grid.Column="1" Grid.Row="0"
@@ -56,30 +57,36 @@
             <Label x:Name="ShowPlayerTotalPopulation" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="585,0,0,0" MouseDoubleClick="ShowTotalPopulationInReadableFormat_MouseDoubleClick"/>
         </Grid>
 
-        <WrapPanel Orientation="Horizontal" MaxWidth="180"
-                   Grid.Column="1" Grid.Row="0"
+        <WrapPanel Orientation="Horizontal" MaxWidth="200"
+                   Grid.Column="1" Grid.Row="1"
               VerticalAlignment="Bottom" HorizontalAlignment="Right">
-            <TextBox x:Name="TurnsNumberTextBox"
-                     HorizontalAlignment="Left"
-                     MinHeight="30" MinWidth="50"
-                     Margin="5"
-                     TextWrapping="Wrap" Text=""
-                     VerticalAlignment="Bottom"
-                     MaxLength="5" FontSize="16"/>
-            <Button x:Name="NextNTurnButton" Content="Next N Turns"
-                    HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                    MinHeight="30" MinWidth="110" Margin="5"
-                    Click="NextNTurnButton_Click"/>
+            <Border MinWidth="180" HorizontalAlignment="Right" Margin="5"
+                    BorderThickness="2" BorderBrush="DarkBlue">
+                <Grid>
+                    <TextBox x:Name="TurnsNumberTextBox"
+                        HorizontalAlignment="Left"
+                        MinHeight="30" MinWidth="50"
+                        Margin="5"
+                        TextWrapping="Wrap" Text=""
+                        VerticalAlignment="Bottom"
+                        MaxLength="5" FontSize="16"
+                        TextChanged="TurnsNumberTextBox_TextChanged"/>
+                    <Button x:Name="NextNTurnButton" Content="? Turns"
+                        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                        MinHeight="30" MinWidth="110" Margin="5"
+                        Click="NextNTurnButton_Click"/>
+                </Grid>
+            </Border>
             <Button x:Name="NextTurnButton" Content="Next Turn"
                     HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                    MinHeight="30" MinWidth="170" Margin="5"
+                    MinHeight="40" MinWidth="180" Margin="5"
                     Click="NextTurnButton_Click"/>
         </WrapPanel>
 
-        <Grid Grid.Column="0" Grid.Row="0">
+        <Grid Grid.Column="0" Grid.Row="1">
             <TabControl x:Name="MainTabControl"
                     HorizontalAlignment="Left"
-                    Margin="5,35,0,0"
+                    Margin="5"
                     MaxWidth="890"
                     VerticalAlignment="Top">
                 <TabItem Header="Systems" Width="100" HorizontalAlignment="Left">
@@ -88,22 +95,17 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <DataGrid x:Name="SystemsGrid"
-                                  Grid.Column="0"
-                                  MinHeight="335"
-                                  MinWidth="200" 
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Top"
-                                  Margin="5,0,0,0"
-                                  IsReadOnly="True"
-                                  BorderThickness="2"
+                        <DataGrid x:Name="SystemsGrid" Grid.Column="0"
+                                  MinHeight="340" MinWidth="200" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Top"
+                                  Margin="3" IsReadOnly="True" BorderThickness="2"
                                   AutoGenerateColumns="False"
                                   VerticalScrollBarVisibility="Visible"
                                   MouseLeftButtonUp="SystemsGrid_MouseLeftButtonUp"/>
                         <TabControl MinHeight="335"
                                     VerticalAlignment="Top"
                                     Grid.Column="1" ScrollViewer.CanContentScroll="True"
-                                    Margin="0,0,5,0">
+                                    Margin="5">
                             <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
                                 <Grid Background="#FFE5E5E5">
                                     <Grid.ColumnDefinitions>
@@ -172,7 +174,7 @@
                                     </WrapPanel>
                                 </Grid>
                             </TabItem>
-                            <TabItem Header="Stars" MinWidth="100" HorizontalAlignment="Right">
+                            <TabItem Header="Stars" Width="100" HorizontalAlignment="Right">
                                 <Grid Background="#FFE5E5E5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
