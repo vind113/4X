@@ -16,9 +16,11 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid x:Name="TurnGrid" Grid.Column="1" Grid.Row="0"
+        
+        <Grid x:Name="TurnGrid" Grid.Column="1" Grid.Row="1"
               Margin="3"
               HorizontalAlignment="Right" MinHeight="30"
               VerticalAlignment="Top" MinWidth="170">
@@ -35,7 +37,7 @@
         </Grid>
 
         <Grid HorizontalAlignment="Left" MinHeight="30"
-              Margin="3"
+              Margin="3" Grid.Row="1" Grid.Column="0"
               VerticalAlignment="Top">
             <Border BorderBrush="Black" BorderThickness="1"/>
             <Label x:Name="PlayerMoney" Content="Money:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -53,12 +55,12 @@
             <Label x:Name="PlayerRareMetals" Content="Rare metals:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="395,0,0,0" Foreground="DarkGreen"/>
             <Label x:Name="ShowPlayerRareMetals" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="462,0,0,0" Foreground="DarkGreen"/>
 
-            <Label x:Name="PlayerTotalPopulation" Content="Population:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="520,0,0,0"/>
+            <Label x:Name="PlayerTotalPopulation" Content="Population:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="520,0,0,0" MouseDoubleClick="ShowTotalPopulationInReadableFormat_MouseDoubleClick"/>
             <Label x:Name="ShowPlayerTotalPopulation" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="585,0,0,0" MouseDoubleClick="ShowTotalPopulationInReadableFormat_MouseDoubleClick"/>
         </Grid>
 
         <WrapPanel Orientation="Horizontal" MaxWidth="200"
-                   Grid.Column="1" Grid.Row="1"
+                   Grid.Column="1" Grid.Row="2"
               VerticalAlignment="Bottom" HorizontalAlignment="Right">
             <Border MinWidth="180" HorizontalAlignment="Right" Margin="5"
                     BorderThickness="2" BorderBrush="DarkBlue">
@@ -83,7 +85,7 @@
                     Click="NextTurnButton_Click"/>
         </WrapPanel>
 
-        <Grid Grid.Column="0" Grid.Row="1">
+        <Grid Grid.Column="0" Grid.Row="2">
             <TabControl x:Name="MainTabControl"
                     HorizontalAlignment="Left"
                     Margin="5"

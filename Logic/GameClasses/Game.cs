@@ -4,6 +4,7 @@ using Logic.Space_Objects;
 using Logic.SupportClasses;
 
 using System;
+using System.Collections.Generic;
 
 namespace Logic.GameClasses {
     public class Game {
@@ -23,6 +24,10 @@ namespace Logic.GameClasses {
         public int GameTurn { get => currentDate.Turn; }
         public string GameDate { get => currentDate.Date; }
         public Player Player { get => player; }
+
+        /*public List<StarSystem> PlayerStarSystems { get => player.StarSystems; }
+
+        public Resourses PlayerResourses { get=> player.OwnedResourses}*/
 
         public bool IsAutoColonizationEnabled {
             get => isAutoColonizationEnabled;

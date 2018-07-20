@@ -315,19 +315,19 @@ namespace Logic.Space_Objects {
 
         private void ExtractAllRseourses(Player player, double miningCoef) {
             var resultTuple =
-                this.ExtractOneResourse(miningCoef, this.BodyResourse.Hydrogen, player.PlayerResourses.Hydrogen);
+                this.ExtractOneResourse(miningCoef, this.BodyResourse.Hydrogen, player.OwnedResourses.Hydrogen);
             this.BodyResourse.Hydrogen = resultTuple.Item1;
-            player.PlayerResourses.Hydrogen = resultTuple.Item2;
+            player.OwnedResourses.Hydrogen = resultTuple.Item2;
 
             resultTuple =
-                this.ExtractOneResourse(miningCoef, this.BodyResourse.CommonMetals, player.PlayerResourses.CommonMetals);
+                this.ExtractOneResourse(miningCoef, this.BodyResourse.CommonMetals, player.OwnedResourses.CommonMetals);
             this.BodyResourse.CommonMetals = resultTuple.Item1;
-            player.PlayerResourses.CommonMetals = resultTuple.Item2;
+            player.OwnedResourses.CommonMetals = resultTuple.Item2;
 
             resultTuple =
-                this.ExtractOneResourse(miningCoef, this.BodyResourse.RareEarthElements, player.PlayerResourses.RareEarthElements);
+                this.ExtractOneResourse(miningCoef, this.BodyResourse.RareEarthElements, player.OwnedResourses.RareEarthElements);
             this.BodyResourse.RareEarthElements = resultTuple.Item1;
-            player.PlayerResourses.RareEarthElements = resultTuple.Item2;
+            player.OwnedResourses.RareEarthElements = resultTuple.Item2;
         }
 
         private Tuple<double, double> ExtractOneResourse(double miningCoef, double resourseOnPlanet, double resourseInPosession) {

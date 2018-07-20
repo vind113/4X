@@ -95,9 +95,9 @@ namespace _4XGame {
             ShowCitizenHub.Content = $"{thisGame.Player.PlayerCitizenHub.CitizensInHub:0.0000E0}";
             ShowPlayerTotalPopulation.Content = $"{thisGame.Player.TotalPopulation:0.0000E0}";
 
-            ShowPlayerHydrogen.Content = $"{thisGame.Player.PlayerResourses.Hydrogen:0.0000E0}";
-            ShowPlayerMetals.Content = $"{thisGame.Player.PlayerResourses.CommonMetals:0.0000E0}";
-            ShowPlayerRareMetals.Content = $"{thisGame.Player.PlayerResourses.RareEarthElements:0.0000E0}";
+            ShowPlayerHydrogen.Content = $"{thisGame.Player.OwnedResourses.Hydrogen:0.0000E0}";
+            ShowPlayerMetals.Content = $"{thisGame.Player.OwnedResourses.CommonMetals:0.0000E0}";
+            ShowPlayerRareMetals.Content = $"{thisGame.Player.OwnedResourses.RareEarthElements:0.0000E0}";
         }
 
         private void RefreshOwnedSystemsValueLabel() {

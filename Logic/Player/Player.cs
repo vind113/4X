@@ -31,7 +31,7 @@ namespace Logic.PlayerClasses {
             set => this.hub = value;
         }
 
-        public Resourses PlayerResourses {
+        public Resourses OwnedResourses {
             get => this.stockpile.PlayerResourses;
             set => this.stockpile.PlayerResourses = value;
         }
