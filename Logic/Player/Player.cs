@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Logic.Resourse;
 using Logic.Space_Objects;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Logic.PlayerClasses {
-    public class Player {
+    public class Player : INotifyPropertyChanged {
         private Stockpile stockpile;
         private CitizenHub hub;
         private ObservableCollection<StarSystem> starSystems;
@@ -24,6 +26,14 @@ namespace Logic.PlayerClasses {
             this.stockpile = stockpile ?? throw new ArgumentNullException(nameof(stockpile));
             this.hub = hub ?? throw new ArgumentNullException(nameof(hub));
             this.starSystems = new ObservableCollection<StarSystem>(starSystems) ?? throw new ArgumentNullException(nameof(starSystems));
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #region Properties
@@ -62,17 +72,26 @@ namespace Logic.PlayerClasses {
 
         public int ColonizedPlanets {
             get => this.colonizedPlanets;
-            set => this.colonizedPlanets = value;
+            set {
+                this.colonizedPlanets = value;
+                OnPropertyChanged();
+            }
         }
 
         public int OwnedPlanets {
             get => this.ownedPlanets;
-            set => this.ownedPlanets = value;
+            set {
+                this.ownedPlanets = value;
+                OnPropertyChanged();
+            }
         }
 
         public int OwnedStars {
             get => this.ownedStars;
-            set => this.ownedStars = value;
+            set {
+                this.ownedStars = value;
+                OnPropertyChanged();
+            }
         }
         #endregion
     }

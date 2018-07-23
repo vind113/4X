@@ -24,27 +24,6 @@ namespace _4XGame {
             InitializeComponent();
 
             this.Title = "4X Game";
-
-            InitializeSystemsGrid();
-
-            RefreshGUI();
-        }
-
-        private void InitializeSystemsGrid() {
-            AddColumn("Name", "Name");
-            AddColumn("StarsCount", "Stars");
-            AddColumn("PlanetsCount", "Planets");
-            AddColumn("HabitablePlanets", "Habitable");
-            AddColumn("ColonizedCount", "Colonized");
-            AddColumn("SystemPopulation", "Population");
-        }
-
-        private void AddColumn(string path, string columnName) {
-            DataGridTextColumn column = new DataGridTextColumn();
-            Binding binding = new Binding(path);
-            column.Binding = binding;
-            column.Header = columnName;
-            SystemsGrid.Columns.Add(column);
         }
 
         #region Celestial Info Box
@@ -55,70 +34,17 @@ namespace _4XGame {
         private void PlayerPlanetsTree_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
             WritePlanetInfoToBox();
         }
-        #endregion
-
-        #region Refresh Info Panels
-        private void RefreshGUI() {
-            WriteStarInfoToBox();
-            WritePlanetInfoToBox();
-            
-            RefreshColonizedPlanetsValueLabel();
-            RefreshOwnedPlanetsValueLabel();
-            RefreshOwnedStarsValueLabel();
-            RefreshOwnedSystemsValueLabel();
-        }
-
-        private void RefreshOwnedSystemsValueLabel() {
-            //OwnedSystemsValueLabel.Content = ViewModel.ThisGame.Player.StarSystems.Count;
-        }
-
-        private void RefreshColonizedPlanetsValueLabel() {
-            ColonizedPlanetsValue.Content = ViewModel.ThisGame.Player.ColonizedPlanets;
-        }
-
-        private void RefreshOwnedPlanetsValueLabel() {
-            OwnedPlanetsValue.Content = ViewModel.ThisGame.Player.OwnedPlanets;
-        }
-
-        private void RefreshOwnedStarsValueLabel() {
-            OwnedStarsValue.Content = ViewModel.ThisGame.Player.OwnedStars;
-        }
 
         private void WriteStarInfoToBox() {
             if (SystemStarsListBox.SelectedItem != null && SystemStarsListBox.SelectedItem is Star star) {
-                StarNameValue.Content = star.Name;
-                StarRadiusValue.Content = $"{star.Radius} km";
-                StarAreaValue.Content = $"{star.Area:E4} km^2";
-                StarTypeValue.Content = star.LumClass;
+                viewModel.SelectedStar = star;
             }
         }
 
         private void WritePlanetInfoToBox() {
             if (SystemPlanetsListBox.SelectedItem != null && SystemPlanetsListBox.SelectedItem is Planet planet) {
-                PlanetNameValue.Content = planet.Name;
-                PlanetRadiusValue.Content = $"{planet.Radius} km";
-                PlanetAreaValue.Content = $"{planet.Area:E4} km^2";
-                PlanetPopulationValue.Content = $"{planet.Population:E5}";
-                PlanetTypeValue.Content = planet.Type.Name;
-
-                PlanetHydrogenValueLabel.Content = $"{planet.BodyResourse.Hydrogen:E4} t";
-                PlanetCommonMetalsValueLabel.Content = $"{planet.BodyResourse.CommonMetals:E4} t";
-                PlanetRareMetalsValueLabel.Content = $"{planet.BodyResourse.RareEarthElements:E4} t";
+                viewModel.SelectedPlanet = planet;
             }
-        }
-
-        private void DisableUI() {
-            SetTurnCriticalElements(false);
-        }
-
-        private void EnableUI() {
-            SetTurnCriticalElements(true);
-        }
-
-        private void SetTurnCriticalElements(bool state) {
-            NextNTurnButton.IsEnabled = state;
-            NextTurnButton.IsEnabled = state;
-            ColonizePlanetButton.IsEnabled = state;
         }
         #endregion
 
@@ -147,7 +73,6 @@ namespace _4XGame {
         private void ColonizePlanet_Click(object sender, RoutedEventArgs e) {
             if (SystemPlanetsListBox.SelectedItem != null && SystemPlanetsListBox.SelectedItem is Planet planet) {
                 planet.Colonize(ViewModel.ThisGame.Player);
-                RefreshColonizedPlanetsValueLabel();
             }
         }
 

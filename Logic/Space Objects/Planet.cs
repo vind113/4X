@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.ComponentModel;
 using Logic.SupportClasses;
 using Logic.PlayerClasses;
 using System.Collections.Generic;
@@ -138,6 +138,7 @@ namespace Logic.Space_Objects {
             private set {
                 if (this.maximumPopulation > value && value > 0) {
                     this.population = value;
+                    OnPropertyChanged();
                 };
             }
         }

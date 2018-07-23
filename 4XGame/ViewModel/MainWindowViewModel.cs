@@ -86,6 +86,22 @@ namespace _4XGame.ViewModel {
                 OnPropertyChanged();
             }
         }
+
+        public Planet SelectedPlanet {
+            get => this.selectedPlanet;
+            set {
+                this.selectedPlanet = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Star SelectedStar {
+            get => this.selectedStar;
+            set {
+                this.selectedStar = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         private void SetCitizensInHub(object sender, CitizenHubChangedEventArgs e) {

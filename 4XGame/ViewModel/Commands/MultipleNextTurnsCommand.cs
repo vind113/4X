@@ -1,6 +1,7 @@
 ﻿using Logic.GameClasses;
 using System;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace _4XGame.ViewModel.Commands {
     public class MultipleNextTurnsCommand : CommandBase {
@@ -24,7 +25,7 @@ namespace _4XGame.ViewModel.Commands {
             }
 
             for (int i = 0; i < turnsToMake; i++) {
-                game.NextTurn();
+                Dispatcher.CurrentDispatcher.Invoke(()=> { game.NextTurn(); }, DispatcherPriority.Background);
             }
         }
     }

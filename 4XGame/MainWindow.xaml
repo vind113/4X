@@ -39,35 +39,35 @@
             
             <WrapPanel Margin="3">
                 <Label x:Name="TurnLabelValue" HorizontalAlignment="Left" FontSize="15"
-                   Content="{Binding Path=Turn}" ContentStringFormat="Turn: {0}"/>
+                       Content="{Binding Path=Turn}" ContentStringFormat="Turn: {0}"/>
 
                 <Label x:Name="DateLabelValue" HorizontalAlignment="Left" FontSize="15"
-                   Content="{Binding Path=Date}" ContentStringFormat="Date: {0}"/>
+                       Content="{Binding Path=Date}" ContentStringFormat="Date: {0}"/>
             </WrapPanel>
         </Grid>
 
         <Border BorderBrush="Black" BorderThickness="1"
-                 Grid.Row="1" Grid.Column="0">
+                Grid.Row="1" Grid.Column="0">
             <WrapPanel HorizontalAlignment="Left"
               Margin="5" VerticalAlignment="Top">
 
                 <Label x:Name="ShowPlayerMoney" HorizontalAlignment="Left" VerticalAlignment="Top"
-                   Content="{Binding Path=Money}" ContentStringFormat="Money: {0:#,#}"/>
+                       Content="{Binding Path=Money}" ContentStringFormat="Money: {0:#,#}"/>
 
                 <Label x:Name="ShowPlayerHydrogen" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Blue"
-                   Content="{Binding Path=CurrentResourses.Hydrogen}" ContentStringFormat="Hydrogen: {0:#,#}"/>
+                       Content="{Binding Path=CurrentResourses.Hydrogen}" ContentStringFormat="Hydrogen: {0:#,#}"/>
 
                 <Label x:Name="ShowPlayerMetals" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DimGray"
-                   Content="{Binding Path=CurrentResourses.CommonMetals}" ContentStringFormat="Common Metals: {0:#,#}"/>
+                       Content="{Binding Path=CurrentResourses.CommonMetals}" ContentStringFormat="Common Metals: {0:#,#}"/>
 
                 <Label x:Name="ShowPlayerRareMetals" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGreen"
-                   Content="{Binding Path=CurrentResourses.RareEarthElements}" ContentStringFormat="Rare Metals: {0:#,#}"/>
+                       Content="{Binding Path=CurrentResourses.RareEarthElements}" ContentStringFormat="Rare Metals: {0:#,#}"/>
 
                 <Label x:Name="ShowPlayerTotalPopulation" HorizontalAlignment="Left" VerticalAlignment="Top"
-                   Content="{Binding Path=TotalPopulation}"  ContentStringFormat="Population: {0:#,#}"/>
+                       Content="{Binding Path=TotalPopulation}"  ContentStringFormat="Population: {0:#,#}"/>
 
                 <Label x:Name="ShowCitizenHub" HorizontalAlignment="Left" VerticalAlignment="Top"
-                   Content="{Binding Path=CitizensInHub}" ContentStringFormat="In Hub: {0:#,#}"/>
+                       Content="{Binding Path=CitizensInHub}" ContentStringFormat="In Hub: {0:#,#}"/>
             </WrapPanel>
         </Border>
 
@@ -107,10 +107,10 @@
 
         <Grid Grid.Column="0" Grid.Row="2">
             <TabControl x:Name="MainTabControl"
-                    HorizontalAlignment="Left"
-                    Margin="5"
-                    MaxWidth="890"
-                    VerticalAlignment="Top">
+                        HorizontalAlignment="Left"
+                        Margin="5"
+                        MaxWidth="890"
+                        VerticalAlignment="Top">
                 <TabItem Header="Systems" Width="100" HorizontalAlignment="Left">
                     <Grid ScrollViewer.CanContentScroll="True">
                         <Grid.ColumnDefinitions>
@@ -124,7 +124,16 @@
                                   AutoGenerateColumns="False"
                                   VerticalScrollBarVisibility="Visible"
                                   ItemsSource="{Binding Path=ThisGame.PlayerStarSystems}"
-                                  MouseLeftButtonUp="SystemsGrid_MouseLeftButtonUp"/>
+                                  MouseLeftButtonUp="SystemsGrid_MouseLeftButtonUp">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="Stars" Binding="{Binding StarsCount}"/>
+                                <DataGridTextColumn Header="Planets" Binding="{Binding PlanetsCount}"/>
+                                <DataGridTextColumn Header="Habitable" Binding="{Binding HabitablePlanets}"/>
+                                <DataGridTextColumn Header="Colonized" Binding="{Binding ColonizedCount}"/>
+                                <DataGridTextColumn Header="Population" Binding="{Binding SystemPopulation, StringFormat={}{0:#,#}}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                         <TabControl MinHeight="335"
                                     VerticalAlignment="Top"
                                     Grid.Column="1" ScrollViewer.CanContentScroll="True"
@@ -136,14 +145,14 @@
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <ListBox x:Name="SystemPlanetsListBox"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            Margin="3"
-                                            MinWidth="180" MinHeight="200"
-                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                            MouseLeftButtonUp="PlayerPlanetsTree_MouseLeftButtonUp"
-                                            BorderThickness="2"
-                                            Grid.Column="0">
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Top"
+                                             Margin="3"
+                                             MinWidth="180" MinHeight="200"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                             MouseLeftButtonUp="PlayerPlanetsTree_MouseLeftButtonUp"
+                                             BorderThickness="2"
+                                             Grid.Column="0">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Label Content="{Binding Name}"/>
@@ -151,50 +160,37 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                     <WrapPanel Grid.Column="1">
-                                        <Grid MinHeight="170" MinWidth="200" Grid.Column="1"
-                                              HorizontalAlignment="Left" VerticalAlignment="Top"
-                                              Background="Azure" Margin="3">
-                                            <Border BorderBrush="Black" BorderThickness="1"/>
+                                        <WrapPanel MinHeight="170" MinWidth="200" Grid.Column="1"
+                                                  HorizontalAlignment="Left" VerticalAlignment="Top"
+                                                  Background="Azure" Margin="3" Orientation="Vertical"
+                                                  DataContext="{Binding Path=SelectedPlanet}">
 
-                                            <Label x:Name="PlanetName" Content="Name:" Height="30" VerticalAlignment="Top"/>
-                                            <Label x:Name="PlanetNameValue" Content="" Margin="40,0,0,0" VerticalAlignment="Top" Height="30"/>
+                                            <Label Content="{Binding Path=Name}" ContentStringFormat="Name: {0}"/>
+                                            <Label Content="{Binding Path=Radius}" ContentStringFormat="Radius: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Area}" ContentStringFormat="Area: {0:#,#}"/>
 
-                                            <Label x:Name="PlanetRadius" Content="Radius:" Margin="0,20,0,0" VerticalAlignment="Top" Height="30"/>
-                                            <Label x:Name="PlanetRadiusValue" Content="" Margin="40,20,0,0" VerticalAlignment="Top" Height="30"/>
+                                            <Separator MinWidth="200" VerticalAlignment="Top" Background="Black"/>
 
-                                            <Label x:Name="PlanetArea" Content="Area:" Margin="0,40,0,0" VerticalAlignment="Top" Height="30"/>
-                                            <Label x:Name="PlanetAreaValue" Content="" Margin="40,40,0,0" VerticalAlignment="Top" Height="30"/>
+                                            <Label Content="{Binding Path=Population}" ContentStringFormat="Population: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Type.Name}" ContentStringFormat="Type: {0}"/>
 
-                                            <Separator MinWidth="200" VerticalAlignment="Top" Margin="0,63,0,0" Background="Black"/>
+                                            <Separator MinWidth="200" VerticalAlignment="Top" Background="Black"/>
 
-                                            <Label x:Name="PlanetPopulation" Content="Population:" Margin="0,60,0,0" VerticalAlignment="Top" Height="30"/>
-                                            <Label x:Name="PlanetPopulationValue" Content="" Margin="65,60,0,0" VerticalAlignment="Top" Height="30"/>
-
-                                            <Label x:Name="PlanetType" Content="Type:" Margin="0,80,0,0" VerticalAlignment="Top" Height="30"/>
-                                            <Label x:Name="PlanetTypeValue" Content="" Margin="40,80,0,0" VerticalAlignment="Top" Height="30"/>
-
-                                            <Separator MinWidth="200" VerticalAlignment="Top" Margin="0,103,0,0" Background="Black"/>
-
-                                            <Label x:Name="PlanetHydrogenLabel" Content="Hydrogen:" Margin="0,100,0,0" VerticalAlignment="Top" Height="30"/>
-                                            <Label x:Name="PlanetHydrogenValueLabel" Content="" Margin="65,100,0,0" VerticalAlignment="Top" Height="30"/>
-
-                                            <Label x:Name="PlanetCommonMetalsLabel" Content="Common metals:" Margin="0,120,0,0" VerticalAlignment="Top" Height="30"/>
-                                            <Label x:Name="PlanetCommonMetalsValueLabel" Content="" Margin="95,120,0,0" VerticalAlignment="Top" Height="30"/>
-
-                                            <Label x:Name="PlanetRareMetalsLabel" Content="Rare metals:" Margin="0,140,0,0" VerticalAlignment="Top" Height="30"/>
-                                            <Label x:Name="PlanetRareMetalsValueLabel" Content="" Margin="70,140,0,0" VerticalAlignment="Top" Height="30"/>
-                                        </Grid>
+                                            <Label Content="{Binding Path=BodyResourse.Hydrogen}" ContentStringFormat="Hydrogen: {0:#,#}"/>
+                                            <Label Content="{Binding Path=BodyResourse.CommonMetals}" ContentStringFormat="Common metals: {0:#,#}"/>
+                                            <Label Content="{Binding Path=BodyResourse.RareEarthElements}" ContentStringFormat="Rare earth elements: {0:#,#}"/>
+                                        </WrapPanel>
                                         <Button x:Name="ColonizePlanetButton"
                                                 Content="Colonize planet" HorizontalAlignment="Left"
                                                 VerticalAlignment="Top" Margin="3"
                                                 MinWidth="95" Click="ColonizePlanet_Click"
                                                 Background="LightGray" RenderTransformOrigin="0.495,3.2"/>
                                         <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
-                                                HorizontalAlignment="Left" Margin="3"
-                                                VerticalAlignment="Top" MinHeight="20" MinWidth="100"
-                                                Checked="AutoColonizeCheckBox_Checked"
-                                                Unchecked="AutoColonizeCheckBox_Unchecked"
-                                                Indeterminate="AutoColonizeCheckBox_Unchecked"/>
+                                                  HorizontalAlignment="Left" Margin="3"
+                                                  VerticalAlignment="Top" MinHeight="20" MinWidth="100"
+                                                  Checked="AutoColonizeCheckBox_Checked"
+                                                  Unchecked="AutoColonizeCheckBox_Unchecked"
+                                                  Indeterminate="AutoColonizeCheckBox_Unchecked"/>
                                     </WrapPanel>
                                 </Grid>
                             </TabItem>
@@ -205,67 +201,60 @@
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <ListBox x:Name="SystemStarsListBox"
-                                         HorizontalAlignment="Left" MinHeight="100"
-                                         Grid.Column="0" Margin="3"
-                                         VerticalAlignment="Top" MinWidth="180"
-                                         ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                         BorderThickness="2"
-                                         MouseLeftButtonUp="PlayerStarsTree_MouseLeftButtonUp">
+                                             HorizontalAlignment="Left" MinHeight="100"
+                                             Grid.Column="0" Margin="3"
+                                             VerticalAlignment="Top" MinWidth="180"
+                                             ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                             BorderThickness="2"
+                                             MouseLeftButtonUp="PlayerStarsTree_MouseLeftButtonUp">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Label Content="{Binding Name}"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
-                                    <Grid MinHeight="90" MinWidth="200" Grid.Column="1"
-                                      HorizontalAlignment="Left" VerticalAlignment="Top"
-                                      Margin="3" Background="Azure">
-                                        <Border BorderBrush="Black" BorderThickness="1"/>
+                                    <WrapPanel MinHeight="90" MinWidth="200" Grid.Column="1"
+                                               HorizontalAlignment="Left" VerticalAlignment="Top"
+                                               Orientation="Vertical"
+                                               Margin="3" Background="Azure"
+                                               DataContext="{Binding Path=SelectedStar}">
 
-                                        <Label x:Name="StarName" Content="Name:"/>
-                                        <Label x:Name="StarNameValue" Content="" Margin="40,0,0,0"/>
+                                        <Label Content="{Binding Path=Name}" ContentStringFormat="Name: {0}"/>
 
-                                        <Label x:Name="StarRadius" Content="Radius:" Margin="0,20,0,0"/>
-                                        <Label x:Name="StarRadiusValue" Content="" Margin="40,20,0,0"/>
+                                        <Label Content="{Binding Path=Radius}" ContentStringFormat="Radius: {0:#,#}"/>
 
-                                        <Label x:Name="StarArea" Content="Area:" Margin="0,40,0,0"/>
-                                        <Label x:Name="StarAreaValue" Content="" Margin="40,40,0,0"/>
+                                        <Label Content="{Binding Path=Area}" ContentStringFormat="Area: {0:#,#}"/>
 
-                                        <Label x:Name="StarType" Content="Type:" Margin="0,60,0,0"/>
-                                        <Label x:Name="StarTypeValue" Content="" Margin="40,60,0,0"/>
-                                    </Grid>
+                                        <Label Content="{Binding Path=LumClass}" ContentStringFormat="Class: {0}"/>
+                                    </WrapPanel>
                                 </Grid>
                             </TabItem>
                         </TabControl>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Info" Width="100">
-                    <Grid>
-                        <Label x:Name="ColonizedPlanets" Content="Colonized planets:"
-                           HorizontalAlignment="Left"
-                           Margin="5,5,0,0" VerticalAlignment="Top"/>
-                        <Label x:Name="ColonizedPlanetsValue" Content="1"
-                           HorizontalAlignment="Left"
-                           Margin="105,5,0,0" VerticalAlignment="Top"/>
-                        <Label x:Name="OwnedPlanets" Content="Owned planets:"
-                           HorizontalAlignment="Left"
-                           Margin="5,25,0,0" VerticalAlignment="Top"/>
-                        <Label x:Name="OwnedPlanetsValue" Content="8"
-                           HorizontalAlignment="Left"
-                           Margin="105,25,0,0" VerticalAlignment="Top"/>
+                    <WrapPanel Orientation="Vertical">
 
-                        <Label x:Name="OwnedStars" Content="Owned stars:"
-                           HorizontalAlignment="Left"
-                           Margin="5,45,0,0" VerticalAlignment="Top"/>
-                        <Label x:Name="OwnedStarsValue" Content="1"
-                           HorizontalAlignment="Left"
-                           Margin="105,45,0,0" VerticalAlignment="Top"/>
+                        <Label ContentStringFormat="Colonized planets: {0}"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Content="{Binding Path=ThisGame.Player.ColonizedPlanets}"/>
 
-                        <Label HorizontalAlignment="Left" VerticalAlignment="Top"
-                               Margin="5,75,0,0"
-                               Content="{Binding Path=ThisGame.PlayerStarSystems.Count}"
-                               ContentStringFormat="Owned Systems: {0}"/>
-                    </Grid>
+                        <Label ContentStringFormat="Owned planets: {0}"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Content="{Binding Path=ThisGame.Player.OwnedPlanets}"/>
+
+                        <Label ContentStringFormat="Owned stars: {0}"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Content="{Binding Path=ThisGame.Player.OwnedStars}"/>
+
+                        <Label ContentStringFormat="Owned Systems: {0}"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Content="{Binding Path=ThisGame.PlayerStarSystems.Count}"/>
+                    </WrapPanel>
                 </TabItem>
                 <TabItem Header="Debug Info" Width="100">
                     <Grid>

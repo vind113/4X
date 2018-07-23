@@ -60,6 +60,8 @@
     <Compile Include="ViewModel\Commands\CommandBase.cs" />
     <Compile Include="ViewModel\Commands\MultipleNextTurnsCommand.cs" />
     <Compile Include="ViewModel\Commands\NextTurnCommand.cs" />
+    <Compile Include="ViewModel\Commands\SelectCelestialBodyCommand.cs" />
+    <Compile Include="ViewModel\Converters\SelectCelestialBodyConverter.cs" />
     <Compile Include="ViewModel\Converters\TurnNumberConverter.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
