@@ -1,39 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-
-using Logic.GameClasses;
-using Logic.PlayerClasses;
 using Logic.Space_Objects;
-using Logic.SupportClasses;
-using System.Diagnostics;
-using System.Threading;
+using _4XGame.ViewModel;
 
 namespace _4XGame {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private Game thisGame = new Game();
-        private UIViewModel viewModel = new UIViewModel();
+        private MainWindowViewModel viewModel;
+
+        public MainWindowViewModel ViewModel {
+            get => this.viewModel;
+            set => this.viewModel = value;
+        }
 
         public MainWindow() {
+            ViewModel = new MainWindowViewModel();
+
             InitializeComponent();
-            SetItemsSource();
 
             this.Title = "4X Game";
 
@@ -59,10 +47,6 @@ namespace _4XGame {
             SystemsGrid.Columns.Add(column);
         }
 
-        private void SetItemsSource() {
-            SystemsGrid.ItemsSource = thisGame.Player.StarSystems;
-        }
-
         #region Celestial Info Box
         private void PlayerStarsTree_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
             WriteStarInfoToBox();
@@ -75,50 +59,29 @@ namespace _4XGame {
 
         #region Refresh Info Panels
         private void RefreshGUI() {
-            SystemsGrid.Items.Refresh();
-
             WriteStarInfoToBox();
             WritePlanetInfoToBox();
-
-            RefreshTopPanel();
-
+            
             RefreshColonizedPlanetsValueLabel();
             RefreshOwnedPlanetsValueLabel();
             RefreshOwnedStarsValueLabel();
             RefreshOwnedSystemsValueLabel();
-
-            RefreshDateTurnPanel();
-        }
-
-        private void RefreshTopPanel() {
-            ShowPlayerMoney.Content = $"{thisGame.Player.PlayerMoney:0.0000E0}";
-            ShowCitizenHub.Content = $"{thisGame.Player.PlayerCitizenHub.CitizensInHub:0.0000E0}";
-            ShowPlayerTotalPopulation.Content = $"{thisGame.Player.TotalPopulation:0.0000E0}";
-
-            ShowPlayerHydrogen.Content = $"{thisGame.Player.OwnedResourses.Hydrogen:0.0000E0}";
-            ShowPlayerMetals.Content = $"{thisGame.Player.OwnedResourses.CommonMetals:0.0000E0}";
-            ShowPlayerRareMetals.Content = $"{thisGame.Player.OwnedResourses.RareEarthElements:0.0000E0}";
         }
 
         private void RefreshOwnedSystemsValueLabel() {
-            OwnedSystemsValueLabel.Content = thisGame.Player.StarSystems.Count;
+            //OwnedSystemsValueLabel.Content = ViewModel.ThisGame.Player.StarSystems.Count;
         }
 
         private void RefreshColonizedPlanetsValueLabel() {
-            ColonizedPlanetsValue.Content = thisGame.Player.ColonizedPlanets;
+            ColonizedPlanetsValue.Content = ViewModel.ThisGame.Player.ColonizedPlanets;
         }
 
         private void RefreshOwnedPlanetsValueLabel() {
-            OwnedPlanetsValue.Content = thisGame.Player.OwnedPlanets;
+            OwnedPlanetsValue.Content = ViewModel.ThisGame.Player.OwnedPlanets;
         }
 
         private void RefreshOwnedStarsValueLabel() {
-            OwnedStarsValue.Content = thisGame.Player.OwnedStars;
-        }
-
-        private void RefreshDateTurnPanel() {
-            TurnLabelValue.Content = thisGame.GameTurn;
-            DateLabelValue.Content = thisGame.GameDate;
+            OwnedStarsValue.Content = ViewModel.ThisGame.Player.OwnedStars;
         }
 
         private void WriteStarInfoToBox() {
@@ -161,20 +124,15 @@ namespace _4XGame {
 
         #region Auto Colonization
         private void AutoColonizeCheckBox_Checked(object sender, RoutedEventArgs e) {
-            thisGame.IsAutoColonizationEnabled = true;
+            ViewModel.ThisGame.IsAutoColonizationEnabled = true;
         }
 
         private void AutoColonizeCheckBox_Unchecked(object sender, RoutedEventArgs e) {
-            thisGame.IsAutoColonizationEnabled = false;
+            ViewModel.ThisGame.IsAutoColonizationEnabled = false;
         }
         #endregion
 
         #region Next Turn
-        private void NextTurnButton_Click(object sender, RoutedEventArgs e) {
-            thisGame.NextTurn();
-            RefreshGUI();
-        }
-
         private void TurnsNumberTextBox_TextChanged(object sender, TextChangedEventArgs e) {
             uint turns = 0;
             if (UInt32.TryParse(TurnsNumberTextBox.Text, out turns)) {
@@ -184,46 +142,12 @@ namespace _4XGame {
                 NextNTurnButton.Content = $"? Turns";
             }
         }
-
-        private void NextNTurnButton_Click(object sender, RoutedEventArgs e) {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
-            TurnsProgressBar.Value = 0;
-
-            int turns = 0;
-            if (!Int32.TryParse(TurnsNumberTextBox.Text, out turns)) {
-                TurnsNumberTextBox.Text = String.Empty;
-                return;
-            }
-            
-            DisableUI();
-
-            TurnsProgressBar.Maximum = turns;
-            for (int i = 0; i < turns; i++) {
-                thisGame.NextTurn();
-                Dispatcher.Invoke(new Action(() => { TurnsProgressBar.Value++; }), DispatcherPriority.Background);
-            }
-
-            RefreshGUI();
-            EnableUI();
-
-            stopwatch.Stop();
-            ElapsedTurnTimeValueLabel.Content = stopwatch.Elapsed;
-
-            //Console.Beep();
-        }
         #endregion
 
         private void ColonizePlanet_Click(object sender, RoutedEventArgs e) {
             if (SystemPlanetsListBox.SelectedItem != null && SystemPlanetsListBox.SelectedItem is Planet planet) {
-                planet.Colonize(thisGame.Player);
+                planet.Colonize(ViewModel.ThisGame.Player);
                 RefreshColonizedPlanetsValueLabel();
-            }
-        }
-
-        private void ShowTotalPopulationInReadableFormat_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
-            if(sender != null && sender is Label valueLabel) {
-                MessageBox.Show(HelperConvertFunctions.NumberToString(thisGame.Player.TotalPopulation), "Total population:");
             }
         }
 

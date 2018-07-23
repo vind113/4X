@@ -1,49 +1,92 @@
 ﻿using Logic.PlayerClasses;
-using Logic.Resourse;
 using Logic.Space_Objects;
 using Logic.SupportClasses;
 
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Logic.GameClasses {
-    public class Game {
+    public class Game : INotifyPropertyChanged {
         private Player player;
-        private CurrentDate currentDate;
+        private CurrentDate gameDate;
         private bool isAutoColonizationEnabled = false;
 
-        private string lastGameMessage;
+       
+        #region Events
+        public event EventHandler<CitizenHubChangedEventArgs> CitizenHubChanged;
+        public event EventHandler<StockpileChangedEventArgs> StockpileChanged;
+        public event EventHandler<PopulationChangedEventArgs> PopulationChanged;
+        
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
+
+        private void OnCitizenHubChanged() {
+            var handler = CitizenHubChanged;
+            handler?.Invoke(this, new CitizenHubChangedEventArgs(player.PlayerCitizenHub)); 
+        }
+
+        private void OnStockpileChanged() {
+            var handler = StockpileChanged;
+            handler?.Invoke(this, new StockpileChangedEventArgs(player.Money, player.OwnedResourses));
+        }
+
+        private void OnPopulationChanged() {
+            var handler = PopulationChanged;
+            handler?.Invoke(this, new PopulationChangedEventArgs(player.TotalPopulation));
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public Game() {
-            player = new Player();
-            currentDate = new CurrentDate();
-            player.StarSystems.Add(StarSystem.GetSolarSystem());
+            Player = new Player();
+            GameDate = new CurrentDate();
+            Player.StarSystems.Add(StarSystem.GetSolarSystem());
         }
 
         #region Properties
-        public int GameTurn { get => currentDate.Turn; }
-        public string GameDate { get => currentDate.Date; }
-        public Player Player { get => player; }
-
-        /*public List<StarSystem> PlayerStarSystems { get => player.StarSystems; }
-
-        public Resourses PlayerResourses { get=> player.OwnedResourses}*/
-
         public bool IsAutoColonizationEnabled {
             get => isAutoColonizationEnabled;
             set => isAutoColonizationEnabled = value;
         }
+
+        public Player Player {
+            get => this.player;
+            set {
+                if(this.Player == value) { return; }
+                this.player = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CurrentDate GameDate {
+            get => this.gameDate;
+            set {
+                this.gameDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<StarSystem> PlayerStarSystems { get => player.StarSystems; }
         #endregion
 
         #region Next Turn Functionality
         public void NextTurn() {
-            currentDate.NextTurn();
+            GameDate = GameDate.NextTurn();
             DiscoverNewStarSystem();
 
-            foreach (StarSystem system in player.StarSystems) {
-                system.NextTurn(player);
+            foreach (StarSystem system in Player.StarSystems) {
+                system.NextTurn(Player);
             }
             SetPlayerCitizenHubCapacity();
+
+            OnCitizenHubChanged();
+            OnStockpileChanged();
+            OnPopulationChanged();
         }
 
         private void DiscoverNewStarSystem() {
@@ -57,44 +100,40 @@ namespace Logic.GameClasses {
                 int systemsToGenerate = 0;
                 StarSystem generatedSystem = null;
                 checked {
-                    maxSystemsToGenerate = (int)((Math.Sqrt(player.StarSystems.Count)) / 2);
+                    maxSystemsToGenerate = (int)((Math.Sqrt(Player.StarSystems.Count)) / 2);
                     systemsToGenerate = HelperRandomFunctions.GetRandomInt(1, maxSystemsToGenerate + 1);
                 }
                 for (int index = 0; index < systemsToGenerate; index++) {
                     //player.StarSystems.Add(StarSystem.GenerateSystem($"System {currentDate.Date}-{index}"));
-                    generatedSystem = StarSystem.GenerateSystem($"System {currentDate.Date}-{index}");
+                    generatedSystem = StarSystem.GenerateSystem($"System {GameDate.Date}-{index}");
 
-                    player.OwnedStars += generatedSystem.SystemStars.Count;
-                    player.OwnedPlanets += generatedSystem.SystemPlanets.Count;
+                    Player.OwnedStars += generatedSystem.SystemStars.Count;
+                    Player.OwnedPlanets += generatedSystem.SystemPlanets.Count;
 
                     if (isAutoColonizationEnabled) {
                         foreach (var planet in generatedSystem.SystemPlanets) {
-                            planet.Colonize(player);
+                            planet.Colonize(Player);
                         }
                     }
 
-                    player.StarSystems.Add(generatedSystem);
+                    Player.StarSystems.Add(generatedSystem);
                 }
             }
         }
 
         private void SetPlayerCitizenHubCapacity() {
-            double newHubCapacity = Math.Ceiling(player.TotalPopulation / 1000);
+            double newHubCapacity = Math.Ceiling(Player.TotalPopulation / 1000);
             
-            if (newHubCapacity > player.PlayerCitizenHub.CitizensInHub) {
-                player.PlayerCitizenHub.MaximumCount = newHubCapacity;
+            if (newHubCapacity > Player.PlayerCitizenHub.CitizensInHub) {
+                Player.PlayerCitizenHub.MaximumCount = newHubCapacity;
             }
         }
 
         #endregion
 
-        public void ResetDate() {
-            currentDate = new CurrentDate();
-        }
-
         public void ResetGame() {
-            player = new Player();
-            currentDate = new CurrentDate();
+            Player = new Player();
+            GameDate = new CurrentDate();
         }
     }
 }

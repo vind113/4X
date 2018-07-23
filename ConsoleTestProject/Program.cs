@@ -13,9 +13,9 @@ namespace ConsoleTestProject {
             //CheckTurns();
             //CheckPlanets();
             //CreateHabitablePlanets();
-            SystemsCheck();
+            //SystemsCheck();
         }
-
+        /*
         #region Test growth
         /*private static void TestGrowthMultipleTimes() {
             double sum = 0;
@@ -53,7 +53,7 @@ namespace ConsoleTestProject {
             Console.WriteLine(firstPop);
             Console.WriteLine(lastPop);
             return lastPop / firstPop;
-        }*/
+        }
         #endregion
 
         static void TestDate() {
@@ -160,5 +160,6 @@ namespace ConsoleTestProject {
 
             return 0;
         }
+        */
     }
 }

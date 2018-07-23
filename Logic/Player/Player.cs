@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Collections.ObjectModel;
 using Logic.Resourse;
 using Logic.Space_Objects;
 
@@ -8,7 +8,8 @@ namespace Logic.PlayerClasses {
     public class Player {
         private Stockpile stockpile;
         private CitizenHub hub;
-        private List<StarSystem> starSystems;
+        private ObservableCollection<StarSystem> starSystems;
+
         private int ownedStars = 1;
         private int colonizedPlanets = 1;
         private int ownedPlanets = 8;
@@ -16,13 +17,13 @@ namespace Logic.PlayerClasses {
         public Player() {
             this.stockpile = new Stockpile();
             this.hub = new CitizenHub();
-            this.starSystems = new List<StarSystem>();
+            this.starSystems = new ObservableCollection<StarSystem>();
         }
 
-        public Player(Stockpile stockpile, CitizenHub hub, List<StarSystem> starSystems) {
+        public Player(Stockpile stockpile, CitizenHub hub, IEnumerable<StarSystem> starSystems) {
             this.stockpile = stockpile ?? throw new ArgumentNullException(nameof(stockpile));
             this.hub = hub ?? throw new ArgumentNullException(nameof(hub));
-            this.starSystems = starSystems ?? throw new ArgumentNullException(nameof(starSystems));
+            this.starSystems = new ObservableCollection<StarSystem>(starSystems) ?? throw new ArgumentNullException(nameof(starSystems));
         }
 
         #region Properties
@@ -36,12 +37,12 @@ namespace Logic.PlayerClasses {
             set => this.stockpile.PlayerResourses = value;
         }
 
-        public double PlayerMoney {
+        public double Money {
             get => this.stockpile.Money;
             set => this.stockpile.Money = value;
         }
 
-        public List<StarSystem> StarSystems {
+        public ObservableCollection<StarSystem> StarSystems {
             get => this.starSystems;
             set => this.starSystems = value;
         }

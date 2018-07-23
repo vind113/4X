@@ -57,7 +57,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="UIViewModel.cs" />
+    <Compile Include="ViewModel\Commands\CommandBase.cs" />
+    <Compile Include="ViewModel\Commands\MultipleNextTurnsCommand.cs" />
+    <Compile Include="ViewModel\Commands\NextTurnCommand.cs" />
+    <Compile Include="ViewModel\Converters\TurnNumberConverter.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -97,5 +101,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

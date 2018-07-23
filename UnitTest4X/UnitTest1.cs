@@ -8,7 +8,18 @@ using Logic.Space_Objects;
 namespace UnitTest4X {
     [TestFixture]
     public class UnitTest1 {
+        [TestCase]
+        public void CheckDateIncrement_CorrectConditions_DateIsCorrect() {
+            CurrentDate currentDate = new CurrentDate();
+            for (int i = 0; i < 120_000; i++) {
+                currentDate = currentDate.NextTurn();
+            }
+            Assert.AreEqual(currentDate.Turn, 120_001);
+            Assert.AreEqual(currentDate.Date, "1.12500");
+        }
+
         #region Citizen Hub People Property
+        /*
         [TestCase]
         public void CitizenHubProperty_CorrectNumber_ValueIsSet() {
             double peopleCount = 11;
@@ -34,9 +45,11 @@ namespace UnitTest4X {
 
             Assert.AreNotEqual(Game.Player.PlayerCitizenHub.CitizensInHub, peopleCount);
         }
+        */
         #endregion
 
         #region Citizen Hub Max Property
+        /*
         [TestCase]
         public void CitizenHubMax_MaxCountCorrect_ValueIsSet() {
             double maxCount = 1;
@@ -54,10 +67,11 @@ namespace UnitTest4X {
 
             Assert.AreNotEqual(Game.Player.PlayerCitizenHub.MaximumCount, maxCount);
         }
+        */
         #endregion
 
         #region Player Resourse Property 
-
+        /*
         [TestCase]
         public void PlayerResoursesProperty_ComMetalIsLowerThanZero_ValueIsNotSet() {
             Resourses resourses = new Resourses(1, -1, 1);
@@ -93,7 +107,7 @@ namespace UnitTest4X {
 
             Assert.AreEqual(Game.Player.PlayerResourses, resourses);
         }
-
+        */
         #endregion
 
         #region Star Luminosity

@@ -1,14 +1,22 @@
 ﻿<Window x:Class="_4XGame.MainWindow"
+        x:Name="CurrentWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_4XGame"
+        xmlns:converters="clr-namespace:_4XGame.ViewModel.Converters"
         xmlns:celestial="clr-namespace:Logic.Space_Objects;assembly=Logic"
         mc:Ignorable="d"
         Title="MainWindow"
         WindowStartupLocation="CenterScreen"
-        Background="Azure" Foreground="Black">
+        Background="Azure" Foreground="Black"
+        DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}">
+    
+    <Window.Resources>
+        <converters:TurnNumberConverter x:Key="TurnNumberConverterResourse"/>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -19,45 +27,49 @@
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
+
         <Grid x:Name="TurnGrid" Grid.Column="1" Grid.Row="1"
-              Margin="3"
-              HorizontalAlignment="Right" MinHeight="30"
-              VerticalAlignment="Top" MinWidth="170">
-            <Border BorderBrush="Black" BorderThickness="1"/>
+              DataContext="{Binding Path=ThisGame.GameDate}">
+
             <ProgressBar x:Name="TurnsProgressBar" Background="Azure"
-                         HorizontalAlignment="Right" MinHeight="30"
-                         VerticalAlignment="Top" MinWidth="170"
-                         BorderThickness="1" BorderBrush="Black"
+                         HorizontalAlignment="Right" MinHeight="40"
+                         VerticalAlignment="Top" MinWidth="200"
+                         BorderThickness="1" BorderBrush="DarkGreen"
                          Minimum="0" Maximum="100"/>
-            <Label x:Name="TurnLabel" Content="Turn: " HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <Label x:Name="TurnLabelValue" Content="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,0,0,0"/>
-            <Label x:Name="DateLabel" Content="Date: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,0,0,0"/>
-            <Label x:Name="DateLabelValue" Content="1.2500" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0"/>
+            
+            <WrapPanel Margin="3">
+                <Label x:Name="TurnLabelValue" HorizontalAlignment="Left" FontSize="15"
+                   Content="{Binding Path=Turn}" ContentStringFormat="Turn: {0}"/>
+
+                <Label x:Name="DateLabelValue" HorizontalAlignment="Left" FontSize="15"
+                   Content="{Binding Path=Date}" ContentStringFormat="Date: {0}"/>
+            </WrapPanel>
         </Grid>
 
-        <Grid HorizontalAlignment="Left" MinHeight="30"
-              Margin="3" Grid.Row="1" Grid.Column="0"
-              VerticalAlignment="Top">
-            <Border BorderBrush="Black" BorderThickness="1"/>
-            <Label x:Name="PlayerMoney" Content="Money:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <Label x:Name="ShowPlayerMoney" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,0,0,0"/>
+        <Border BorderBrush="Black" BorderThickness="1"
+                 Grid.Row="1" Grid.Column="0">
+            <WrapPanel HorizontalAlignment="Left"
+              Margin="5" VerticalAlignment="Top">
 
-            <Label x:Name="CitizenHub" Content="In Hub:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="95,0,0,0"/>
-            <Label x:Name="ShowCitizenHub" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,0,0,0"/>
+                <Label x:Name="ShowPlayerMoney" HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Content="{Binding Path=Money}" ContentStringFormat="Money: {0:#,#}"/>
 
-            <Label x:Name="PlayerHydrogen" Content="Hydorgen:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="185,0,0,0" Foreground="Blue"/>
-            <Label x:Name="ShowPlayerHydrogen" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="242,0,0,0" Foreground="Blue"/>
+                <Label x:Name="ShowPlayerHydrogen" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Blue"
+                   Content="{Binding Path=CurrentResourses.Hydrogen}" ContentStringFormat="Hydrogen: {0:#,#}"/>
 
-            <Label x:Name="PlayerMetals" Content="Metals:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,0,0,0" Foreground="DimGray"/>
-            <Label x:Name="ShowPlayerMetals" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="340,0,0,0" Foreground="DimGray"/>
+                <Label x:Name="ShowPlayerMetals" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DimGray"
+                   Content="{Binding Path=CurrentResourses.CommonMetals}" ContentStringFormat="Common Metals: {0:#,#}"/>
 
-            <Label x:Name="PlayerRareMetals" Content="Rare metals:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="395,0,0,0" Foreground="DarkGreen"/>
-            <Label x:Name="ShowPlayerRareMetals" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="462,0,0,0" Foreground="DarkGreen"/>
+                <Label x:Name="ShowPlayerRareMetals" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGreen"
+                   Content="{Binding Path=CurrentResourses.RareEarthElements}" ContentStringFormat="Rare Metals: {0:#,#}"/>
 
-            <Label x:Name="PlayerTotalPopulation" Content="Population:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="520,0,0,0" MouseDoubleClick="ShowTotalPopulationInReadableFormat_MouseDoubleClick"/>
-            <Label x:Name="ShowPlayerTotalPopulation" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="585,0,0,0" MouseDoubleClick="ShowTotalPopulationInReadableFormat_MouseDoubleClick"/>
-        </Grid>
+                <Label x:Name="ShowPlayerTotalPopulation" HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Content="{Binding Path=TotalPopulation}"  ContentStringFormat="Population: {0:#,#}"/>
+
+                <Label x:Name="ShowCitizenHub" HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Content="{Binding Path=CitizensInHub}" ContentStringFormat="In Hub: {0:#,#}"/>
+            </WrapPanel>
+        </Border>
 
         <WrapPanel Orientation="Horizontal" MaxWidth="200"
                    Grid.Column="1" Grid.Row="2"
@@ -66,23 +78,31 @@
                     BorderThickness="2" BorderBrush="DarkBlue">
                 <Grid>
                     <TextBox x:Name="TurnsNumberTextBox"
-                        HorizontalAlignment="Left"
-                        MinHeight="30" MinWidth="50"
-                        Margin="5"
-                        TextWrapping="Wrap" Text=""
-                        VerticalAlignment="Bottom"
-                        MaxLength="5" FontSize="16"
-                        TextChanged="TurnsNumberTextBox_TextChanged"/>
+                            HorizontalAlignment="Left"
+                            MinHeight="30" MinWidth="50"
+                            Margin="5"
+                            TextWrapping="Wrap" Text=""
+                            VerticalAlignment="Bottom"
+                            MaxLength="5" FontSize="16"
+                            TextChanged="TurnsNumberTextBox_TextChanged"/>
                     <Button x:Name="NextNTurnButton" Content="? Turns"
-                        HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                        MinHeight="30" MinWidth="110" Margin="5"
-                        Click="NextNTurnButton_Click"/>
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            MinHeight="30" MinWidth="110" Margin="5"
+                            Command="{Binding Path=MultipleNextTurnsCmd}">
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource TurnNumberConverterResourse}">
+                                <Binding Path="Text" ElementName="TurnsNumberTextBox"/>
+                                <Binding Path="ThisGame"/>
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
                 </Grid>
             </Border>
             <Button x:Name="NextTurnButton" Content="Next Turn"
                     HorizontalAlignment="Right" VerticalAlignment="Bottom"
                     MinHeight="40" MinWidth="180" Margin="5"
-                    Click="NextTurnButton_Click"/>
+                    Command="{Binding Path=NextTurnCmd}"
+                    CommandParameter="{Binding Path=ThisGame}"/>
         </WrapPanel>
 
         <Grid Grid.Column="0" Grid.Row="2">
@@ -103,6 +123,7 @@
                                   Margin="3" IsReadOnly="True" BorderThickness="2"
                                   AutoGenerateColumns="False"
                                   VerticalScrollBarVisibility="Visible"
+                                  ItemsSource="{Binding Path=ThisGame.PlayerStarSystems}"
                                   MouseLeftButtonUp="SystemsGrid_MouseLeftButtonUp"/>
                         <TabControl MinHeight="335"
                                     VerticalAlignment="Top"
@@ -235,27 +256,23 @@
 
                         <Label x:Name="OwnedStars" Content="Owned stars:"
                            HorizontalAlignment="Left"
-                           Margin="5,55,0,0" VerticalAlignment="Top"/>
+                           Margin="5,45,0,0" VerticalAlignment="Top"/>
                         <Label x:Name="OwnedStarsValue" Content="1"
                            HorizontalAlignment="Left"
-                           Margin="105,55,0,0" VerticalAlignment="Top"/>
+                           Margin="105,45,0,0" VerticalAlignment="Top"/>
 
-                        <Label x:Name="OwnedSystmesLabel" Content="Owned sytems"
-                           HorizontalAlignment="Left"
-                           Margin="5,85,0,0" VerticalAlignment="Top"/>
-                        <Label x:Name="OwnedSystemsValueLabel" Content="1"
-                           HorizontalAlignment="Left"
-                           Margin="105,85,0,0" VerticalAlignment="Top"/>
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Top"
+                               Margin="5,75,0,0"
+                               Content="{Binding Path=ThisGame.PlayerStarSystems.Count}"
+                               ContentStringFormat="Owned Systems: {0}"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Debug Info" Width="100">
                     <Grid>
-                        <Label x:Name="ElapsedTurnTimeLabel" Content="Elapsed: "
-                           HorizontalAlignment="Left"
-                           Margin="5,5,0,0" VerticalAlignment="Top"/>
-                        <Label x:Name="ElapsedTurnTimeValueLabel" Content=""
-                           HorizontalAlignment="Left"
-                           Margin="65,5,0,0" VerticalAlignment="Top"/>
+                        <Label HorizontalAlignment="Left"
+                               Margin="5" VerticalAlignment="Top"
+                               Content="{Binding Path=MultipleNextTurnsCmd.LastExecutionTime}"
+                               ContentStringFormat="Last Command Elapsed: {0}"/>
                     </Grid>
                 </TabItem>
             </TabControl>

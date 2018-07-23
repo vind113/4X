@@ -43,8 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameClasses\Game.cs" />
+    <Compile Include="GameClasses\PopulationChangedEventArgs.cs" />
+    <Compile Include="GameClasses\StockpileChangedEventArgs.cs" />
     <Compile Include="Player\CitizenHub.cs" />
     <Compile Include="GameClasses\CurrentDate.cs" />
+    <Compile Include="GameClasses\CitizenHubChangedEventArgs.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\Stockpile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
