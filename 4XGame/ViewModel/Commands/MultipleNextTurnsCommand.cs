@@ -8,6 +8,7 @@ namespace _4XGame.ViewModel.Commands {
     public class MultipleNextTurnsCommand : CommandBase {
         private int commandProgress;
         private int commandParts = 1;
+        private TimeSpan lastExecutionTime;
 
         public int CommandProgress {
             get => this.commandProgress;
@@ -21,6 +22,14 @@ namespace _4XGame.ViewModel.Commands {
             get => this.commandParts;
             set {
                 this.commandParts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public TimeSpan LastExecutionTime {
+            get => this.lastExecutionTime;
+            protected set {
+                this.lastExecutionTime = value;
                 OnPropertyChanged();
             }
         }

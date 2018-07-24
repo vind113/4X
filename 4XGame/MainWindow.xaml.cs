@@ -1,27 +1,36 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using Logic.Space_Objects;
 using _4XGame.ViewModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace _4XGame {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
+    public partial class MainWindow : Window, INotifyPropertyChanged {
         private MainWindowViewModel viewModel;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public MainWindowViewModel ViewModel {
             get => this.viewModel;
-            set => this.viewModel = value;
+            set {
+                this.viewModel = value;
+                OnPropertyChanged();
+            }
         }
 
         public MainWindow() {
             ViewModel = new MainWindowViewModel();
             InitializeComponent();
             this.Title = "4X Game";
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #region Auto Colonization

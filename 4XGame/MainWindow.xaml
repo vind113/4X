@@ -31,8 +31,12 @@
         <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <Menu>
                 <MenuItem Header="Game" BorderBrush="Gray" Height="20">
-                    <MenuItem Header="New Game"/>
-                    <MenuItem Header="Save Game"/>
+                    <MenuItem Header="New Game"
+                              Command="{Binding Path=NewGameCmd}"
+                              CommandParameter=
+                                "{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                                          AncestorType={x:Type Window}}}"/>
+                    <MenuItem Header="Load Game"/>
                     <MenuItem Header="Load Game"/>
                     <Separator/>
                     <MenuItem Header="Exit"/>
@@ -40,7 +44,7 @@
             </Menu>
         </WrapPanel>
 
-        <Grid x:Name="TurnGrid" Grid.Column="1" Grid.Row="1">
+        <Grid Grid.Column="1" Grid.Row="1">
 
             <ProgressBar x:Name="TurnsProgressBar" Background="Azure"
                          HorizontalAlignment="Right" MinHeight="40"
@@ -48,10 +52,10 @@
                          BorderThickness="1" BorderBrush="DarkGreen" Minimum="0"/>
             
             <WrapPanel Margin="3">
-                <Label x:Name="TurnLabelValue" HorizontalAlignment="Left" FontSize="15"
+                <Label HorizontalAlignment="Left" FontSize="15"
                        Content="{Binding Path=ThisGame.GameDate.Turn}" ContentStringFormat="Turn: {0}"/>
 
-                <Label x:Name="DateLabelValue" HorizontalAlignment="Left" FontSize="15"
+                <Label HorizontalAlignment="Left" FontSize="15"
                        Content="{Binding Path=ThisGame.GameDate.Date}" ContentStringFormat="Date: {0}"/>
             </WrapPanel>
         </Grid>
@@ -59,7 +63,7 @@
         <Border BorderBrush="Black" BorderThickness="1"
                 Grid.Row="1" Grid.Column="0">
             <WrapPanel HorizontalAlignment="Left"
-              Margin="5" VerticalAlignment="Top">
+                       Margin="5" VerticalAlignment="Top">
 
                 <Label x:Name="ShowPlayerMoney" HorizontalAlignment="Left" VerticalAlignment="Top"
                        Content="{Binding Path=Money}" ContentStringFormat="Money: {0:#,#}"/>
@@ -133,7 +137,7 @@
                                   Margin="3" IsReadOnly="True" BorderThickness="2"
                                   AutoGenerateColumns="False"
                                   VerticalScrollBarVisibility="Visible"
-                                  ItemsSource="{Binding Path=ThisGame.PlayerStarSystems}">
+                                  ItemsSource="{Binding Path=ThisGame.Player.StarSystems}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Stars" Binding="{Binding StarsCount}"/>
@@ -269,7 +273,7 @@
                         <Label ContentStringFormat="Owned Systems: {0}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding Path=ThisGame.PlayerStarSystems.Count}"/>
+                               Content="{Binding Path=ThisGame.Player.StarSystems.Count}"/>
                     </WrapPanel>
                 </TabItem>
                 <TabItem Header="Debug Info" Width="100">

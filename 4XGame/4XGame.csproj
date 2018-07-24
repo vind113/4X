@@ -59,6 +59,7 @@
     </ApplicationDefinition>
     <Compile Include="ViewModel\Commands\ColonizePlanetCommand.cs" />
     <Compile Include="ViewModel\Commands\CommandBase.cs" />
+    <Compile Include="ViewModel\Commands\RelayCommand\RelayCommand.cs" />
     <Compile Include="ViewModel\Commands\MultipleNextTurnsCommand.cs" />
     <Compile Include="ViewModel\Commands\NextTurnCommand.cs" />
     <Compile Include="ViewModel\Converters\ColonizePlanetConverter.cs" />

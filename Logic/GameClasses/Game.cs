@@ -70,8 +70,6 @@ namespace Logic.GameClasses {
                 OnPropertyChanged();
             }
         }
-
-        public ObservableCollection<StarSystem> PlayerStarSystems { get => player.StarSystems; }
         #endregion
 
         #region Next Turn Functionality
@@ -130,10 +128,5 @@ namespace Logic.GameClasses {
         }
 
         #endregion
-
-        public void ResetGame() {
-            Player = new Player();
-            GameDate = new CurrentDate();
-        }
     }
 }

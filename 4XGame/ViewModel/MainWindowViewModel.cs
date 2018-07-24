@@ -41,6 +41,11 @@ namespace _4XGame.ViewModel {
         private ColonizePlanetCommand colonizePlanetCommand = null;
         public ColonizePlanetCommand ColonizePlanetCmd =>
             colonizePlanetCommand ?? (colonizePlanetCommand = new ColonizePlanetCommand());
+
+        private RelayCommand<MainWindow> newGameCommand = null;
+        public RelayCommand<MainWindow> NewGameCmd =>
+            newGameCommand ?? (newGameCommand = new RelayCommand<MainWindow>(
+                (o) => { o.ViewModel = new MainWindowViewModel(); }));
         #endregion
 
         #region Properties

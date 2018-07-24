@@ -6,17 +6,7 @@ using System.Windows.Input;
 namespace _4XGame.ViewModel.Commands {
 
     public abstract class CommandBase : ICommand, INotifyPropertyChanged {
-        private TimeSpan lastExecutionTime;
-
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public TimeSpan LastExecutionTime {
-            get => this.lastExecutionTime;
-            protected set {
-                this.lastExecutionTime = value;
-                OnPropertyChanged();
-            }
-        }
 
         public abstract bool CanExecute(object parameter);
 

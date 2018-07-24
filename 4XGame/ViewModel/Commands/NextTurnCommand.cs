@@ -18,8 +18,6 @@ namespace _4XGame.ViewModel.Commands {
             if (parameter != null && parameter is Game game) {
                 game.NextTurn();
             }
-
-            this.LastExecutionTime = stopwatch.Elapsed;
         }
     }
 }
