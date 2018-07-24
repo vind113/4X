@@ -1,10 +1,8 @@
 ﻿using _4XGame.ViewModel.Commands;
 using Logic.GameClasses;
 using Logic.Resourse;
-using Logic.Space_Objects;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
 
 namespace _4XGame.ViewModel {
     public class MainWindowViewModel : INotifyPropertyChanged {
@@ -15,8 +13,6 @@ namespace _4XGame.ViewModel {
         private double totalPopulation;
 
         private Resourses resourses;
-        private Planet selectedPlanet;
-        private Star selectedStar;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -41,6 +37,10 @@ namespace _4XGame.ViewModel {
         private MultipleNextTurnsCommand multipleNextTurnsCommand = null;
         public MultipleNextTurnsCommand MultipleNextTurnsCmd =>
             multipleNextTurnsCommand ?? (multipleNextTurnsCommand = new MultipleNextTurnsCommand());
+
+        private ColonizePlanetCommand colonizePlanetCommand = null;
+        public ColonizePlanetCommand ColonizePlanetCmd =>
+            colonizePlanetCommand ?? (colonizePlanetCommand = new ColonizePlanetCommand());
         #endregion
 
         #region Properties
@@ -83,22 +83,6 @@ namespace _4XGame.ViewModel {
             get => this.totalPopulation;
             set {
                 this.totalPopulation = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Planet SelectedPlanet {
-            get => this.selectedPlanet;
-            set {
-                this.selectedPlanet = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Star SelectedStar {
-            get => this.selectedStar;
-            set {
-                this.selectedStar = value;
                 OnPropertyChanged();
             }
         }

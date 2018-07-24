@@ -5,7 +5,7 @@ using System.Windows.Data;
 namespace _4XGame.ViewModel.Converters {
     class TurnNumberConverter : IMultiValueConverter {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-            Tuple<string, object> tuple = new Tuple<string, object>((string)values[0], values[1]);
+            Tuple<object, object> tuple = new Tuple<object, object>(values[0], values[1]);
             return (object)tuple;
         }
 

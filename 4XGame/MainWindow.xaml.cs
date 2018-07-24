@@ -20,33 +20,9 @@ namespace _4XGame {
 
         public MainWindow() {
             ViewModel = new MainWindowViewModel();
-
             InitializeComponent();
-
             this.Title = "4X Game";
         }
-
-        #region Celestial Info Box
-        private void PlayerStarsTree_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-            WriteStarInfoToBox();
-        }
-
-        private void PlayerPlanetsTree_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-            WritePlanetInfoToBox();
-        }
-
-        private void WriteStarInfoToBox() {
-            if (SystemStarsListBox.SelectedItem != null && SystemStarsListBox.SelectedItem is Star star) {
-                viewModel.SelectedStar = star;
-            }
-        }
-
-        private void WritePlanetInfoToBox() {
-            if (SystemPlanetsListBox.SelectedItem != null && SystemPlanetsListBox.SelectedItem is Planet planet) {
-                viewModel.SelectedPlanet = planet;
-            }
-        }
-        #endregion
 
         #region Auto Colonization
         private void AutoColonizeCheckBox_Checked(object sender, RoutedEventArgs e) {
@@ -69,18 +45,5 @@ namespace _4XGame {
             }
         }
         #endregion
-
-        private void ColonizePlanet_Click(object sender, RoutedEventArgs e) {
-            if (SystemPlanetsListBox.SelectedItem != null && SystemPlanetsListBox.SelectedItem is Planet planet) {
-                planet.Colonize(ViewModel.ThisGame.Player);
-            }
-        }
-
-        private void SystemsGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-            if(SystemsGrid.SelectedItem != null && SystemsGrid.SelectedItem is StarSystem system) {
-                SystemPlanetsListBox.ItemsSource = system.SystemPlanets;
-                SystemStarsListBox.ItemsSource = system.SystemStars;
-            }
-        }
     }
 }

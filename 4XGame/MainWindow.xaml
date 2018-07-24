@@ -4,9 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:_4XGame"
         xmlns:converters="clr-namespace:_4XGame.ViewModel.Converters"
-        xmlns:celestial="clr-namespace:Logic.Space_Objects;assembly=Logic"
         mc:Ignorable="d"
         Title="MainWindow"
         WindowStartupLocation="CenterScreen"
@@ -15,6 +13,7 @@
     
     <Window.Resources>
         <converters:TurnNumberConverter x:Key="TurnNumberConverterResourse"/>
+        <converters:ColonizePlanetConverter x:Key="ColonizePlanetConverterResourse"/>
     </Window.Resources>
 
     <Grid>
@@ -23,26 +22,37 @@
             <ColumnDefinition MinWidth="200" Width="200"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="40"/>
             <RowDefinition/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="TurnGrid" Grid.Column="1" Grid.Row="1"
-              DataContext="{Binding Path=ThisGame.GameDate}">
+        <WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <Menu>
+                <MenuItem Header="Game" BorderBrush="Gray" Height="20">
+                    <MenuItem Header="New Game"/>
+                    <MenuItem Header="Save Game"/>
+                    <MenuItem Header="Load Game"/>
+                    <Separator/>
+                    <MenuItem Header="Exit"/>
+                </MenuItem>
+            </Menu>
+        </WrapPanel>
+
+        <Grid x:Name="TurnGrid" Grid.Column="1" Grid.Row="1">
 
             <ProgressBar x:Name="TurnsProgressBar" Background="Azure"
                          HorizontalAlignment="Right" MinHeight="40"
                          VerticalAlignment="Top" MinWidth="200"
-                         BorderThickness="1" BorderBrush="DarkGreen"
-                         Minimum="0" Maximum="100"/>
+                         BorderThickness="1" BorderBrush="DarkGreen" Minimum="0"/>
             
             <WrapPanel Margin="3">
                 <Label x:Name="TurnLabelValue" HorizontalAlignment="Left" FontSize="15"
-                       Content="{Binding Path=Turn}" ContentStringFormat="Turn: {0}"/>
+                       Content="{Binding Path=ThisGame.GameDate.Turn}" ContentStringFormat="Turn: {0}"/>
 
                 <Label x:Name="DateLabelValue" HorizontalAlignment="Left" FontSize="15"
-                       Content="{Binding Path=Date}" ContentStringFormat="Date: {0}"/>
+                       Content="{Binding Path=ThisGame.GameDate.Date}" ContentStringFormat="Date: {0}"/>
             </WrapPanel>
         </Grid>
 
@@ -72,7 +82,7 @@
         </Border>
 
         <WrapPanel Orientation="Horizontal" MaxWidth="200"
-                   Grid.Column="1" Grid.Row="2"
+                   Grid.Column="1" Grid.Row="3"
               VerticalAlignment="Bottom" HorizontalAlignment="Right">
             <Border MinWidth="180" HorizontalAlignment="Right" Margin="5"
                     BorderThickness="2" BorderBrush="DarkBlue">
@@ -123,8 +133,7 @@
                                   Margin="3" IsReadOnly="True" BorderThickness="2"
                                   AutoGenerateColumns="False"
                                   VerticalScrollBarVisibility="Visible"
-                                  ItemsSource="{Binding Path=ThisGame.PlayerStarSystems}"
-                                  MouseLeftButtonUp="SystemsGrid_MouseLeftButtonUp">
+                                  ItemsSource="{Binding Path=ThisGame.PlayerStarSystems}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Stars" Binding="{Binding StarsCount}"/>
@@ -148,9 +157,9 @@
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Top"
                                              Margin="3"
+                                             ItemsSource="{Binding ElementName=SystemsGrid, Path=SelectedItem.SystemPlanets}"
                                              MinWidth="180" MinHeight="200"
                                              ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                             MouseLeftButtonUp="PlayerPlanetsTree_MouseLeftButtonUp"
                                              BorderThickness="2"
                                              Grid.Column="0">
                                         <ListBox.ItemTemplate>
@@ -163,7 +172,7 @@
                                         <WrapPanel MinHeight="170" MinWidth="200" Grid.Column="1"
                                                   HorizontalAlignment="Left" VerticalAlignment="Top"
                                                   Background="Azure" Margin="3" Orientation="Vertical"
-                                                  DataContext="{Binding Path=SelectedPlanet}">
+                                                  DataContext="{Binding ElementName=SystemPlanetsListBox, Path=SelectedItem}">
 
                                             <Label Content="{Binding Path=Name}" ContentStringFormat="Name: {0}"/>
                                             <Label Content="{Binding Path=Radius}" ContentStringFormat="Radius: {0:#,#}"/>
@@ -182,9 +191,16 @@
                                         </WrapPanel>
                                         <Button x:Name="ColonizePlanetButton"
                                                 Content="Colonize planet" HorizontalAlignment="Left"
-                                                VerticalAlignment="Top" Margin="3"
-                                                MinWidth="95" Click="ColonizePlanet_Click"
-                                                Background="LightGray" RenderTransformOrigin="0.495,3.2"/>
+                                                VerticalAlignment="Top" Margin="3" MinWidth="95"
+                                                Background="LightGray"
+                                                Command="{Binding Path=ColonizePlanetCmd}">
+                                            <Button.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource ColonizePlanetConverterResourse}">
+                                                    <Binding Path="ThisGame.Player"/>
+                                                    <Binding ElementName="SystemPlanetsListBox" Path="SelectedItem"/>
+                                                </MultiBinding>
+                                            </Button.CommandParameter>
+                                        </Button>
                                         <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
                                                   HorizontalAlignment="Left" Margin="3"
                                                   VerticalAlignment="Top" MinHeight="20" MinWidth="100"
@@ -203,10 +219,10 @@
                                     <ListBox x:Name="SystemStarsListBox"
                                              HorizontalAlignment="Left" MinHeight="100"
                                              Grid.Column="0" Margin="3"
+                                             ItemsSource="{Binding ElementName=SystemsGrid, Path=SelectedItem.SystemStars}"
                                              VerticalAlignment="Top" MinWidth="180"
                                              ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                             BorderThickness="2"
-                                             MouseLeftButtonUp="PlayerStarsTree_MouseLeftButtonUp">
+                                             BorderThickness="2">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Label Content="{Binding Name}"/>
@@ -217,7 +233,7 @@
                                                HorizontalAlignment="Left" VerticalAlignment="Top"
                                                Orientation="Vertical"
                                                Margin="3" Background="Azure"
-                                               DataContext="{Binding Path=SelectedStar}">
+                                               DataContext="{Binding ElementName=SystemStarsListBox, Path=SelectedItem}">
 
                                         <Label Content="{Binding Path=Name}" ContentStringFormat="Name: {0}"/>
 

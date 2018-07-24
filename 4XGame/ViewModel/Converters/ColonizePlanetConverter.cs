@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 
 namespace _4XGame.ViewModel.Converters {
-    class SelectCelestialBodyConverter : IMultiValueConverter {
+    public class ColonizePlanetConverter : IMultiValueConverter {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
             Tuple<object, object> tuple = new Tuple<object, object>(values[0], values[1]);
             return (object)tuple;
