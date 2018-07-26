@@ -9,6 +9,7 @@ namespace Logic.Space_Objects {
     public struct PlanetType {
         private const int goodWorldQuality = 100;
 
+        //TODO: СДЕЛАЙ БАЙТОМ
         private int quality;
         private string name;
 
@@ -62,14 +63,14 @@ namespace Logic.Space_Objects {
     /// <summary>
     /// Представляет планету
     /// </summary>
-    [Serializable]
     public class Planet : CelestialBody {
-        PlanetType type;            //тип планеты
-        double population;          //население в особях
-        int buildingSites;          //количество мест для строительства
-        int availableSites;         //количество доступных мест для строительства
-        double maximumPopulation;   //максимальное население планеты
-        //коллекция станций на орбите
+        private PlanetType type;            //тип планеты
+        private double population;          //население в особях
+        private int buildingSites;          //количество мест для строительства
+        private int availableSites;         //количество доступных мест для строительства
+        private double maximumPopulation;   //максимальное население планеты
+
+        private const double citizensPerSector = 100_000_000d;
 
         /// <summary>
         /// Инициализирует экземпляр класса планеты с значениями по умолчанию
@@ -105,7 +106,7 @@ namespace Logic.Space_Objects {
 
             this.maximumPopulation = (double)this.type.Quality * this.area;
 
-            this.buildingSites = (int)(this.MaximumPopulation / 100_000_000d);
+            this.buildingSites = (int)(this.MaximumPopulation / citizensPerSector);
             this.availableSites = this.buildingSites;
            
             this.population = Math.Floor(population);
@@ -119,9 +120,10 @@ namespace Logic.Space_Objects {
             double hydrogen = 0;
 
             if(planetType.Name != "Gas giant") {
-                commonMetals = HelperRandomFunctions.GetRandomInt(70, 130) * planetArea * 10;
-                rareEarthElements = (HelperRandomFunctions.GetRandomInt(90, 110) * planetArea) / 2;
-                hydrogen = (HelperRandomFunctions.GetRandomInt(70, 100) * planetArea) / 10;
+                const double massOfTenKmCrust = (10d * ((3d) * 10E9));
+                commonMetals = planetArea * (massOfTenKmCrust / 20);
+                rareEarthElements = planetArea * (massOfTenKmCrust / 1E5);
+                hydrogen = planetArea / 10;
             }
 
             Resourses planetResourses = new Resourses(hydrogen, commonMetals, rareEarthElements);
@@ -163,63 +165,6 @@ namespace Logic.Space_Objects {
         /// </summary>
         public PlanetType Type { get => this.type; }
 
-        #region Planet Generation
-        /// <summary>
-        ///     Генерирует планету с заданым именем и типом
-        /// </summary>
-        /// <param name="name">
-        ///     Имя планеты
-        /// </param>
-        /// <param name="planetType">
-        ///     Тип планеты(пустынная, океаническая, газовый гигант и т.д)
-        /// </param>
-        /// <returns></returns>
-        public static Planet GeneratePlanet(string name, PlanetTypeValue planetType) {
-            string planetName = name;
-            double population = 0;
-            double radius = 0;
-
-            if(planetType == PlanetTypeValue.GasGiant) {
-                radius = GasGiantRadiusGeneration();
-            }
-            else {
-                radius = RockyPlanetRadiusGeneration();
-            }
-
-            return new Planet(planetName, radius, planetType, population);
-        }
-
-        private static double RockyPlanetRadiusGeneration() {
-            double radius;
-
-            if (HelperRandomFunctions.PercentProbableBool(8)) {
-                radius = (double)HelperRandomFunctions.GetRandomInt(11_000, 13_000);
-            }
-            else if (HelperRandomFunctions.PercentProbableBool(15)) {
-                radius = (double)HelperRandomFunctions.GetRandomInt(9_000, 11_000);
-            }
-            else {
-                radius = (double)HelperRandomFunctions.GetRandomInt(3_000, 9_000);
-            }
-
-            return radius;
-        }
-
-        private static double GasGiantRadiusGeneration() {
-            double radius;
-            if (HelperRandomFunctions.PercentProbableBool(10)) {
-                radius = (double)HelperRandomFunctions.GetRandomInt(110_000, 150_000);
-            }
-            else if (HelperRandomFunctions.PercentProbableBool(20)) {
-                radius = (double)HelperRandomFunctions.GetRandomInt(100_000, 110_000);
-            }
-            else {
-                radius = (double)HelperRandomFunctions.GetRandomInt(20_000, 100_000);
-            }
-            return radius;
-        }
-        #endregion
-
         public override string ToString() {
             return $"{this.Name} is a {this.Type.Name} world with radius of {this.radius} km " +
                 $"and area of {this.Area:E4} km^2. " +
@@ -249,15 +194,15 @@ namespace Logic.Space_Objects {
                 return;
             }
 
-            double partOfGrowth = 7_000d;
+            double partOfGrowth = 0.0015d;
 
-            double growthCoef = (this.MaximumPopulation / this.Population) / (partOfGrowth);
+            double growthCoef = partOfGrowth * HelperRandomFunctions.GetRandomDouble();
 
-            double newPopulation =
-                HelperRandomFunctions.GetRandomDouble() * growthCoef * ((double)this.Type.Quality / (double)PlanetType.GoodWorldQuality) * this.population;
+            double addedPart =
+                growthCoef * ((double)this.Type.Quality / (double)PlanetType.GoodWorldQuality);
 
-            newPopulation = Math.Ceiling(newPopulation);
-            this.Population += newPopulation;
+            double addedPopulation = this.Population * addedPart;
+            this.Population += addedPopulation;
         }
 
         private void CitizensToTheHub(Player player) {
@@ -265,12 +210,12 @@ namespace Logic.Space_Objects {
                 return;
             }
 
-            double partOfTravellers = 1_000;
+            double partOfTravellers = 1_000d;
 
             double citizensToHubExpected = Math.Floor(this.Population / partOfTravellers);
 
             double citizensToHub =
-                Math.Ceiling(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
+                Math.Floor(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
 
             bool canTravelFromPlanet = citizensToHub < this.Population;
             bool canTravelToHub =
@@ -288,7 +233,7 @@ namespace Logic.Space_Objects {
             }
 
             double citizensFromHub =
-                Math.Ceiling(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
+                Math.Floor(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
 
             bool canTravelToPlanet = (this.Population + citizensFromHub) < this.MaximumPopulation;
             bool canTravelFromHub = citizensFromHub < player.PlayerCitizenHub.CitizensInHub;
@@ -304,13 +249,9 @@ namespace Logic.Space_Objects {
                 return;
             }
 
-            //случайный модификатор добычи
-            double partOfExtraction = (double)HelperRandomFunctions.GetRandomInt(1, 5) / 3;
+            double miningDifficulty = ((double)this.Type.Quality / (double)PlanetType.GoodWorldQuality) / 20;
 
-            double gameTurnsToDepletion = 3000;
-            double miningDifficulty = (double)this.Type.Quality / (double)PlanetType.GoodWorldQuality;
-
-            double miningCoef = miningDifficulty * partOfExtraction / gameTurnsToDepletion;
+            double miningCoef = miningDifficulty * this.Population;
             ExtractAllRseourses(player, miningCoef);
         }
 
@@ -337,7 +278,7 @@ namespace Logic.Space_Objects {
             }
 
             double resourseExtracted = 0;
-            resourseExtracted = resourseOnPlanet * miningCoef;
+            resourseExtracted = miningCoef;
 
             if (resourseExtracted <= resourseOnPlanet && resourseExtracted > 1E5) {
                 resourseInPosession += resourseExtracted;
@@ -358,14 +299,21 @@ namespace Logic.Space_Objects {
         /// <param name="player">
         ///     Игрок, который колонизирует планету
         /// </param>
-        public void Colonize(Player player) {
+        /// <returns>
+        /// Булевое значение, которое показывает успешность колонизации
+        /// </returns>
+        public bool Colonize(Player player) {
             double colonizers = 10_000_000;
 
             if (this.Population == 0 && this.MaximumPopulation > colonizers) {
 
                 this.Population += colonizers;
                 player.ColonizedPlanets++;
+
+                return true;
             }
+
+            return false;
         }
     }
 }

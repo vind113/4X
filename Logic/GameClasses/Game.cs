@@ -3,7 +3,6 @@ using Logic.Space_Objects;
 using Logic.SupportClasses;
 
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -13,7 +12,6 @@ namespace Logic.GameClasses {
         private CurrentDate gameDate;
         private bool isAutoColonizationEnabled = false;
 
-       
         #region Events
         public event EventHandler<CitizenHubChangedEventArgs> CitizenHubChanged;
         public event EventHandler<StockpileChangedEventArgs> StockpileChanged;
@@ -97,13 +95,14 @@ namespace Logic.GameClasses {
                 int maxSystemsToGenerate = 0;
                 int systemsToGenerate = 0;
                 StarSystem generatedSystem = null;
+
                 checked {
                     maxSystemsToGenerate = (int)((Math.Sqrt(Player.StarSystems.Count)) / 2);
                     systemsToGenerate = HelperRandomFunctions.GetRandomInt(1, maxSystemsToGenerate + 1);
                 }
+
                 for (int index = 0; index < systemsToGenerate; index++) {
-                    //player.StarSystems.Add(StarSystem.GenerateSystem($"System {currentDate.Date}-{index}"));
-                    generatedSystem = StarSystem.GenerateSystem($"System {GameDate.Date}-{index}");
+                    generatedSystem = StarSystemFactory.GenerateSystem($"System {GameDate.Date} #{index}");
 
                     Player.OwnedStars += generatedSystem.SystemStars.Count;
                     Player.OwnedPlanets += generatedSystem.SystemPlanets.Count;

@@ -20,7 +20,7 @@ namespace _4XGame.ViewModel.Commands {
 
         public int CommandParts {
             get => this.commandParts;
-            set {
+            private set {
                 this.commandParts = value;
                 OnPropertyChanged();
             }
@@ -56,15 +56,15 @@ namespace _4XGame.ViewModel.Commands {
                 return;
             }
 
-            commandParts = (int)turnsToMake;
+            CommandParts = (int)turnsToMake;
 
             for (int i = 0; i < turnsToMake; i++) {
                 Dispatcher.CurrentDispatcher.Invoke(()=> { game.NextTurn(); }, DispatcherPriority.Background);
-                commandProgress++;
+                CommandProgress++;
             }
 
-            commandProgress = 0;
-            commandParts = 1;
+            CommandProgress = 0;
+            CommandParts = 1;
 
             Dispatcher.CurrentDispatcher.Invoke(() => { Console.Beep(); }, DispatcherPriority.Background);
         }

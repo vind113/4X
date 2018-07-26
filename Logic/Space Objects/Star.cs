@@ -7,19 +7,43 @@ using System.Threading.Tasks;
 using Logic.SupportClasses;
 
 namespace Logic.Space_Objects {
+    /// <summary>
+    /// Представляет классы светимости звезды
+    /// </summary>
     public enum LuminosityClass {
         O, B, A, F, G, K, M
     }
 
+    /// <summary>
+    /// Представляет звезду
+    /// </summary>
     public class Star : CelestialBody {
         private LuminosityClass lumClass;
 
+        /// <summary>
+        /// Класс светимости этой звезды
+        /// </summary>
         public LuminosityClass LumClass { get => this.lumClass; }
 
+        /// <summary>
+        /// Инициализирует экземпляр класса планеты с значениями по умолчанию
+        /// </summary>
         public Star() {
 
         }
 
+        /// <summary>
+        /// Инициализирует экземпляр класса звезды
+        /// </summary>
+        /// <param name="name">
+        ///     Имя звезды
+        /// </param>
+        /// <param name="radius">
+        ///     Радиус звезды
+        /// </param>
+        /// <param name="luminosityClass">
+        ///     Класс светимости звезды
+        /// </param>
         public Star(string name, double radius, LuminosityClass luminosityClass) {
             this.name = name;
             this.radius = radius;
@@ -29,7 +53,15 @@ namespace Logic.Space_Objects {
             this.area = HelperMathFunctions.SphereArea(this.Radius);
         }
 
-        //тестируй
+        /// <summary>
+        /// Сгенерировать звезду с заданым именем
+        /// </summary>
+        /// <param name="name">
+        ///     Имя звезды
+        /// </param>
+        /// <returns>
+        ///     Возвращает экземпляр класса <see cref="Star"/>
+        /// </returns>
         public static Star GenerateStar(string name) {
             int radius = 0;
             LuminosityClass luminosityClass;
@@ -57,13 +89,13 @@ namespace Logic.Space_Objects {
 
             }
             //реальное соотношение 0.076
-            else if (starFraction < 0.1) {
+            else if (starFraction < 0.2) {
                 radius = HelperRandomFunctions.GetRandomInt(672_000, 728_000);
                 luminosityClass = LuminosityClass.G;
 
             }
             //реальное соотношение 0.12
-            else if (starFraction < 0.20) {
+            else if (starFraction < 0.3) {
                 radius = HelperRandomFunctions.GetRandomInt(490_000, 672_000);
                 luminosityClass = LuminosityClass.K;
 
@@ -76,30 +108,21 @@ namespace Logic.Space_Objects {
             return new Star(name, radius, luminosityClass);
         }
 
+        /// <summary>
+        ///     Преобразует данные экземпляра в строковое представление
+        /// </summary>
+        /// <returns>Строку, представляющую объект</returns>
         public override string ToString() {
             return $"It is a star called {this.name}" +
                 $" with radius of {this.Radius:E4} km and area of {this.Area:E4} km^2." +
                 $"Luminosity class is {this.LumClass}";
         }
 
+        /// <summary>
+        ///     Выполняет все операции для перехода на следующий ход
+        /// </summary>
         public void NextTurn() {
 
         }
-
-        /*
-            private LuminosityClass GetLuminosityClass(double starRadius) {
-
-            double sunRadius = 696_392d;
-
-            if (starRadius <= sunRadius * 0.7) return LuminosityClass.M;
-            if (starRadius > sunRadius * 0.7 && starRadius <= sunRadius * 0.96) return LuminosityClass.K;
-            if (starRadius > sunRadius * 0.96 && starRadius <= sunRadius * 1.15) return LuminosityClass.G;
-            if (starRadius > sunRadius * 1.15 && starRadius <= sunRadius * 1.4) return LuminosityClass.F;
-            if (starRadius > sunRadius * 1.4 && starRadius <= sunRadius * 1.8) return LuminosityClass.A;
-            if (starRadius > sunRadius * 1.8 && starRadius <= sunRadius * 6.6) return LuminosityClass.B;
-
-            return LuminosityClass.O;
-        }
-        */
     }
 }

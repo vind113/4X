@@ -9,7 +9,6 @@ using System.Runtime.CompilerServices;
 
 namespace Logic.Space_Objects {
 
-    [Serializable]
     public abstract class CelestialBody : INotifyPropertyChanged {
         protected string name;                //имя небесного тела
         protected double area;      //площадь небесного тела

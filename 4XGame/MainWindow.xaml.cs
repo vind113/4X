@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using _4XGame.ViewModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace _4XGame {
     /// <summary>
@@ -33,16 +34,6 @@ namespace _4XGame {
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #region Auto Colonization
-        private void AutoColonizeCheckBox_Checked(object sender, RoutedEventArgs e) {
-            ViewModel.ThisGame.IsAutoColonizationEnabled = true;
-        }
-
-        private void AutoColonizeCheckBox_Unchecked(object sender, RoutedEventArgs e) {
-            ViewModel.ThisGame.IsAutoColonizationEnabled = false;
-        }
-        #endregion
-
         #region Next Turn
         private void TurnsNumberTextBox_TextChanged(object sender, TextChangedEventArgs e) {
             uint turns = 0;
@@ -54,5 +45,9 @@ namespace _4XGame {
             }
         }
         #endregion
+        
+        private void ExitMenuItem_Click(object sender, RoutedEventArgs e) {
+            Process.GetCurrentProcess().Kill();
+        }
     }
 }

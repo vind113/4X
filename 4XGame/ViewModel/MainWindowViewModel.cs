@@ -1,6 +1,7 @@
 ﻿using _4XGame.ViewModel.Commands;
 using Logic.GameClasses;
 using Logic.Resourse;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -14,6 +15,8 @@ namespace _4XGame.ViewModel {
 
         private Resourses resourses;
 
+        private string gameEventsLog;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
@@ -21,6 +24,8 @@ namespace _4XGame.ViewModel {
         }
 
         public MainWindowViewModel() {
+            gameEventsLog = String.Empty;
+
             ThisGame = new Game();
 
             this.resourses = new Resourses(0, 0, 0);
@@ -88,6 +93,14 @@ namespace _4XGame.ViewModel {
             get => this.totalPopulation;
             set {
                 this.totalPopulation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string GameEventsLog {
+            get => this.gameEventsLog;
+            set {
+                this.gameEventsLog = value;
                 OnPropertyChanged();
             }
         }

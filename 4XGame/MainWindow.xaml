@@ -36,10 +36,10 @@
                               CommandParameter=
                                 "{Binding RelativeSource={RelativeSource Mode=FindAncestor,
                                                           AncestorType={x:Type Window}}}"/>
-                    <MenuItem Header="Load Game"/>
+                    <MenuItem Header="Save Game"/>
                     <MenuItem Header="Load Game"/>
                     <Separator/>
-                    <MenuItem Header="Exit"/>
+                    <MenuItem Header="Exit" Click="ExitMenuItem_Click"/>
                 </MenuItem>
             </Menu>
         </WrapPanel>
@@ -49,7 +49,9 @@
             <ProgressBar x:Name="TurnsProgressBar" Background="Azure"
                          HorizontalAlignment="Right" MinHeight="40"
                          VerticalAlignment="Top" MinWidth="200"
-                         BorderThickness="1" BorderBrush="DarkGreen" Minimum="0"/>
+                         BorderThickness="1" BorderBrush="DarkGreen" Minimum="0"
+                         Maximum="{Binding Path=MultipleNextTurnsCmd.CommandParts, Mode=OneWay}"
+                         Value="{Binding Path=MultipleNextTurnsCmd.CommandProgress, Mode=OneWay}"/>
             
             <WrapPanel Margin="3">
                 <Label HorizontalAlignment="Left" FontSize="15"
@@ -123,7 +125,6 @@
             <TabControl x:Name="MainTabControl"
                         HorizontalAlignment="Left"
                         Margin="5"
-                        MaxWidth="890"
                         VerticalAlignment="Top">
                 <TabItem Header="Systems" Width="100" HorizontalAlignment="Left">
                     <Grid ScrollViewer.CanContentScroll="True">
@@ -134,21 +135,20 @@
                         <DataGrid x:Name="SystemsGrid" Grid.Column="0"
                                   MinHeight="340" MinWidth="200" 
                                   HorizontalAlignment="Left" VerticalAlignment="Top"
-                                  Margin="3" IsReadOnly="True" BorderThickness="2"
+                                  Margin="3" CanUserAddRows="False" BorderThickness="2"
                                   AutoGenerateColumns="False"
                                   VerticalScrollBarVisibility="Visible"
                                   ItemsSource="{Binding Path=ThisGame.Player.StarSystems}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                                <DataGridTextColumn Header="Stars" Binding="{Binding StarsCount}"/>
-                                <DataGridTextColumn Header="Planets" Binding="{Binding PlanetsCount}"/>
-                                <DataGridTextColumn Header="Habitable" Binding="{Binding HabitablePlanets}"/>
-                                <DataGridTextColumn Header="Colonized" Binding="{Binding ColonizedCount}"/>
-                                <DataGridTextColumn Header="Population" Binding="{Binding SystemPopulation, StringFormat={}{0:#,#}}"/>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}"/>
+                                <DataGridTextColumn Header="Colonized" Binding="{Binding ColonizedCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Population" Binding="{Binding SystemPopulation, StringFormat={}{0:#,#}}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Stars" Binding="{Binding StarsCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Planets" Binding="{Binding PlanetsCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Habitable" Binding="{Binding HabitablePlanets}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <TabControl MinHeight="335"
-                                    VerticalAlignment="Top"
+                        <TabControl VerticalAlignment="Top"
                                     Grid.Column="1" ScrollViewer.CanContentScroll="True"
                                     Margin="5">
                             <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
@@ -193,24 +193,25 @@
                                             <Label Content="{Binding Path=BodyResourse.CommonMetals}" ContentStringFormat="Common metals: {0:#,#}"/>
                                             <Label Content="{Binding Path=BodyResourse.RareEarthElements}" ContentStringFormat="Rare earth elements: {0:#,#}"/>
                                         </WrapPanel>
-                                        <Button x:Name="ColonizePlanetButton"
+
+                                        <WrapPanel>
+                                            <Button x:Name="ColonizePlanetButton"
                                                 Content="Colonize planet" HorizontalAlignment="Left"
                                                 VerticalAlignment="Top" Margin="3" MinWidth="95"
                                                 Background="LightGray"
                                                 Command="{Binding Path=ColonizePlanetCmd}">
-                                            <Button.CommandParameter>
-                                                <MultiBinding Converter="{StaticResource ColonizePlanetConverterResourse}">
-                                                    <Binding Path="ThisGame.Player"/>
-                                                    <Binding ElementName="SystemPlanetsListBox" Path="SelectedItem"/>
-                                                </MultiBinding>
-                                            </Button.CommandParameter>
-                                        </Button>
-                                        <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
+                                                <Button.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource ColonizePlanetConverterResourse}">
+                                                        <Binding Path="ThisGame.Player"/>
+                                                        <Binding ElementName="SystemPlanetsListBox" Path="SelectedItem"/>
+                                                    </MultiBinding>
+                                                </Button.CommandParameter>
+                                            </Button>
+                                            <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
                                                   HorizontalAlignment="Left" Margin="3"
                                                   VerticalAlignment="Top" MinHeight="20" MinWidth="100"
-                                                  Checked="AutoColonizeCheckBox_Checked"
-                                                  Unchecked="AutoColonizeCheckBox_Unchecked"
-                                                  Indeterminate="AutoColonizeCheckBox_Unchecked"/>
+                                                  IsChecked="{Binding Path=ThisGame.IsAutoColonizationEnabled, Mode=TwoWay}"/>
+                                        </WrapPanel>
                                     </WrapPanel>
                                 </Grid>
                             </TabItem>
@@ -286,5 +287,18 @@
                 </TabItem>
             </TabControl>
         </Grid>
+
+        <DockPanel Grid.Column="0" Grid.Row="3" LastChildFill="True"
+                   Margin="5">
+            <WrapPanel Orientation="Vertical" DockPanel.Dock="Right">
+                <Button MinWidth="100"
+                        Content="Clear Log"/>
+            </WrapPanel>
+            
+            <TextBox VerticalScrollBarVisibility="Visible"
+                     IsReadOnly="True" FontSize="16"
+                     DockPanel.Dock="Left"
+                     Text="{Binding Path=GameEventsLog}"/>
+        </DockPanel>
     </Grid>
 </Window>
