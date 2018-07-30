@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Logic.GameClasses;
-using Logic.Space_Objects;
+using Logic.SpaceObjects;
 using Logic.SupportClasses;
 
 namespace ConsoleTestProject {

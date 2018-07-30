@@ -24,15 +24,18 @@ namespace _4XGame.ViewModel {
         }
 
         public MainWindowViewModel() {
-            gameEventsLog = String.Empty;
+            GameEventsLog = String.Empty;
 
             ThisGame = new Game();
 
-            this.resourses = new Resourses(0, 0, 0);
+            this.CurrentResourses = new Resourses(0, 0, 0);
 
             ThisGame.CitizenHubChanged += SetCitizensInHub;
             ThisGame.StockpileChanged += SetStockpile;
             ThisGame.PopulationChanged += SetTotalPopulation;
+
+            //КОСТИИИИИИИИИИИИИИЛЬ
+            //ThisGame.NextTurn();
         }
 
         #region Commands

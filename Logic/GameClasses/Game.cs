@@ -1,5 +1,5 @@
 ﻿using Logic.PlayerClasses;
-using Logic.Space_Objects;
+using Logic.SpaceObjects;
 using Logic.SupportClasses;
 
 using System;
@@ -42,8 +42,8 @@ namespace Logic.GameClasses {
 
         public Game() {
             Player = new Player();
+
             GameDate = new CurrentDate();
-            Player.StarSystems.Add(StarSystem.GetSolarSystem());
         }
 
         #region Properties
@@ -75,10 +75,7 @@ namespace Logic.GameClasses {
             GameDate = GameDate.NextTurn();
             DiscoverNewStarSystem();
 
-            foreach (StarSystem system in Player.StarSystems) {
-                system.NextTurn(Player);
-            }
-            SetPlayerCitizenHubCapacity();
+            player.NextTurn(IsAutoColonizationEnabled);
 
             OnCitizenHubChanged();
             OnStockpileChanged();
@@ -97,15 +94,12 @@ namespace Logic.GameClasses {
                 StarSystem generatedSystem = null;
 
                 checked {
-                    maxSystemsToGenerate = (int)((Math.Sqrt(Player.StarSystems.Count)) / 2);
+                    maxSystemsToGenerate = (int)((Math.Sqrt(Player.StarSystemsCount)) / 2);
                     systemsToGenerate = HelperRandomFunctions.GetRandomInt(1, maxSystemsToGenerate + 1);
                 }
 
                 for (int index = 0; index < systemsToGenerate; index++) {
-                    generatedSystem = StarSystemFactory.GenerateSystem($"System {GameDate.Date} #{index}");
-
-                    Player.OwnedStars += generatedSystem.SystemStars.Count;
-                    Player.OwnedPlanets += generatedSystem.SystemPlanets.Count;
+                    generatedSystem = StarSystemFactory.GetStarSystem($"System {GameDate.Date} #{index}");
 
                     if (isAutoColonizationEnabled) {
                         foreach (var planet in generatedSystem.SystemPlanets) {
@@ -113,16 +107,8 @@ namespace Logic.GameClasses {
                         }
                     }
 
-                    Player.StarSystems.Add(generatedSystem);
+                    Player.AddStarSystem(generatedSystem);
                 }
-            }
-        }
-
-        private void SetPlayerCitizenHubCapacity() {
-            double newHubCapacity = Math.Ceiling(Player.TotalPopulation / 1000);
-            
-            if (newHubCapacity > Player.PlayerCitizenHub.CitizensInHub) {
-                Player.PlayerCitizenHub.MaximumCount = newHubCapacity;
             }
         }
 

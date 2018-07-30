@@ -3,7 +3,9 @@ using NUnit.Framework;
 
 using Logic.GameClasses;
 using Logic.Resourse;
-using Logic.Space_Objects;
+using Logic.SpaceObjects;
+using Logic.PlayerClasses;
+using System.Collections.Generic;
 
 namespace UnitTest4X {
     [TestFixture]
@@ -17,98 +19,6 @@ namespace UnitTest4X {
             Assert.AreEqual(currentDate.Turn, 120_001);
             Assert.AreEqual(currentDate.Date, "1.12500");
         }
-
-        #region Citizen Hub People Property
-        /*
-        [TestCase]
-        public void CitizenHubProperty_CorrectNumber_ValueIsSet() {
-            double peopleCount = 11;
-            Game.Player.PlayerCitizenHub.MaximumCount = peopleCount;
-
-            Game.Player.PlayerCitizenHub.CitizensInHub = peopleCount;
-
-            Assert.AreEqual(Game.Player.PlayerCitizenHub.CitizensInHub, peopleCount);
-        }
-
-        [TestCase]
-        public void CitizenHubProperty_NumberIsLowerThanZero_ValueIsNotSet() {
-            double peopleCount = -1;
-            Game.Player.PlayerCitizenHub.CitizensInHub = peopleCount;
-
-            Assert.AreNotEqual(Game.Player.PlayerCitizenHub.CitizensInHub, peopleCount);
-        }
-
-        [TestCase]
-        public void CitizenHubProperty_NumberIsBiggerThanMaxCount_ValueIsNotSet() {
-            double peopleCount = Game.Player.PlayerCitizenHub.MaximumCount + 1;
-            Game.Player.PlayerCitizenHub.CitizensInHub = peopleCount;
-
-            Assert.AreNotEqual(Game.Player.PlayerCitizenHub.CitizensInHub, peopleCount);
-        }
-        */
-        #endregion
-
-        #region Citizen Hub Max Property
-        /*
-        [TestCase]
-        public void CitizenHubMax_MaxCountCorrect_ValueIsSet() {
-            double maxCount = 1;
-
-            Game.Player.PlayerCitizenHub.MaximumCount = maxCount;
-
-            Assert.AreEqual(Game.Player.PlayerCitizenHub.MaximumCount, maxCount);
-        }
-
-        [TestCase]
-        public void CitizenHubMax_MaxCountLowerThanZero_ValueIsNotSet() {
-            double maxCount = -1;
-
-            Game.Player.PlayerCitizenHub.MaximumCount = maxCount;
-
-            Assert.AreNotEqual(Game.Player.PlayerCitizenHub.MaximumCount, maxCount);
-        }
-        */
-        #endregion
-
-        #region Player Resourse Property 
-        /*
-        [TestCase]
-        public void PlayerResoursesProperty_ComMetalIsLowerThanZero_ValueIsNotSet() {
-            Resourses resourses = new Resourses(1, -1, 1);
-
-            Game.Player.PlayerResourses = resourses;
-
-            Assert.AreNotEqual(Game.Player.PlayerResourses, resourses);
-        }
-
-        [TestCase]
-        public void PlayerResoursesProperty_RareMetalIsLowerThanZero_ValueIsNotSet() {
-            Resourses resourses = new Resourses(1, 1, -1);
-
-            Game.Player.PlayerResourses = resourses;
-
-            Assert.AreNotEqual(Game.Player.PlayerResourses, resourses);
-        }
-
-        [TestCase]
-        public void PlayerResoursesProperty_HydorgenIsLowerThanZero_ValueIsNotSet() {
-            Resourses resourses = new Resourses(-100, 1, 1);
-
-            Game.Player.PlayerResourses = resourses;
-
-            Assert.AreNotEqual(Game.Player.PlayerResourses, resourses);
-        }
-
-        [TestCase]
-        public void PlayerResoursesProperty_ResoursesAreValid_ValueIsSet() {
-            Resourses resourses = new Resourses(1, 1, 1);
-
-            Game.Player.PlayerResourses = resourses;
-
-            Assert.AreEqual(Game.Player.PlayerResourses, resourses);
-        }
-        */
-        #endregion
 
         #region Star Luminosity
         [TestCase]
@@ -154,40 +64,37 @@ namespace UnitTest4X {
         }
         #endregion
 
-        /*#region Resourse extraction
         [TestCase]
-        public void ExtractResourses_ResourseOnPlanetIsZero_TupleFirstElementIsZero() {
-            var resultTuple = Planet.ExtractResourse(0.1, 0, 1E5);
-            Assert.AreEqual(resultTuple.Item1, 0);
+        public void TryToColonizeQueue_QueueCountIsZero_ImmediateReturn() {
+            Player player = new Player();
+
+            Assert.DoesNotThrow(new TestDelegate(player.TryToColonizeQueue));
         }
 
         [TestCase]
-        public void ExtractResourses_ResourseOnPlanetLowerThanResourseExtractedAndExtractedResoursesLowerThanThreshold_TotalExtraction() {
-            var resultTuple = Planet.ExtractResourse(2, 1E4, 0);
-            Assert.AreEqual(0, resultTuple.Item1);
-            Assert.AreEqual(1E4, resultTuple.Item2);
-        }
+        public void TryToColonizeQueue_QueueCountIsGreaterThanZero() {
+            Player player = new Player();
+            int planetsToColonize = 255;
 
-        [TestCase]
-        public void ExtractResourses_ResourseOnPlanetGreaterThanResourseExtractedAndExtractedResoursesLowerThanThreshold_TotalExtraction() {
-            var resultTuple = Planet.ExtractResourse(0.5, 1E4, 0);
-            Assert.AreEqual(0, resultTuple.Item1);
-            Assert.AreEqual(1E4, resultTuple.Item2);
-        }
+            player.OwnedResourses = new Resourses(Double.MaxValue, Double.MaxValue, Double.MaxValue);
 
-        [TestCase]
-        public void ExtractResourses_ResourseOnPlanetLowerThanResourseExtractedAndExtractedResoursesGreaterThanThreshold_TotalExtraction() {
-            var resultTuple = Planet.ExtractResourse(2, 1E6, 0);
-            Assert.AreEqual(0, resultTuple.Item1);
-            Assert.AreEqual(1E6, resultTuple.Item2);
-        }
+            List<Planet> planetList = new List<Planet>();
 
-        [TestCase]
-        public void ExtractResourses_ResourseOnPlanetGreaterThanResourseExtractedAndExtractedResourseGreaterThreshold_UsualExtraction() {
-            var resultTuple = Planet.ExtractResourse(0.1, 1E7, 1E8);
-            Assert.AreEqual(resultTuple.Item1, 1E7 - 1E6);
-            Assert.AreEqual(resultTuple.Item2, 1E8 + 1E6);
+            for (int i = 0; i < planetsToColonize; i++) {
+                planetList.Add(PlanetFactory.GetPlanet("a", PlanetTypeValue.Continental));
+            }
+
+            player.AddStarSystem(new StarSystem("system", new List<Star>(), planetList));
+
+            foreach (var system in player.StarSystems) {
+                for (int planetIndex = 0; planetIndex < system.PlanetsCount; planetIndex++) {
+                    player.AddToColonizationQueue(system.SystemPlanets[planetIndex]);
+                }
+            }
+
+            player.TryToColonizeQueue();
+
+            Assert.AreEqual(planetsToColonize + 2, player.ColonizedPlanets);
         }
-        #endregion*/
     }
 }

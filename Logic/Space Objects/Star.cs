@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Logic.SupportClasses;
 
-using Logic.SupportClasses;
-
-namespace Logic.Space_Objects {
+namespace Logic.SpaceObjects {
     /// <summary>
     /// Представляет классы светимости звезды
     /// </summary>

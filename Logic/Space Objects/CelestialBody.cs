@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Logic.Resourse;
 using System.Runtime.CompilerServices;
 
-namespace Logic.Space_Objects {
+namespace Logic.SpaceObjects {
 
     public abstract class CelestialBody : INotifyPropertyChanged {
         protected string name;                //имя небесного тела

@@ -26,7 +26,6 @@ namespace _4XGame {
         public MainWindow() {
             ViewModel = new MainWindowViewModel();
             InitializeComponent();
-            this.Title = "4X Game";
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {

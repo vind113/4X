@@ -1,5 +1,5 @@
 ﻿using Logic.PlayerClasses;
-using Logic.Space_Objects;
+using Logic.SpaceObjects;
 using System;
 
 namespace _4XGame.ViewModel.Commands {

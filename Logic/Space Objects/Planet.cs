@@ -5,7 +5,7 @@ using Logic.PlayerClasses;
 using System.Collections.Generic;
 using Logic.Resourse;
 
-namespace Logic.Space_Objects {
+namespace Logic.SpaceObjects {
     public struct PlanetType {
         private const int goodWorldQuality = 100;
 
@@ -65,6 +65,7 @@ namespace Logic.Space_Objects {
     /// </summary>
     public class Planet : CelestialBody {
         private PlanetType type;            //тип планеты
+        private bool isColonized = false;
         private double population;          //население в особях
         private int buildingSites;          //количество мест для строительства
         private int availableSites;         //количество доступных мест для строительства
@@ -95,7 +96,11 @@ namespace Logic.Space_Objects {
         ///     Изначальное население планеты
         /// </param>
         public Planet(string name, double radius, PlanetTypeValue type, double population) {
-            this.name = name;
+            this.Name = name;
+
+            if (radius < 2000) {
+                throw new ArgumentOutOfRangeException(nameof(radius), "Can't be less than 2000");
+            }
             this.radius = radius;
 
             PlanetType planetType = PlanetTypeContainer.GetPlanetType(type);
@@ -104,26 +109,33 @@ namespace Logic.Space_Objects {
             double planetArea = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
             this.area = planetArea;
 
-            this.maximumPopulation = (double)this.type.Quality * this.area;
+            this.maximumPopulation = (double)this.type.Quality * this.Area;
 
             this.buildingSites = (int)(this.MaximumPopulation / citizensPerSector);
             this.availableSites = this.buildingSites;
-           
-            this.population = Math.Floor(population);
 
-            this.BodyResourse = GetPlanetResourses(planetType, planetArea);
+            if (this.MaximumPopulation > population) {
+                this.Population = Math.Floor(population);
+            }
+
+            if(this.Population > 0) {
+                this.IsColonized = true;
+            }
+
+            this.BodyResourse = SetPlanetResourses(planetType, planetArea);
         }
 
-        private Resourses GetPlanetResourses(PlanetType planetType, double planetArea) {
+        private static Resourses SetPlanetResourses(PlanetType planetType, double planetArea) {
             double commonMetals = 0;
             double rareEarthElements = 0;
             double hydrogen = 0;
 
             if(planetType.Name != "Gas giant") {
                 const double massOfTenKmCrust = (10d * ((3d) * 10E9));
+
                 commonMetals = planetArea * (massOfTenKmCrust / 20);
                 rareEarthElements = planetArea * (massOfTenKmCrust / 1E5);
-                hydrogen = planetArea / 10;
+                hydrogen = planetArea * (massOfTenKmCrust / 200);
             }
 
             Resourses planetResourses = new Resourses(hydrogen, commonMetals, rareEarthElements);
@@ -136,12 +148,21 @@ namespace Logic.Space_Objects {
         /// </summary>
         public double Population {
             get => this.population;
-            //private set нужен для централизованой проверки на допустимость значения внутри класса
             private set {
                 if (this.maximumPopulation > value && value > 0) {
                     this.population = value;
                     OnPropertyChanged();
                 };
+            }
+        }
+
+        public bool IsColonized {
+            get => this.isColonized;
+            private set {
+                if (this.isColonized != value) {
+                    this.isColonized = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -181,6 +202,10 @@ namespace Logic.Space_Objects {
         ///     Игрок, которому принадлежит планета
         /// </param>
         public void NextTurn(Player player) {
+            if (this.Population == 0) {
+                return;
+            }
+
             AddPopulation();
         
             CitizensToTheHub(player);
@@ -190,10 +215,6 @@ namespace Logic.Space_Objects {
         }
 
         private void AddPopulation() {
-            if (this.Population == 0) {
-                return;
-            }
-
             double partOfGrowth = 0.0015d;
 
             double growthCoef = partOfGrowth * HelperRandomFunctions.GetRandomDouble();
@@ -203,13 +224,11 @@ namespace Logic.Space_Objects {
 
             double addedPopulation = this.Population * addedPart;
             this.Population += addedPopulation;
+
+            //return addedPopulation;
         }
 
         private void CitizensToTheHub(Player player) {
-            if (this.Population == 0) {
-                return;
-            }
-
             double partOfTravellers = 1_000d;
 
             double citizensToHubExpected = Math.Floor(this.Population / partOfTravellers);
@@ -228,10 +247,6 @@ namespace Logic.Space_Objects {
         }
 
         private void CitizensFromTheHub(Player player) {
-            if (this.Population == 0) {
-                return;
-            }
-
             double citizensFromHub =
                 Math.Floor(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
 
@@ -245,11 +260,8 @@ namespace Logic.Space_Objects {
         }
 
         private void ExtractResourses(Player player) {
-            if (this.Population == 0) {
-                return;
-            }
-
-            double miningDifficulty = ((double)this.Type.Quality / (double)PlanetType.GoodWorldQuality) / 20;
+            double months = 12;
+            double miningDifficulty = ((double)this.Type.Quality / (double)PlanetType.GoodWorldQuality) / months;
 
             double miningCoef = miningDifficulty * this.Population;
             ExtractAllRseourses(player, miningCoef);
@@ -280,7 +292,7 @@ namespace Logic.Space_Objects {
             double resourseExtracted = 0;
             resourseExtracted = miningCoef;
 
-            if (resourseExtracted <= resourseOnPlanet && resourseExtracted > 1E5) {
+            if (resourseExtracted <= resourseOnPlanet && resourseOnPlanet > 1E7) {
                 resourseInPosession += resourseExtracted;
                 resourseOnPlanet -= resourseExtracted;
             }
@@ -303,14 +315,26 @@ namespace Logic.Space_Objects {
         /// Булевое значение, которое показывает успешность колонизации
         /// </returns>
         public bool Colonize(Player player) {
+            if (player == null) {
+                throw new ArgumentNullException(nameof(player));
+            }
+
+            if (this.Population > 0) {
+                return true;
+            }
+
             double colonizers = 10_000_000;
 
-            if (this.Population == 0 && this.MaximumPopulation > colonizers) {
+            if (this.MaximumPopulation > colonizers && player.GetColonizer()) {
 
                 this.Population += colonizers;
-                player.ColonizedPlanets++;
+                this.IsColonized = true;
 
                 return true;
+            }
+
+            if (this.maximumPopulation > 0) {
+                player.AddToColonizationQueue(this);
             }
 
             return false;
