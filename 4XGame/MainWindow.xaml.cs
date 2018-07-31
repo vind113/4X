@@ -48,5 +48,9 @@ namespace _4XGame {
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e) {
             Process.GetCurrentProcess().Kill();
         }
+        
+        private void CancelButton_Click(object sender, RoutedEventArgs e) {
+
+        }
     }
 }

@@ -19,11 +19,11 @@ namespace UnitTest4X {
             Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
             Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
 
-            Resourses c = a + b;
+            a.Add(b);
 
-            bool hydrogenEqual = c.Hydrogen == (a.Hydrogen + b.Hydrogen);
-            bool commonMetalsEqual = c.CommonMetals == (a.CommonMetals + b.CommonMetals);
-            bool rareElementsEqual = c.RareEarthElements == (a.RareEarthElements + b.RareEarthElements);
+            bool hydrogenEqual = a.Hydrogen == (hydrogenA + hydrogenB);
+            bool commonMetalsEqual = a.CommonMetals == (commonMetalsA + commonMetalsB);
+            bool rareElementsEqual = a.RareEarthElements == (rareElementsA + rareElementsB);
 
             Assert.IsTrue(hydrogenEqual && commonMetalsEqual && rareElementsEqual);
         }
@@ -42,7 +42,7 @@ namespace UnitTest4X {
             Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
             Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
 
-            Resourses c = a - b;
+            Resourses c = a.Substract(b);
 
             bool hydrogenEqual = c.Hydrogen == (hydrogenA - hydrogenB);
             bool commonMetalsEqual = c.CommonMetals == (commonMetalsA - commonMetalsB);
@@ -69,7 +69,7 @@ namespace UnitTest4X {
             Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
             Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
 
-            Resourses c = a - b;
+            Resourses c = a.Substract(b);
         }
     }
 }

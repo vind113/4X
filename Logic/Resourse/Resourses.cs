@@ -3,17 +3,37 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Logic.Resourse {
+    /// <summary>
+    /// Представляет ресурсы
+    /// </summary>
     public class Resourses : INotifyPropertyChanged {
         private double hydrogen;
         private double commonMetals;
         private double rareEarthElements;
 
+        private static readonly Resourses zero = new Resourses();
+
+        /// <summary>
+        /// Инициализирует новый объект <see cref="Resourses"/> значениями по умолчанию
+        /// </summary>
         public Resourses() {
             this.Hydrogen = 0;
             this.CommonMetals = 0;
             this.RareEarthElements = 0;
         }
 
+        /// <summary>
+        /// Инициализирует новый объект <see cref="Resourses"/> заданными значениями
+        /// </summary>
+        /// <param name="hydrogen">
+        /// Количество энергетических ресурсов
+        /// </param>
+        /// <param name="commonMetals">
+        /// Количество обычных металлов
+        /// </param>
+        /// <param name="rareEarthElements">
+        /// Количество редких элементов
+        /// </param>
         public Resourses(double hydrogen, double commonMetals, double rareEarthElements) {
             this.Hydrogen = hydrogen;
             this.CommonMetals = commonMetals;
@@ -60,38 +80,43 @@ namespace Logic.Resourse {
             return false;
         }
 
-        public static Resourses operator +(Resourses res1, Resourses res2) {
-            Resourses result = new Resourses();
+        /// <summary>
+        /// Прибавляет ресурсы переданного объекта <see cref="Resourses"/>
+        /// </summary>
+        public void Add(Resourses parameter) {
             try {
                 checked {
-                    result.Hydrogen = res1.Hydrogen + res2.Hydrogen;
-                    result.CommonMetals = res1.Hydrogen + res2.Hydrogen;
-                    result.RareEarthElements = res1.RareEarthElements + res2.RareEarthElements;
+                    this.Hydrogen += parameter.Hydrogen;
+                    this.CommonMetals += parameter.CommonMetals;
+                    this.RareEarthElements += parameter.RareEarthElements;
                 }
             }
             catch(OverflowException) {
 
             }
-
-            return result;
         }
 
-        public static Resourses operator -(Resourses res1, Resourses res2) {
+        /// <summary>
+        /// Вычитает ресурсы переданного объекта <see cref="Resourses"/>
+        /// </summary>
+        /// <exception cref="ArgumentException"
+        /// <exception cref="OverflowException"
+        public Resourses Substract(Resourses parameter) {
             try {
                 checked {
-                    if (res1 < res2) {
-                        throw new ArgumentException("First argument can't be less than second");
+                    if (this < parameter) {
+                        throw new ArgumentException("Argument can't be greater than parameter");
                     }
-                    res1.Hydrogen -= res2.Hydrogen;
-                    res1.CommonMetals -= res2.CommonMetals;
-                    res1.RareEarthElements -= res2.RareEarthElements;
+                    this.Hydrogen -= parameter.Hydrogen;
+                    this.CommonMetals -= parameter.CommonMetals;
+                    this.RareEarthElements -= parameter.RareEarthElements;
                 }
             }
             catch (OverflowException) {
 
             }
 
-            return res1;
+            return this;
         }
 
         public double Hydrogen {
@@ -123,6 +148,8 @@ namespace Logic.Resourse {
                 }
             }
         }
+
+        public static Resourses Zero => zero;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

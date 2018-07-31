@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Logic.PlayerClasses;
+using Logic.Resourse;
 
 namespace Logic.SpaceObjects {
     /// <summary>
@@ -13,6 +14,8 @@ namespace Logic.SpaceObjects {
 
         private readonly List<Star> systemStars;
         private readonly List<Planet> systemPlanets;
+
+        private Resourses systemResourses;
 
         private byte colonizedCount;
         private double population;
@@ -47,15 +50,15 @@ namespace Logic.SpaceObjects {
         /// <param name="name"></param>
         /// <param name="systemStars"></param>
         /// <param name="planets"></param>
-        public StarSystem(string name, List<Star> stars, List<Planet> planets) {
+        public StarSystem(string name, IList<Star> stars, IList<Planet> planets) {
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
-            this.systemStars = stars ?? throw new ArgumentNullException(nameof(stars));
+            this.systemStars = new List<Star>(stars) ?? throw new ArgumentNullException(nameof(stars));
 
             if (planets.Count > 255) {
                 throw new ArgumentOutOfRangeException(nameof(planets), "Count can't be greater than 255");
             }
 
-            this.systemPlanets = planets ?? throw new ArgumentNullException(nameof(planets));
+            this.systemPlanets = new List<Planet>(planets) ?? throw new ArgumentNullException(nameof(planets));
 
             foreach (var planet in this.SystemPlanets) {
                 planet.PropertyChanged += this.Planet_PropertyChanged;

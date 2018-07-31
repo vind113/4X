@@ -3,11 +3,11 @@ using Logic.Resourse;
 
 namespace Logic.PlayerClasses {
     public class Stockpile {
-        private double money = 0;               //деньги, доступные игроку
+        private double money = 0;            //деньги, доступные игроку
         private Resourses playerResourses;  //ресурсы на складе
 
         public Stockpile() {
-            this.Money = 0;
+            this.Money = 111_222_333_444;
             this.PlayerResourses = new Resourses(0, 0, 0);
         }
 

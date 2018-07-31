@@ -18,11 +18,14 @@ namespace Logic.SpaceObjects {
             }
         }
         public double Area { get => this.area; }
+
         public double Radius { get => this.radius; }
+
         public Resourses BodyResourse {
             get => this.bodyResourse;
             protected set => this.bodyResourse = value;
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {

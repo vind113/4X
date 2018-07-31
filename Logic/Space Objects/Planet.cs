@@ -9,16 +9,19 @@ namespace Logic.SpaceObjects {
     public struct PlanetType {
         private const int goodWorldQuality = 100;
 
-        //TODO: СДЕЛАЙ БАЙТОМ
-        private int quality;
+        private byte quality;
         private string name;
+        private double miningDifficulty;
 
-        public PlanetType(int quality, string name) {
+        public PlanetType(byte quality, string name) {
             this.quality = quality;
             this.name = name ?? throw new ArgumentNullException(nameof(name));
+
+            double months = 12;
+            this.miningDifficulty = ((double)quality / (double)PlanetType.GoodWorldQuality) / months;
         }
 
-        public int Quality {
+        public byte Quality {
             get => this.quality;
             set => this.quality = value;
         }
@@ -29,6 +32,7 @@ namespace Logic.SpaceObjects {
         }
 
         public static int GoodWorldQuality { get => goodWorldQuality; }
+        public double MiningDifficulty { get => this.miningDifficulty; }
     }
 
     public enum PlanetTypeValue {
@@ -37,17 +41,22 @@ namespace Logic.SpaceObjects {
 
     static public class PlanetTypeContainer {
         static Dictionary<PlanetTypeValue, PlanetType> planetTypes = new Dictionary<PlanetTypeValue, PlanetType>();
+        static PlanetType[] planetTypesArray = new PlanetType[] {
+            new PlanetType(90, "Continental"),
+            new PlanetType(0, "Barren"),
+            new PlanetType(30, "Desert"),
+            new PlanetType(150, "Paradise"),
+            new PlanetType(50, "Ocean"),
+            new PlanetType(0, "Gas giant"),
+            new PlanetType(0, "Ice world"),
+            new PlanetType(70, "Tropical"),
+            new PlanetType(65, "Tundra")
+        }; 
 
         static PlanetTypeContainer() {
-            planetTypes.Add(PlanetTypeValue.Continental, new PlanetType(90, "Continental"));
-            planetTypes.Add(PlanetTypeValue.Barren, new PlanetType(0, "Barren"));
-            planetTypes.Add(PlanetTypeValue.Desert, new PlanetType(30, "Desert"));
-            planetTypes.Add(PlanetTypeValue.Paradise, new PlanetType(150, "Paradise"));
-            planetTypes.Add(PlanetTypeValue.Ocean, new PlanetType(50, "Ocean"));
-            planetTypes.Add(PlanetTypeValue.GasGiant, new PlanetType(0, "Gas giant"));
-            planetTypes.Add(PlanetTypeValue.IceWorld, new PlanetType(0, "Ice world"));
-            planetTypes.Add(PlanetTypeValue.Tropical, new PlanetType(70, "Tropical"));
-            planetTypes.Add(PlanetTypeValue.Tundra, new PlanetType(65, "Tundra"));
+            for (int i = 0; i < planetTypesArray.Length; i++) {
+                planetTypes.Add((PlanetTypeValue)i, planetTypesArray[i]);
+            }
         }
 
         public static PlanetType GetPlanetType(PlanetTypeValue key) {
@@ -99,7 +108,7 @@ namespace Logic.SpaceObjects {
             this.Name = name;
 
             if (radius < 2000) {
-                throw new ArgumentOutOfRangeException(nameof(radius), "Can't be less than 2000");
+                throw new ArgumentOutOfRangeException(nameof(radius), "Can't be lower than 2000");
             }
             this.radius = radius;
 
@@ -260,48 +269,22 @@ namespace Logic.SpaceObjects {
         }
 
         private void ExtractResourses(Player player) {
-            double months = 12;
-            double miningDifficulty = ((double)this.Type.Quality / (double)PlanetType.GoodWorldQuality) / months;
-
-            double miningCoef = miningDifficulty * this.Population;
-            ExtractAllRseourses(player, miningCoef);
+            if (this.BodyResourse > Resourses.Zero) {
+                double minedResourses = this.Type.MiningDifficulty * this.Population;
+                ExtractAllRseourses(player, minedResourses);
+            }
         }
 
         private void ExtractAllRseourses(Player player, double miningCoef) {
-            var resultTuple =
-                this.ExtractOneResourse(miningCoef, this.BodyResourse.Hydrogen, player.OwnedResourses.Hydrogen);
-            this.BodyResourse.Hydrogen = resultTuple.Item1;
-            player.OwnedResourses.Hydrogen = resultTuple.Item2;
+            try {
+                Resourses extracted = new Resourses(miningCoef, miningCoef, miningCoef);
 
-            resultTuple =
-                this.ExtractOneResourse(miningCoef, this.BodyResourse.CommonMetals, player.OwnedResourses.CommonMetals);
-            this.BodyResourse.CommonMetals = resultTuple.Item1;
-            player.OwnedResourses.CommonMetals = resultTuple.Item2;
-
-            resultTuple =
-                this.ExtractOneResourse(miningCoef, this.BodyResourse.RareEarthElements, player.OwnedResourses.RareEarthElements);
-            this.BodyResourse.RareEarthElements = resultTuple.Item1;
-            player.OwnedResourses.RareEarthElements = resultTuple.Item2;
-        }
-
-        private Tuple<double, double> ExtractOneResourse(double miningCoef, double resourseOnPlanet, double resourseInPosession) {
-            if (resourseOnPlanet <= 0) {
-                return new Tuple<double, double>(0, resourseInPosession);
+                this.BodyResourse.Substract(extracted);
+                player.OwnedResourses.Add(extracted);
             }
-
-            double resourseExtracted = 0;
-            resourseExtracted = miningCoef;
-
-            if (resourseExtracted <= resourseOnPlanet && resourseOnPlanet > 1E7) {
-                resourseInPosession += resourseExtracted;
-                resourseOnPlanet -= resourseExtracted;
+            catch (ArgumentException) {
+                return;
             }
-            else {
-                resourseInPosession += resourseOnPlanet;
-                resourseOnPlanet = 0;
-            }
-
-            return new Tuple<double, double>(resourseOnPlanet, resourseInPosession);
         }
         #endregion
 

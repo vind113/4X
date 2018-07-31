@@ -5,6 +5,8 @@ using Logic.Resourse;
 using Logic.SpaceObjects;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Logic.GameClasses;
+using Logic.SupportClasses;
 
 namespace Logic.PlayerClasses {
     public class Player : INotifyPropertyChanged {
@@ -34,13 +36,29 @@ namespace Logic.PlayerClasses {
             this.ships = new Ships();
         }
 
-        public Player(Stockpile stockpile, CitizenHub hub, IEnumerable<StarSystem> starSystems) {
+        public Player(Stockpile stockpile, IEnumerable<StarSystem> starSystems) {
             this.stockpile = stockpile ?? throw new ArgumentNullException(nameof(stockpile));
-            this.hub = hub ?? throw new ArgumentNullException(nameof(hub));
             this.starSystems = new ObservableCollection<StarSystem>(starSystems) ?? throw new ArgumentNullException(nameof(starSystems));
+
+            this.hub = new CitizenHub();
+            this.planetsToColonize = new Queue<Planet>();
+            this.ships = new Ships();
         }
 
+        public event EventHandler<StockpileChangedEventArgs> StockpileChanged;
+        public event EventHandler<PopulationChangedEventArgs> PopulationChanged;
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnStockpileChanged() {
+            var handler = StockpileChanged;
+            handler?.Invoke(this, new StockpileChangedEventArgs(this.Money, this.OwnedResourses));
+        }
+
+        private void OnPopulationChanged() {
+            var handler = PopulationChanged;
+            handler?.Invoke(this, new PopulationChangedEventArgs(this.TotalPopulation));
+        }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
             var handler = PropertyChanged;
@@ -84,7 +102,7 @@ namespace Logic.PlayerClasses {
 
         public CitizenHub PlayerCitizenHub {
             get => this.hub;
-            set => this.hub = value;
+            private set => this.hub = value;
         }
 
         public Resourses OwnedResourses {
@@ -159,7 +177,7 @@ namespace Logic.PlayerClasses {
         }
         #endregion
 
-        public void NextTurn(bool isAutoColonizationEnabled) {
+        public void NextTurn(bool isAutoColonizationEnabled, bool isDiscoveringNewStarSystems) {
             if (isAutoColonizationEnabled) {
                 this.TryToColonizeQueue();
             }
@@ -168,7 +186,14 @@ namespace Logic.PlayerClasses {
                 system.NextTurn(this);
             }
 
+            if (isDiscoveringNewStarSystems) {
+                DiscoverNewStarSystem(isAutoColonizationEnabled);
+            }
+
             SetCitizenHubCapacity();
+
+            OnStockpileChanged();
+            OnPopulationChanged();
         }
 
         private void SetCitizenHubCapacity() {
@@ -226,6 +251,36 @@ namespace Logic.PlayerClasses {
 
             if (this.starSystems.Contains(system)) {
                 this.starSystems.Remove(system);
+            }
+        }
+
+        private void DiscoverNewStarSystem(bool isAutoColonizationEnabled) {
+            //с такой вероятностью каждый ход будет открываться новая система
+            //возможно добавить зависимость от уровня технологий
+            //оптимальное значение - 0.15
+            double discoveryProbability = 0.15;
+
+            if (HelperRandomFunctions.ProbableBool(discoveryProbability)) {
+                int maxSystemsToGenerate = 0;
+                int systemsToGenerate = 0;
+                StarSystem generatedSystem = null;
+
+                checked {
+                    maxSystemsToGenerate = (int)((Math.Sqrt(this.StarSystemsCount)) / 2);
+                    systemsToGenerate = HelperRandomFunctions.GetRandomInt(1, maxSystemsToGenerate + 1);
+                }
+
+                for (int index = 0; index < systemsToGenerate; index++) {
+                    generatedSystem = StarSystemFactory.GetStarSystem($"System {this.StarSystemsCount + 1} #{index}");
+
+                    if (isAutoColonizationEnabled) {
+                        foreach (var planet in generatedSystem.SystemPlanets) {
+                            planet.Colonize(this);
+                        }
+                    }
+
+                    this.AddStarSystem(generatedSystem);
+                }
             }
         }
     }

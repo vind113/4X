@@ -10,7 +10,7 @@ namespace _4XGame.ViewModel {
         private Game thisGame;
 
         private double money;
-        private double citizensInHub;
+        //private double citizensInHub;
         private double totalPopulation;
 
         private Resourses resourses;
@@ -30,12 +30,9 @@ namespace _4XGame.ViewModel {
 
             this.CurrentResourses = new Resourses(0, 0, 0);
 
-            ThisGame.CitizenHubChanged += SetCitizensInHub;
-            ThisGame.StockpileChanged += SetStockpile;
-            ThisGame.PopulationChanged += SetTotalPopulation;
-
-            //КОСТИИИИИИИИИИИИИИЛЬ
-            //ThisGame.NextTurn();
+            //ThisGame.CitizenHubChanged += SetCitizensInHub;
+            ThisGame.Player.StockpileChanged += SetStockpile;
+            ThisGame.Player.PopulationChanged += SetTotalPopulation;
         }
 
         #region Commands
@@ -65,14 +62,14 @@ namespace _4XGame.ViewModel {
             }
         }
 
-        public double CitizensInHub {
+        /*public double CitizensInHub {
             get => this.citizensInHub;
             set {
                 if (this.CitizensInHub == value) { return; }
                 this.citizensInHub = value;
                 OnPropertyChanged();
             }
-        }
+        }*/
 
         public double Money {
             get => this.money;
@@ -109,9 +106,9 @@ namespace _4XGame.ViewModel {
         }
         #endregion
 
-        private void SetCitizensInHub(object sender, CitizenHubChangedEventArgs e) {
+        /*private void SetCitizensInHub(object sender, CitizenHubChangedEventArgs e) {
             CitizensInHub = e.CitizensInHub;   
-        }
+        }*/
 
         private void SetStockpile(object sender, StockpileChangedEventArgs e) {
             Money = e.Money;

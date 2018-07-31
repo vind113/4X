@@ -23,7 +23,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="70"/>
             <RowDefinition/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
@@ -60,32 +60,55 @@
                     <Label HorizontalAlignment="Left" FontSize="15"
                        Content="{Binding Path=ThisGame.GameDate.Date}" ContentStringFormat="Date: {0}"/>
                 </WrapPanel>
+
+                <Button VerticalAlignment="Bottom" MinHeight="30"
+                        Content="Cancel"
+                        Click="CancelButton_Click"/>
             </Grid>
         </Grid>
 
         <Border BorderBrush="Black" BorderThickness="1"
                 Grid.Row="1" Grid.Column="0" Margin="5">
-            <WrapPanel HorizontalAlignment="Left"
-                       VerticalAlignment="Top">
+            <Grid ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-                <Label x:Name="ShowPlayerMoney" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Content="{Binding Path=Money}" ContentStringFormat="Money: {0:#,#}"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-                <Label x:Name="ShowPlayerHydrogen" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Blue"
-                       Content="{Binding Path=CurrentResourses.Hydrogen}" ContentStringFormat="Hydrogen: {0:#,#}"/>
+                <Label Grid.Row="1" Grid.Column="0"
+                       Foreground="Blue"
+                       Content="{Binding Path=CurrentResourses.Hydrogen}"
+                       ContentStringFormat="Hydrogen: {0:#,#}"/>
 
-                <Label x:Name="ShowPlayerMetals" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DimGray"
-                       Content="{Binding Path=CurrentResourses.CommonMetals}" ContentStringFormat="Common Metals: {0:#,#}"/>
+                <Label Grid.Row="1" Grid.Column="1"
+                       Foreground="DimGray"
+                       Content="{Binding Path=CurrentResourses.CommonMetals}"
+                       ContentStringFormat="Common Metals: {0:#,#}"/>
 
-                <Label x:Name="ShowPlayerRareMetals" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGreen"
-                       Content="{Binding Path=CurrentResourses.RareEarthElements}" ContentStringFormat="Rare Metals: {0:#,#}"/>
+                <Label Grid.Row="1" Grid.Column="2"
+                       Foreground="DarkGreen"
+                       Content="{Binding Path=CurrentResourses.RareEarthElements}"
+                       ContentStringFormat="Rare Elements: {0:#,#}"/>
 
-                <Label x:Name="ShowPlayerTotalPopulation" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Content="{Binding Path=TotalPopulation}"  ContentStringFormat="Population: {0:#,#}"/>
+                
+                <Label Grid.Row="0" Grid.Column="0"
+                       Content="{Binding Path=Money}"
+                       ContentStringFormat="Money: {0:#,#}"/>
 
-                <Label x:Name="ShowCitizenHub" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Content="{Binding Path=CitizensInHub}" ContentStringFormat="In Hub: {0:#,#}"/>
-            </WrapPanel>
+                <Label Grid.Row="0" Grid.Column="1"
+                       Content="{Binding Path=TotalPopulation}"
+                       ContentStringFormat="Population: {0:#,#}"/>
+
+                <!--Label Grid.Row="0" Grid.Column="2"
+                       Content="{Binding Path=CitizensInHub}"
+                       ContentStringFormat="In Hub: {0:#,#}"/-->
+            </Grid>
         </Border>
 
         <WrapPanel Orientation="Horizontal" MaxWidth="200"

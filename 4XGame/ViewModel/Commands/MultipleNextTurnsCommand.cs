@@ -60,6 +60,7 @@ namespace _4XGame.ViewModel.Commands {
 
             for (int i = 0; i < turnsToMake; i++) {
                 Dispatcher.CurrentDispatcher.Invoke(()=> { game.NextTurn(); }, DispatcherPriority.Background);
+                //game.NextTurn();
                 CommandProgress++;
             }
 

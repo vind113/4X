@@ -13,7 +13,7 @@ namespace Logic.PlayerClasses {
             }
 
             if (playerResourses >= colonizerCost) {
-                playerResourses = playerResourses - colonizerCost;
+                playerResourses.Substract(colonizerCost);
                 return true;
             }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-
 using Logic.GameClasses;
 using Logic.Resourse;
 using Logic.SpaceObjects;
@@ -12,7 +11,7 @@ namespace UnitTest4X {
     public class UnitTest1 {
         [TestCase]
         public void CheckDateIncrement_CorrectConditions_DateIsCorrect() {
-            CurrentDate currentDate = new CurrentDate();
+            TurnDate currentDate = new TurnDate();
             for (int i = 0; i < 120_000; i++) {
                 currentDate = currentDate.NextTurn();
             }
