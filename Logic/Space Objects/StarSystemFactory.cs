@@ -61,7 +61,7 @@ namespace Logic.SpaceObjects {
             }
 
             for (int index = 0; index < starsCount; index++) {
-                stars.Add(Star.GenerateStar($"{name} Sun #{index + 1}"));
+                stars.Add(Star.GenerateStar($"{name} Star #{index + 1}"));
             }
         
             return stars;
@@ -70,7 +70,7 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Генерирует колекцию <see cref="Planet"/> системы
         /// </summary>
-        /// <param name="name">
+        /// <param name="systemName">
         /// Имя звездной системы, в которой находятся генерируемые планеты
         /// </param>
         /// <param name="stars">
@@ -79,14 +79,16 @@ namespace Logic.SpaceObjects {
         /// <returns>
         /// <see cref="List{T}"/>, содержащий <see cref="Planet"/>
         /// </returns>
-        private static List<Planet> GenerateSystemPlanets(string name, List<Star> stars) {
+        private static List<Planet> GenerateSystemPlanets(string systemName, List<Star> stars) {
             List<Planet> planets = new List<Planet>();
 
             int planetCount = 0;
 
-            GenerateBarrenPlanets(name, ref planetCount, planets);
-            GenerateHabitablePlanets(name, ref planetCount, stars, planets);
-            GenerateGasGiantPlanets(name, ref planetCount, planets);
+            string systemNameLocal = systemName;
+
+            GenerateBarrenPlanets(systemNameLocal, ref planetCount, planets);
+            GenerateHabitablePlanets(systemNameLocal, ref planetCount, stars, planets);
+            GenerateGasGiantPlanets(systemNameLocal, ref planetCount, planets);
 
             return planets;
         }
@@ -94,7 +96,7 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Генерирует безжизненные планеты системы
         /// </summary>
-        /// <param name="name">
+        /// <param name="nameTemplate">
         /// Имя звездной системы, в которой находятся генерируемые планеты
         /// </param>
         /// <param name="planetCount">
@@ -103,10 +105,10 @@ namespace Logic.SpaceObjects {
         /// <param name="planets">
         /// Коллекция <see cref="Planet"/> системы
         /// </param>
-        private static void GenerateBarrenPlanets(string name, ref int planetCount, List<Planet> planets) {
+        private static void GenerateBarrenPlanets(string systemName, ref int planetCount, List<Planet> planets) {
             int barrenCount = HelperRandomFunctions.GetRandomInt(minBarrenCount, maxBarrenCount + 1);
             for (int index = 0; index < barrenCount; index++) {
-                planets.Add(PlanetFactory.GetPlanet($"{name} #{planetCount}(B)", PlanetTypeValue.Barren));
+                planets.Add(PlanetFactory.GetPlanet(GetPlanetName(systemName, planetCount), PlanetTypeVariants.Barren));
                 planetCount++;
             }
         }
@@ -114,7 +116,7 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Генерирует обитаемые планеты системы
         /// </summary>
-        /// <param name="name">
+        /// <param name="systemName">
         /// Имя звездной системы, в которой находятся генерируемые планеты
         /// </param>
         /// <param name="planetCount">
@@ -126,7 +128,7 @@ namespace Logic.SpaceObjects {
         /// <param name="planets">
         /// Коллекция <see cref="Planet"/> системы
         /// </param>
-        private static void GenerateHabitablePlanets(string name, ref int planetCount, List<Star> stars, List<Planet> planets) {
+        private static void GenerateHabitablePlanets(string systemName, ref int planetCount, List<Star> stars, List<Planet> planets) {
             LuminosityClass systemStarClass = stars[0].LumClass;
 
             if (systemStarClass == LuminosityClass.G
@@ -135,7 +137,7 @@ namespace Logic.SpaceObjects {
 
                 int habitablePlanetCount = HelperRandomFunctions.GetRandomInt(minHabitableCount, maxHabitableCount + 1);
                 for (int index = 0; index < habitablePlanetCount; index++) {
-                    GenerateHabitablePlanet(name, planets, planetCount);
+                    GenerateHabitablePlanet(systemName, planets, planetCount);
                     planetCount++;
                 }
             }
@@ -144,7 +146,7 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Генерирует одну обитаемую планету
         /// </summary>
-        /// <param name="name">
+        /// <param name="systemName">
         /// Имя звездной системы, в которой находятся генерируемые планеты
         /// </param>
         /// <param name="planets">
@@ -153,40 +155,45 @@ namespace Logic.SpaceObjects {
         /// <param name="planetCount">
         /// Счетчик планет системы
         /// </param>
-        private static void GenerateHabitablePlanet(string name, List<Planet> planets, int planetCount) {
+        private static void GenerateHabitablePlanet(string systemName, List<Planet> planets, int planetCount) {
             int probabilityIndex = HelperRandomFunctions.GetRandomInt(1, maxPercents + 1);
 
-            string planetName = $"{name} #{planetCount}(H)";
+            string planetName = GetPlanetName(systemName, planetCount);
+
+            PlanetTypeVariants planetType;
 
             if (probabilityIndex <= 30) {
-                planets.Add(PlanetFactory.GetPlanet(planetName, PlanetTypeValue.Continental));
+                planetType = PlanetTypeVariants.Continental;
 
             }
             else if (probabilityIndex <= 50) {
-                planets.Add(PlanetFactory.GetPlanet(planetName, PlanetTypeValue.Tundra));
+                planetType = PlanetTypeVariants.Tundra;
 
             }
             else if (probabilityIndex <= 70) {
-                planets.Add(PlanetFactory.GetPlanet(planetName, PlanetTypeValue.Ocean));
+                planetType = PlanetTypeVariants.Ocean;
 
             }
             else if (probabilityIndex <= 80) {
-                planets.Add(PlanetFactory.GetPlanet(planetName, PlanetTypeValue.Paradise));
+                planetType = PlanetTypeVariants.Paradise;
 
             }
             else if (probabilityIndex <= 90) {
-                planets.Add(PlanetFactory.GetPlanet(planetName, PlanetTypeValue.Tropical));
+                planetType = PlanetTypeVariants.Tropical;
 
             }
             else {
-                planets.Add(PlanetFactory.GetPlanet(planetName, PlanetTypeValue.Desert));
+                planetType = PlanetTypeVariants.Desert;
+
             }
+
+            planets.Add(PlanetFactory.GetPlanet(planetName, planetType));
         }
 
         /// <summary>
         /// Генерирует газовые планеты системы
         /// </summary>
-        /// <param name="name">
+        /// <param name="systemName">
         /// Имя звездной системы, в которой находятся генерируемые планеты
         /// </param>
         /// <param name="planetCount">
@@ -195,12 +202,16 @@ namespace Logic.SpaceObjects {
         /// <param name="planets">
         /// Коллекция <see cref="Planet"/> системы
         /// </param>
-        private static void GenerateGasGiantPlanets(string name, ref int planetCount, List<Planet> planets) {
+        private static void GenerateGasGiantPlanets(string systemName, ref int planetCount, List<Planet> planets) {
             int gasGiantCount = HelperRandomFunctions.GetRandomInt(minGasGiantCount, maxGasGiantCount + 1);
             for (int index = 0; index < gasGiantCount; index++) {
-                planets.Add(PlanetFactory.GetPlanet($"{name} #{planetCount}(GG)", PlanetTypeValue.GasGiant));
+                planets.Add(PlanetFactory.GetPlanet(GetPlanetName(systemName, planetCount), PlanetTypeVariants.GasGiant));
                 planetCount++;
             }
+        }
+
+        private static string GetPlanetName(string systemName, int planetCount) {
+            return $"{systemName} #{planetCount}";
         }
 
         /// <summary>
@@ -212,15 +223,15 @@ namespace Logic.SpaceObjects {
         public static StarSystem GetSolarSystem() {
             List<Planet> planets = new List<Planet>();
 
-            planets.Add(new Planet("Mercury", 2440, PlanetTypeValue.Barren, 0d));
-            planets.Add(new Planet("Venus", 6051, PlanetTypeValue.Barren, 0d));
-            planets.Add(new Planet("Earth", 6371, PlanetTypeValue.Continental, 20_000_000_000d));
-            planets.Add(new Planet("Mars", 3389, PlanetTypeValue.Desert, 0d));
+            planets.Add(new Planet("Mercury", 2440, PlanetTypeVariants.Barren, 0d));
+            planets.Add(new Planet("Venus", 6051, PlanetTypeVariants.Barren, 0d));
+            planets.Add(new Planet("Earth", 6371, PlanetTypeVariants.Continental, 20_000_000_000d));
+            planets.Add(new Planet("Mars", 3389, PlanetTypeVariants.Barren, 0d));
 
-            planets.Add(new Planet("Jupiter", 71_492, PlanetTypeValue.GasGiant, 0d));
-            planets.Add(new Planet("Saturn", 60_268, PlanetTypeValue.GasGiant, 0d));
-            planets.Add(new Planet("Uranus", 25_559, PlanetTypeValue.GasGiant, 0d));
-            planets.Add(new Planet("Neptune", 24_764, PlanetTypeValue.GasGiant, 0d));
+            planets.Add(new Planet("Jupiter", 71_492, PlanetTypeVariants.GasGiant, 0d));
+            planets.Add(new Planet("Saturn", 60_268, PlanetTypeVariants.GasGiant, 0d));
+            planets.Add(new Planet("Uranus", 25_559, PlanetTypeVariants.GasGiant, 0d));
+            planets.Add(new Planet("Neptune", 24_764, PlanetTypeVariants.GasGiant, 0d));
 
             List<Star> stars = new List<Star> { new Star("Sun", 696_392d, LuminosityClass.G) };
 

@@ -1,4 +1,5 @@
 ﻿using Logic.SupportClasses;
+using System;
 
 namespace Logic.SpaceObjects {
     /// <summary>
@@ -11,6 +12,7 @@ namespace Logic.SpaceObjects {
     /// <summary>
     /// Представляет звезду
     /// </summary>
+    [Serializable]
     public class Star : CelestialBody {
         private LuminosityClass lumClass;
 

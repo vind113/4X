@@ -22,12 +22,12 @@ namespace Logic.SpaceObjects {
         ///     Тип планеты(пустынная, океаническая, газовый гигант и т.д)
         /// </param>
         /// <returns></returns>
-        public static Planet GetPlanet(string name, PlanetTypeValue planetType) {
+        public static Planet GetPlanet(string name, PlanetTypeVariants planetType) {
             string planetName = name;
             double population = 0;
             double radius = 0;
 
-            if (planetType == PlanetTypeValue.GasGiant) {
+            if (planetType == PlanetTypeVariants.GasGiant) {
                 radius = GasGiantRadiusGeneration();
             }
             else {

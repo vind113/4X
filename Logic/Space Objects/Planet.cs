@@ -35,36 +35,36 @@ namespace Logic.SpaceObjects {
         public double MiningDifficulty { get => this.miningDifficulty; }
     }
 
-    public enum PlanetTypeValue {
+    public enum PlanetTypeVariants {
         Continental, Barren, Desert, Paradise, Ocean, GasGiant, IceWorld, Tropical, Tundra
     }
 
     static public class PlanetTypeContainer {
-        static Dictionary<PlanetTypeValue, PlanetType> planetTypes = new Dictionary<PlanetTypeValue, PlanetType>();
+        static Dictionary<PlanetTypeVariants, PlanetType> planetTypes = new Dictionary<PlanetTypeVariants, PlanetType>();
         static PlanetType[] planetTypesArray = new PlanetType[] {
             new PlanetType(90, "Continental"),
             new PlanetType(0, "Barren"),
-            new PlanetType(30, "Desert"),
+            new PlanetType(10, "Desert"),
             new PlanetType(150, "Paradise"),
-            new PlanetType(50, "Ocean"),
+            new PlanetType(40, "Ocean"),
             new PlanetType(0, "Gas giant"),
             new PlanetType(0, "Ice world"),
-            new PlanetType(70, "Tropical"),
-            new PlanetType(65, "Tundra")
+            new PlanetType(40, "Tropical"),
+            new PlanetType(50, "Tundra")
         }; 
 
         static PlanetTypeContainer() {
             for (int i = 0; i < planetTypesArray.Length; i++) {
-                planetTypes.Add((PlanetTypeValue)i, planetTypesArray[i]);
+                planetTypes.Add((PlanetTypeVariants)i, planetTypesArray[i]);
             }
         }
 
-        public static PlanetType GetPlanetType(PlanetTypeValue key) {
+        public static PlanetType GetPlanetType(PlanetTypeVariants key) {
             if (planetTypes.ContainsKey(key)) {
                 return planetTypes[key];
             }
             else {
-                return planetTypes[PlanetTypeValue.Barren];
+                throw new ArgumentException("Passed key does not have a value");
             }
         }
     }
@@ -72,7 +72,8 @@ namespace Logic.SpaceObjects {
     /// <summary>
     /// Представляет планету
     /// </summary>
-    public class Planet : CelestialBody {
+    [Serializable]
+    public class Planet : CelestialBody, IHabitable {
         private PlanetType type;            //тип планеты
         private bool isColonized = false;
         private double population;          //население в особях
@@ -104,7 +105,7 @@ namespace Logic.SpaceObjects {
         /// <param name="population">
         ///     Изначальное население планеты
         /// </param>
-        public Planet(string name, double radius, PlanetTypeValue type, double population) {
+        public Planet(string name, double radius, PlanetTypeVariants type, double population) {
             this.Name = name;
 
             if (radius < 2000) {
@@ -120,7 +121,7 @@ namespace Logic.SpaceObjects {
 
             this.maximumPopulation = (double)this.type.Quality * this.Area;
 
-            this.buildingSites = (int)(this.MaximumPopulation / citizensPerSector);
+            this.buildingSites = (int)Math.Ceiling(this.MaximumPopulation / citizensPerSector);
             this.availableSites = this.buildingSites;
 
             if (this.MaximumPopulation > population) {
@@ -157,7 +158,7 @@ namespace Logic.SpaceObjects {
         /// </summary>
         public double Population {
             get => this.population;
-            private set {
+            set {
                 if (this.maximumPopulation > value && value > 0) {
                     this.population = value;
                     OnPropertyChanged();
@@ -215,17 +216,15 @@ namespace Logic.SpaceObjects {
                 return;
             }
 
-            AddPopulation();
-        
-            CitizensToTheHub(player);
-            CitizensFromTheHub(player);
+            AddPopulation(player.PopulationGrowthModifier);
+
+            player.Hub.MigrateHabitatToHub(this);
+            player.Hub.MigrateHubToHabitat(this);
 
             ExtractResourses(player);
         }
 
-        private void AddPopulation() {
-            double partOfGrowth = 0.0015d;
-
+        private void AddPopulation(double partOfGrowth) {
             double growthCoef = partOfGrowth * HelperRandomFunctions.GetRandomDouble();
 
             double addedPart =
@@ -233,57 +232,24 @@ namespace Logic.SpaceObjects {
 
             double addedPopulation = this.Population * addedPart;
             this.Population += addedPopulation;
-
-            //return addedPopulation;
-        }
-
-        private void CitizensToTheHub(Player player) {
-            double partOfTravellers = 1_000d;
-
-            double citizensToHubExpected = Math.Floor(this.Population / partOfTravellers);
-
-            double citizensToHub =
-                Math.Floor(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
-
-            bool canTravelFromPlanet = citizensToHub < this.Population;
-            bool canTravelToHub =
-                (player.PlayerCitizenHub.CitizensInHub + citizensToHub) < player.PlayerCitizenHub.MaximumCount;
-
-            if (canTravelFromPlanet && canTravelToHub) {
-                this.Population -= citizensToHub;
-                player.PlayerCitizenHub.CitizensInHub += citizensToHub;
-            }      
-        }
-
-        private void CitizensFromTheHub(Player player) {
-            double citizensFromHub =
-                Math.Floor(HelperRandomFunctions.GetRandomDouble() * player.PlayerCitizenHub.CitizensInHub);
-
-            bool canTravelToPlanet = (this.Population + citizensFromHub) < this.MaximumPopulation;
-            bool canTravelFromHub = citizensFromHub < player.PlayerCitizenHub.CitizensInHub;
-
-            if (canTravelToPlanet && canTravelFromHub) {
-                player.PlayerCitizenHub.CitizensInHub -= citizensFromHub;
-                this.Population += citizensFromHub;
-            }
         }
 
         private void ExtractResourses(Player player) {
             if (this.BodyResourse > Resourses.Zero) {
-                double minedResourses = this.Type.MiningDifficulty * this.Population;
-                ExtractAllRseourses(player, minedResourses);
-            }
-        }
+                double minedResourses = (this.Type.MiningDifficulty * this.Population);
 
-        private void ExtractAllRseourses(Player player, double miningCoef) {
-            try {
-                Resourses extracted = new Resourses(miningCoef, miningCoef, miningCoef);
+                double minedHydrogen = minedResourses / 10;
+                double minedCommonMetals = minedResourses;
+                double minedRareElements = minedResourses / 5_000;
+                try {
+                    Resourses extracted = new Resourses(minedHydrogen, minedCommonMetals, minedRareElements);
 
-                this.BodyResourse.Substract(extracted);
-                player.OwnedResourses.Add(extracted);
-            }
-            catch (ArgumentException) {
-                return;
+                    this.BodyResourse.Substract(extracted);
+                    player.OwnedResourses.Add(extracted);
+                }
+                catch (ArgumentException) {
+                    return;
+                }
             }
         }
         #endregion

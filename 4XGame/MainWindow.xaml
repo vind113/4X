@@ -9,11 +9,32 @@
         Title="MainWindow"
         WindowStartupLocation="CenterScreen"
         Background="Azure" Foreground="Black"
-        DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}">
+        DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}"
+        Closing="CurrentWindow_Closing">
     
     <Window.Resources>
         <converters:TurnNumberConverter x:Key="TurnNumberConverterResourse"/>
         <converters:ColonizePlanetConverter x:Key="ColonizePlanetConverterResourse"/>
+
+        <Style x:Key="ListBoxStyle" TargetType="ListBox">
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="MinHeight" Value="200"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+
+        <Style x:Key="CelestialInfoPanelStyle" TargetType="WrapPanel">
+            <Setter Property="Orientation" Value="Vertical"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="Azure"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="MinWidth" Value="200"/>
+            <Setter Property="MinHeight" Value="100"/>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -172,31 +193,62 @@
                         </DataGrid>
                         <TabControl Grid.Column="1" ScrollViewer.CanContentScroll="True"
                                     Margin="5">
-                            <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
+                            <TabItem Header="Stars" Width="100" HorizontalAlignment="Right">
                                 <Grid Background="#FFE5E5E5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <ListBox x:Name="SystemPlanetsListBox"
-                                             VerticalAlignment="Top"
-                                             Margin="3"
-                                             ItemsSource="{Binding ElementName=SystemsGrid, Path=SelectedItem.SystemPlanets}"
-                                             MinWidth="100" MinHeight="200"
-                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                             BorderThickness="2"
-                                             Grid.Column="0">
+                                    
+                                    <ListBox x:Name="SystemStarsListBox"
+                                             Style="{StaticResource ListBoxStyle}"
+                                             Grid.Column="0" 
+                                             ItemsSource="{Binding ElementName=SystemsGrid, Path=SelectedItem.SystemStars}">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Label Content="{Binding Name}"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
+                                    <WrapPanel Grid.Column="1"
+                                               Style="{StaticResource CelestialInfoPanelStyle}"
+                                               DataContext="{Binding ElementName=SystemStarsListBox, Path=SelectedItem}">
+
+                                        <Label Content="{Binding Path=Name}" ContentStringFormat="Name: {0}"/>
+
+                                        <Label Content="{Binding Path=Radius}" ContentStringFormat="Radius: {0:#,#}"/>
+
+                                        <Label Content="{Binding Path=Area}" ContentStringFormat="Area: {0:#,#}"/>
+
+                                        <Label Content="{Binding Path=LumClass}" ContentStringFormat="Class: {0}"/>
+                                    </WrapPanel>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
+                                <Grid Background="#FFE5E5E5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <ListBox x:Name="SystemPlanetsListBox"
+                                             Style="{StaticResource ListBoxStyle}"
+                                             ItemsSource="{Binding ElementName=SystemsGrid, Path=SelectedItem.SystemPlanets}"
+                                             Grid.Column="0">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <WrapPanel>
+                                                    <Label Content="{Binding Name}"/>
+                                                    <Label Content="{Binding Path=Type.Name}" Foreground="Green"
+                                                           ContentStringFormat="({0})"/>
+                                                </WrapPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
                                     <WrapPanel Grid.Column="1" Orientation="Vertical">
                                         <WrapPanel Grid.Column="1"
-                                                  HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto"
-                                                  Background="Azure" Margin="3" Orientation="Vertical"
-                                                  DataContext="{Binding ElementName=SystemPlanetsListBox, Path=SelectedItem}">
+                                                   Style="{StaticResource CelestialInfoPanelStyle}"
+                                                   DataContext="{Binding ElementName=SystemPlanetsListBox, Path=SelectedItem}">
 
                                             <Label Content="{Binding Path=Name}" ContentStringFormat="Name: {0}"/>
                                             <Label Content="{Binding Path=Radius}" ContentStringFormat="Radius: {0:#,#}"/>
@@ -206,6 +258,8 @@
 
                                             <Label Content="{Binding Path=Population}" ContentStringFormat="Population: {0:#,#}"/>
                                             <Label Content="{Binding Path=Type.Name}" ContentStringFormat="Type: {0}"/>
+                                            <Label Content="{Binding Path=BuildingSites}" ContentStringFormat="Building sites: {0}"/>
+                                            <Label Content="{Binding Path=MaximumPopulation}" ContentStringFormat="Maximum of population: {0:#,#}"/>
 
                                             <Separator MinWidth="200" Background="Black"/>
 
@@ -235,38 +289,20 @@
                                     </WrapPanel>
                                 </Grid>
                             </TabItem>
-                            <TabItem Header="Stars" Width="100" HorizontalAlignment="Right">
+                            <TabItem Header="Artificial constructtions"
+                                     HorizontalAlignment="Left">
                                 <Grid Background="#FFE5E5E5">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <ListBox x:Name="SystemStarsListBox"
-                                             HorizontalAlignment="Left" MinHeight="100"
-                                             Grid.Column="0" Margin="3"
-                                             ItemsSource="{Binding ElementName=SystemsGrid, Path=SelectedItem.SystemStars}"
-                                             VerticalAlignment="Top" MinWidth="180"
-                                             ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                             BorderThickness="2">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Label Content="{Binding Name}"/>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
+                                    <ListBox Grid.Column="0"
+                                             Style="{StaticResource ListBoxStyle}">
                                     </ListBox>
-                                    <WrapPanel MinHeight="90" MinWidth="200" Grid.Column="1"
-                                               HorizontalAlignment="Left" VerticalAlignment="Top"
-                                               Orientation="Vertical"
-                                               Margin="3" Background="Azure"
-                                               DataContext="{Binding ElementName=SystemStarsListBox, Path=SelectedItem}">
 
-                                        <Label Content="{Binding Path=Name}" ContentStringFormat="Name: {0}"/>
-
-                                        <Label Content="{Binding Path=Radius}" ContentStringFormat="Radius: {0:#,#}"/>
-
-                                        <Label Content="{Binding Path=Area}" ContentStringFormat="Area: {0:#,#}"/>
-
-                                        <Label Content="{Binding Path=LumClass}" ContentStringFormat="Class: {0}"/>
+                                    <WrapPanel Grid.Column="1"
+                                               Style="{StaticResource CelestialInfoPanelStyle}">
+                                        
                                     </WrapPanel>
                                 </Grid>
                             </TabItem>

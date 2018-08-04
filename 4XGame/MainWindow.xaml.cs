@@ -46,11 +46,31 @@ namespace _4XGame {
         #endregion
         
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e) {
+            Exit(null);
+        }
+
+        private void CurrentWindow_Closing(object sender, CancelEventArgs e) {
+            Exit(e);
+        }
+
+        private static void Exit(CancelEventArgs e) {
+            var result = MessageBox.Show("Do you want to exit?", "Exit", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes) {
+                KillApp();
+            }
+            else if (result == MessageBoxResult.No && e != null) {
+                e.Cancel = true;
+            }
+        }
+
+        private static void KillApp() {
             Process.GetCurrentProcess().Kill();
         }
-        
+
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
 
         }
+
+        
     }
 }

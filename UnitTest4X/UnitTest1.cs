@@ -80,7 +80,7 @@ namespace UnitTest4X {
             List<Planet> planetList = new List<Planet>();
 
             for (int i = 0; i < planetsToColonize; i++) {
-                planetList.Add(PlanetFactory.GetPlanet("a", PlanetTypeValue.Continental));
+                planetList.Add(PlanetFactory.GetPlanet("a", PlanetTypeVariants.Continental));
             }
 
             player.AddStarSystem(new StarSystem("system", new List<Star>(), planetList));
@@ -93,7 +93,7 @@ namespace UnitTest4X {
 
             player.TryToColonizeQueue();
 
-            Assert.AreEqual(planetsToColonize + 2, player.ColonizedPlanets);
+            Assert.AreEqual(planetsToColonize + player.StarSystems[0].HabitablePlanets, player.ColonizedPlanets);
         }
     }
 }

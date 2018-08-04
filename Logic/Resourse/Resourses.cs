@@ -6,6 +6,7 @@ namespace Logic.Resourse {
     /// <summary>
     /// Представляет ресурсы
     /// </summary>
+    [Serializable]
     public class Resourses : INotifyPropertyChanged {
         private double hydrogen;
         private double commonMetals;
@@ -117,6 +118,12 @@ namespace Logic.Resourse {
             }
 
             return this;
+        }
+
+        public void SetToZero() {
+            this.Hydrogen = 0;
+            this.CommonMetals = 0;
+            this.RareEarthElements = 0;
         }
 
         public double Hydrogen {

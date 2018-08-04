@@ -9,6 +9,7 @@ using Logic.GameClasses;
 using Logic.SupportClasses;
 
 namespace Logic.PlayerClasses {
+    [Serializable]
     public class Player : INotifyPropertyChanged {
         private string name;
 
@@ -24,8 +25,12 @@ namespace Logic.PlayerClasses {
         private int colonizedPlanets;
         private int ownedPlanets;
 
+        private double populationGrowthModifier = 0.0015;
+
         public Player() {
             this.Stockpile = new Stockpile();
+            this.Stockpile.PlayerResourses.Add(new Resourses(1_000_000_000, 10_000_000_000, 10_000_000));
+
             this.hub = new CitizenHub();
 
             this.starSystems = new ObservableCollection<StarSystem>();
@@ -100,7 +105,7 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public CitizenHub PlayerCitizenHub {
+        public CitizenHub Hub {
             get => this.hub;
             private set => this.hub = value;
         }
@@ -123,6 +128,10 @@ namespace Logic.PlayerClasses {
             get => this.starSystems.Count;
         }
 
+        public int ToColonize {
+            get => this.planetsToColonize.Count;
+        }
+
         public double TotalPopulation {
             get {
                 double population = 0;
@@ -131,7 +140,7 @@ namespace Logic.PlayerClasses {
                         population += planet.Population;
                     }
                 }
-                population += this.PlayerCitizenHub.CitizensInHub;
+                population += this.Hub.CitizensInHub;
                 return population;
             }
         }
@@ -175,16 +184,25 @@ namespace Logic.PlayerClasses {
                 OnPropertyChanged();
             }
         }
+
+        public double PopulationGrowthModifier {
+            get => this.populationGrowthModifier;
+            set {
+                if (value >= 0 && value != this.populationGrowthModifier) {
+                    this.populationGrowthModifier = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #endregion
 
         public void NextTurn(bool isAutoColonizationEnabled, bool isDiscoveringNewStarSystems) {
-            if (isAutoColonizationEnabled) {
-                this.TryToColonizeQueue();
-            }
-
             foreach (StarSystem system in this.StarSystems) {
                 system.NextTurn(this);
             }
+
+            Goods.SustainPopulationNeeds(this);
+            this.TryToColonizeQueue();
 
             if (isDiscoveringNewStarSystems) {
                 DiscoverNewStarSystem(isAutoColonizationEnabled);
@@ -199,8 +217,8 @@ namespace Logic.PlayerClasses {
         private void SetCitizenHubCapacity() {
             double newHubCapacity = Math.Floor(this.TotalPopulation / 1000);
 
-            if (newHubCapacity > this.PlayerCitizenHub.CitizensInHub) {
-                this.PlayerCitizenHub.MaximumCount = newHubCapacity;
+            if (newHubCapacity > this.Hub.CitizensInHub) {
+                this.Hub.MaximumCount = newHubCapacity;
             }
         }
 

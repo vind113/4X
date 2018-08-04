@@ -2,8 +2,9 @@
 using System;
 
 namespace Logic.PlayerClasses {
+    [Serializable]
     public class Ships {
-        private readonly Resourses colonizerCost = new Resourses(1E10, 1E10, 1E9);
+        private readonly Resourses colonizerCost = new Resourses(1E9, 1E10, 1E6);
 
         public bool GetColonizer(Player player) {
             Resourses playerResourses = player.OwnedResourses;
