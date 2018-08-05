@@ -205,7 +205,7 @@ namespace Logic.PlayerClasses {
             this.TryToColonizeQueue();
 
             if (isDiscoveringNewStarSystems) {
-                DiscoverNewStarSystem(isAutoColonizationEnabled);
+                Discovery.NewStarSystem(isAutoColonizationEnabled, this);
             }
 
             SetCitizenHubCapacity();
@@ -220,10 +220,6 @@ namespace Logic.PlayerClasses {
             if (newHubCapacity > this.Hub.CitizensInHub) {
                 this.Hub.MaximumCount = newHubCapacity;
             }
-        }
-
-        public bool GetColonizer() {
-            return this.Ships.GetColonizer(this);
         }
 
         public void AddStarSystem(StarSystem system) {
@@ -269,36 +265,6 @@ namespace Logic.PlayerClasses {
 
             if (this.starSystems.Contains(system)) {
                 this.starSystems.Remove(system);
-            }
-        }
-
-        private void DiscoverNewStarSystem(bool isAutoColonizationEnabled) {
-            //с такой вероятностью каждый ход будет открываться новая система
-            //возможно добавить зависимость от уровня технологий
-            //оптимальное значение - 0.15
-            double discoveryProbability = 0.15;
-
-            if (HelperRandomFunctions.ProbableBool(discoveryProbability)) {
-                int maxSystemsToGenerate = 0;
-                int systemsToGenerate = 0;
-                StarSystem generatedSystem = null;
-
-                checked {
-                    maxSystemsToGenerate = (int)((Math.Sqrt(this.StarSystemsCount)) / 2);
-                    systemsToGenerate = HelperRandomFunctions.GetRandomInt(1, maxSystemsToGenerate + 1);
-                }
-
-                for (int index = 0; index < systemsToGenerate; index++) {
-                    generatedSystem = StarSystemFactory.GetStarSystem($"System {this.StarSystemsCount + 1} #{index}");
-
-                    if (isAutoColonizationEnabled) {
-                        foreach (var planet in generatedSystem.SystemPlanets) {
-                            planet.Colonize(this);
-                        }
-                    }
-
-                    this.AddStarSystem(generatedSystem);
-                }
             }
         }
     }

@@ -6,11 +6,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace _4XGame.ViewModel {
+    [Serializable]
     public class MainWindowViewModel : INotifyPropertyChanged {
         private Game thisGame;
 
         private double money;
-        //private double citizensInHub;
         private double totalPopulation;
 
         private Resourses resourses;
@@ -30,7 +30,6 @@ namespace _4XGame.ViewModel {
 
             this.CurrentResourses = new Resourses(0, 0, 0);
 
-            //ThisGame.CitizenHubChanged += SetCitizensInHub;
             ThisGame.Player.StockpileChanged += SetStockpile;
             ThisGame.Player.PopulationChanged += SetTotalPopulation;
         }
@@ -61,15 +60,6 @@ namespace _4XGame.ViewModel {
                 OnPropertyChanged();
             }
         }
-
-        /*public double CitizensInHub {
-            get => this.citizensInHub;
-            set {
-                if (this.CitizensInHub == value) { return; }
-                this.citizensInHub = value;
-                OnPropertyChanged();
-            }
-        }*/
 
         public double Money {
             get => this.money;
@@ -105,11 +95,7 @@ namespace _4XGame.ViewModel {
             }
         }
         #endregion
-
-        /*private void SetCitizensInHub(object sender, CitizenHubChangedEventArgs e) {
-            CitizensInHub = e.CitizensInHub;   
-        }*/
-
+        
         private void SetStockpile(object sender, StockpileChangedEventArgs e) {
             Money = e.Money;
             CurrentResourses = e.ArgResourses;

@@ -126,9 +126,6 @@
                        Content="{Binding Path=TotalPopulation}"
                        ContentStringFormat="Population: {0:#,#}"/>
 
-                <!--Label Grid.Row="0" Grid.Column="2"
-                       Content="{Binding Path=CitizensInHub}"
-                       ContentStringFormat="In Hub: {0:#,#}"/-->
             </Grid>
         </Border>
 
@@ -193,7 +190,25 @@
                         </DataGrid>
                         <TabControl Grid.Column="1" ScrollViewer.CanContentScroll="True"
                                     Margin="5">
-                            <TabItem Header="Stars" Width="100" HorizontalAlignment="Right">
+                            <TabItem Header="System Info" MinWidth="100">
+                                <Grid Background="#FFE5E5E5">
+                                    <WrapPanel Orientation="Vertical" DataContext="{Binding ElementName=SystemsGrid,
+                                               Path=SelectedItem}">
+                                        <Label Content="Miners in system: 0"/>
+
+                                        <Label Content="{Binding Path=SystemResourses.Hydrogen}"
+                                               ContentStringFormat="Hydrogen: {0:E15}"/>
+
+                                        <Label Content="{Binding Path=SystemResourses.CommonMetals}"
+                                               ContentStringFormat="Common metals: {0:E15}"/>
+
+                                        <Label Content="{Binding Path=SystemResourses.RareEarthElements}"
+                                               ContentStringFormat="Rare elements: {0:E15}"/>
+                                    </WrapPanel>
+                                </Grid>
+                            </TabItem>
+                            
+                            <TabItem Header="Stars" MinWidth="100">
                                 <Grid Background="#FFE5E5E5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -224,7 +239,7 @@
                                     </WrapPanel>
                                 </Grid>
                             </TabItem>
-                            <TabItem Header="Planets" Width="100" HorizontalAlignment="Left">
+                            <TabItem Header="Planets" MinWidth="100">
                                 <Grid Background="#FFE5E5E5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -289,8 +304,7 @@
                                     </WrapPanel>
                                 </Grid>
                             </TabItem>
-                            <TabItem Header="Artificial constructtions"
-                                     HorizontalAlignment="Left">
+                            <TabItem Header="Artificial constructtions" MinWidth="100">
                                 <Grid Background="#FFE5E5E5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>

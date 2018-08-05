@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Logic.PlayerClasses;
 using Logic.Resourse;
+using Logic.SupportClasses;
 
 namespace Logic.SpaceObjects {
     /// <summary>
@@ -16,6 +17,7 @@ namespace Logic.SpaceObjects {
         private readonly List<Planet> systemPlanets;
 
         private Resourses systemResourses;
+        private int minersCount;
 
         private byte colonizedCount;
         private double population;
@@ -64,8 +66,14 @@ namespace Logic.SpaceObjects {
                 planet.PropertyChanged += this.Planet_PropertyChanged;
             }
 
-            this.SetSystemPopulation();
-            this.SetColonizedPlantes();
+            this.SystemPopulation = this.SetSystemPopulation();
+
+            if(this.SystemPopulation > 0) {
+                this.MinersCount = 10;
+            }
+
+            this.ColonizedCount = this.SetColonizedPlantes();
+            this.SystemResourses = this.SetResourses();
         }
 
         /// <summary>
@@ -132,6 +140,16 @@ namespace Logic.SpaceObjects {
             }
         }
 
+        public Resourses SystemResourses {
+            get => this.systemResourses;
+            private set => this.systemResourses = value;
+        }
+
+        public int MinersCount {
+            get => this.minersCount;
+            private set => this.minersCount = value;
+        }
+
         /// <summary>
         ///     Выполняет все операции для перехода на следующий ход
         /// </summary>
@@ -141,18 +159,27 @@ namespace Logic.SpaceObjects {
         public void NextTurn(Player player) {
 
             foreach (Planet planet in this.SystemPlanets) {
-                planet.NextTurn(player); 
+                planet.NextTurn(player);
             }
 
             foreach (Star star in this.SystemStars) {
                 star.NextTurn();
             }
 
-            this.SetSystemPopulation();
+            this.SystemPopulation = this.SetSystemPopulation();
 
+            MineSystemResourses(player);
         }
 
-        private void SetSystemPopulation() {
+        private void MineSystemResourses(Player player) {
+            if(this.SystemPopulation <= 0) {
+                return;
+            }
+            Miner.Mine(this.MinersCount, this.SystemResourses, player.OwnedResourses);
+            OnPropertyChanged(nameof(StarSystem.SystemResourses));
+        }
+
+        private double SetSystemPopulation() {
             double population = 0;
 
             foreach (var planet in this.SystemPlanets) {
@@ -161,10 +188,10 @@ namespace Logic.SpaceObjects {
                 }
             }
 
-            this.SystemPopulation = population;
+            return population;
         }
 
-        private void SetColonizedPlantes() {
+        private byte SetColonizedPlantes() {
             byte colonized = 0;
 
             foreach (var planet in this.SystemPlanets) {
@@ -173,7 +200,7 @@ namespace Logic.SpaceObjects {
                 }
             }
 
-            this.ColonizedCount = colonized;
+            return colonized;
         }
 
         private int GetHabitableCount() {
@@ -184,6 +211,20 @@ namespace Logic.SpaceObjects {
                 }
             }
             return habitableCount;
+        }
+
+        private Resourses SetResourses() {
+            double hydrogenModifier = HelperRandomFunctions.GetRandomDouble();
+            double commonMetalsModifier = HelperRandomFunctions.GetRandomDouble();
+            double rareElementsModifier = HelperRandomFunctions.GetRandomDouble();
+
+            double hydrogen = hydrogenModifier * 1E22;
+            double commonMetals = commonMetalsModifier * 1E24;
+            double rareElements = rareElementsModifier * 1E20;
+
+            Resourses resourses = new Resourses(hydrogen, commonMetals, rareElements);
+
+            return resourses;
         }
     }
 }

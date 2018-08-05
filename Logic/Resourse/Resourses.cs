@@ -81,6 +81,26 @@ namespace Logic.Resourse {
             return false;
         }
 
+        public static bool AreEqual(Resourses res1, Resourses res2) {
+            if (res1.Hydrogen == res2.Hydrogen
+             && res1.CommonMetals == res2.CommonMetals
+             && res1.RareEarthElements == res2.RareEarthElements) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool AreNotEqual(Resourses res1, Resourses res2) {
+            if (res1.Hydrogen != res2.Hydrogen
+             || res1.CommonMetals != res2.CommonMetals
+             || res1.RareEarthElements != res2.RareEarthElements) {
+                return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Прибавляет ресурсы переданного объекта <see cref="Resourses"/>
         /// </summary>
@@ -139,7 +159,7 @@ namespace Logic.Resourse {
         public double CommonMetals {
             get => this.commonMetals;
             set {
-                if (value > 0) {
+                if (value >= 0) {
                     this.commonMetals = value;
                     OnPropertyChanged();
                 }

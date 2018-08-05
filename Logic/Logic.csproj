@@ -47,6 +47,7 @@
     <Compile Include="GameClasses\StockpileChangedEventArgs.cs" />
     <Compile Include="Player\CitizenHub.cs" />
     <Compile Include="GameClasses\CurrentDate.cs" />
+    <Compile Include="Player\Discovery.cs" />
     <Compile Include="Player\Goods.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\Ships.cs" />

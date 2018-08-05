@@ -12,10 +12,12 @@ namespace Logic.SpaceObjects {
         private byte quality;
         private string name;
         private double miningDifficulty;
+        private byte resourseAbundance;
 
-        public PlanetType(byte quality, string name) {
+        public PlanetType(byte quality, string name, byte resourseAbundance = 100) {
             this.quality = quality;
             this.name = name ?? throw new ArgumentNullException(nameof(name));
+            this.resourseAbundance = resourseAbundance;
 
             double months = 12;
             this.miningDifficulty = ((double)quality / (double)PlanetType.GoodWorldQuality) / months;
@@ -264,28 +266,28 @@ namespace Logic.SpaceObjects {
         /// Булевое значение, которое показывает успешность колонизации
         /// </returns>
         public bool Colonize(Player player) {
-            if (player == null) {
-                throw new ArgumentNullException(nameof(player));
-            }
-
             if (this.Population > 0) {
                 return true;
             }
 
-            double colonizers = 10_000_000;
+            if (player == null) {
+                throw new ArgumentNullException(nameof(player));
+            }
 
-            if (this.MaximumPopulation > colonizers && player.GetColonizer()) {
+            //рефакторь тут
+            if (this.MaximumPopulation > Colonizer.Colonists) {
+                Colonizer colonizer = Colonizer.TryGetColonizer(player.OwnedResourses);
+                if (colonizer == null) {
+                    player.AddToColonizationQueue(this);
+                    return false;
+                }
 
-                this.Population += colonizers;
+                this.Population += colonizer.GetColonists(colonizer.ColonistsOnShip);
                 this.IsColonized = true;
 
                 return true;
             }
-
-            if (this.maximumPopulation > 0) {
-                player.AddToColonizationQueue(this);
-            }
-
+           
             return false;
         }
     }

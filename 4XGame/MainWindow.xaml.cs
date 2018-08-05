@@ -54,11 +54,15 @@ namespace _4XGame {
         }
 
         private static void Exit(CancelEventArgs e) {
-            var result = MessageBox.Show("Do you want to exit?", "Exit", MessageBoxButton.YesNo);
+            var result = MessageBox.Show("Save before exit?", "Exit", MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Yes) {
+                MessageBox.Show("Saving is not implemented yet;(", "Cannot save");
                 KillApp();
             }
-            else if (result == MessageBoxResult.No && e != null) {
+            else if(result == MessageBoxResult.No) {
+                KillApp();
+            }
+            else if (result == MessageBoxResult.Cancel && e != null) {
                 e.Cancel = true;
             }
         }
