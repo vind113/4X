@@ -41,46 +41,10 @@ namespace Logic.Resourse {
             this.RareEarthElements = rareEarthElements;
         }
 
-        public static bool operator >=(Resourses res1, Resourses res2) {
-            if (res1.Hydrogen >= res2.Hydrogen
-             && res1.CommonMetals >= res2.CommonMetals
-             && res1.RareEarthElements >= res2.RareEarthElements) {
-                return true;
-            }
-
-            return false;
-        }
-
-        public static bool operator <=(Resourses res1, Resourses res2) {
-            if (res1.Hydrogen <= res2.Hydrogen
-             && res1.CommonMetals <= res2.CommonMetals
-             && res1.RareEarthElements <= res2.RareEarthElements) {
-                return true;
-            }
-
-            return false;
-        }
-
-        public static bool operator >(Resourses res1, Resourses res2) {
-            if (res1.Hydrogen > res2.Hydrogen
-             && res1.CommonMetals > res2.CommonMetals
-             && res1.RareEarthElements > res2.RareEarthElements) {
-                return true;
-            }
-
-            return false;
-        }
-
-        public static bool operator <(Resourses res1, Resourses res2) {
-            if (res1.Hydrogen < res2.Hydrogen
-             && res1.CommonMetals < res2.CommonMetals
-             && res1.RareEarthElements < res2.RareEarthElements) {
-                return true;
-            }
-
-            return false;
-        }
-
+        /// <summary>
+        /// Сравнивает два объекта <see cref="Resourses"/>
+        /// </summary>
+        /// <returns>Булевое значение, показывающее, равны ли соответствующие составные объектов <see cref="Resourses"/></returns>
         public static bool AreEqual(Resourses res1, Resourses res2) {
             if (res1.Hydrogen == res2.Hydrogen
              && res1.CommonMetals == res2.CommonMetals
@@ -91,6 +55,10 @@ namespace Logic.Resourse {
             return false;
         }
 
+        /// <summary>
+        /// Сравнивает два объекта <see cref="Resourses"/>
+        /// </summary>
+        /// <returns>Булевое значение, показывающее, отличаются ли соответствующие составные объектов <see cref="Resourses"/></returns>
         public static bool AreNotEqual(Resourses res1, Resourses res2) {
             if (res1.Hydrogen != res2.Hydrogen
              || res1.CommonMetals != res2.CommonMetals
@@ -120,12 +88,12 @@ namespace Logic.Resourse {
         /// <summary>
         /// Вычитает ресурсы переданного объекта <see cref="Resourses"/>
         /// </summary>
-        /// <exception cref="ArgumentException"
-        /// <exception cref="OverflowException"
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="OverflowException"/>
         public Resourses Substract(Resourses parameter) {
             try {
                 checked {
-                    if (this < parameter) {
+                    if (!this.CanSubstract(parameter)) {
                         throw new ArgumentException("Argument can't be greater than parameter");
                     }
                     this.Hydrogen -= parameter.Hydrogen;
@@ -138,6 +106,26 @@ namespace Logic.Resourse {
             }
 
             return this;
+        }
+
+        public bool CanSubstract(Resourses res) {
+            if (this.Hydrogen >= res.Hydrogen
+             && this.CommonMetals >= res.CommonMetals
+             && this.RareEarthElements >= res.RareEarthElements) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsStrictlyGreater(Resourses res) {
+            if (this.Hydrogen > res.Hydrogen
+             && this.CommonMetals > res.CommonMetals
+             && this.RareEarthElements > res.RareEarthElements) {
+                return true;
+            }
+
+            return false;
         }
 
         public void SetToZero() {

@@ -140,14 +140,23 @@ namespace Logic.SpaceObjects {
             }
         }
 
+        /// <summary>
+        /// Возвращает ресурсы системы
+        /// </summary>
         public Resourses SystemResourses {
             get => this.systemResourses;
             private set => this.systemResourses = value;
         }
 
+        /// <summary>
+        /// Возвращает количество добывающих кораблей системы
+        /// </summary>
         public int MinersCount {
             get => this.minersCount;
-            private set => this.minersCount = value;
+            private set {
+                this.minersCount = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -172,11 +181,11 @@ namespace Logic.SpaceObjects {
         }
 
         private void MineSystemResourses(Player player) {
-            if(this.SystemPopulation <= 0) {
+            if(this.SystemPopulation == 0) {
                 return;
             }
+
             Miner.Mine(this.MinersCount, this.SystemResourses, player.OwnedResourses);
-            OnPropertyChanged(nameof(StarSystem.SystemResourses));
         }
 
         private double SetSystemPopulation() {
@@ -214,17 +223,11 @@ namespace Logic.SpaceObjects {
         }
 
         private Resourses SetResourses() {
-            double hydrogenModifier = HelperRandomFunctions.GetRandomDouble();
-            double commonMetalsModifier = HelperRandomFunctions.GetRandomDouble();
-            double rareElementsModifier = HelperRandomFunctions.GetRandomDouble();
+            double hydrogen = HelperRandomFunctions.GetRandomDouble() * 1E22;
+            double commonMetals = HelperRandomFunctions.GetRandomDouble() * 1E24;
+            double rareElements = HelperRandomFunctions.GetRandomDouble() * 1E20;
 
-            double hydrogen = hydrogenModifier * 1E22;
-            double commonMetals = commonMetalsModifier * 1E24;
-            double rareElements = rareElementsModifier * 1E20;
-
-            Resourses resourses = new Resourses(hydrogen, commonMetals, rareElements);
-
-            return resourses;
+            return new Resourses(hydrogen, commonMetals, rareElements);
         }
     }
 }

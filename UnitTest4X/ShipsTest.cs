@@ -8,7 +8,7 @@ namespace UnitTest4X {
     public class ShipsTest {
         [TestCase]
         public void ColonizerGetColonists_ParamIsLowerThanColonistsOnShip_GetColonists() {
-            Colonizer colonizer = Colonizer.TryGetColonizer(new Resourses(Double.MaxValue, Double.MaxValue, Double.MaxValue));
+            Colonizer colonizer = Ships.GetColonizerFrom(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
 
             double colonize = colonizer.GetColonists(colonizer.ColonistsOnShip / 4);
 
@@ -17,7 +17,7 @@ namespace UnitTest4X {
 
         [TestCase]
         public void ColonizerGetColonists_ParamIsGreaterThanColonistsOnShip_GetColonists() {
-            Colonizer colonizer = Colonizer.TryGetColonizer(new Resourses(Double.MaxValue, Double.MaxValue, Double.MaxValue));
+            Colonizer colonizer = Ships.GetColonizerFrom(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
 
             double colonize = colonizer.GetColonists(colonizer.ColonistsOnShip * 4);
 
@@ -37,7 +37,14 @@ namespace UnitTest4X {
                 resoursesInitModifier*minerPrice.RareEarthElements
             );
 
-            int result = Miner.TryGetMiners(shipsToBuy, inPossesion);
+            Resourses neededResourses = new Resourses(
+                shipsToBuy * minerPrice.Hydrogen,
+                shipsToBuy * minerPrice.CommonMetals,
+                shipsToBuy * minerPrice.RareEarthElements
+            );
+
+            int result = 0;
+            result = Ships.GetMinersFrom(inPossesion, shipsToBuy);
 
             Assert.AreEqual(0, result);
         }
@@ -55,7 +62,14 @@ namespace UnitTest4X {
                 resoursesInitModifier * minerPrice.RareEarthElements
             );
 
-            int result = Miner.TryGetMiners(shipsToBuy, inPossesion);
+            Resourses neededResourses = new Resourses(
+                shipsToBuy * minerPrice.Hydrogen,
+                shipsToBuy * minerPrice.CommonMetals,
+                shipsToBuy * minerPrice.RareEarthElements
+            );
+
+            int result = 0;
+            result = Ships.GetMinersFrom(inPossesion, shipsToBuy);
 
             Assert.AreEqual(shipsToBuy, result);
         }
@@ -131,13 +145,13 @@ namespace UnitTest4X {
             int miners = 10;
             Miner.Mine(miners, from, to);
 
-            bool isFromZero = Resourses.AreEqual(from, Resourses.Zero);
+            bool isFromIsZero = Resourses.AreEqual(from, Resourses.Zero);
 
             bool isToResoursesIncreased = (hydrogenTo < to.Hydrogen)
                                         && (commonMetalsTo < to.CommonMetals)
                                         && (rareElementsTo < to.RareEarthElements);
 
-            Assert.IsTrue(isFromZero && isToResoursesIncreased);
+            Assert.IsTrue(isFromIsZero && isToResoursesIncreased);
         }
 
     }

@@ -15,13 +15,11 @@ namespace UnitTest4X {
             double rareElementsPre = 0;
 
             Player player = new Player();
-            var system = player.StarSystems[0];
+            var planet = player.StarSystems[0].SystemPlanets[2];
 
-            foreach (var planet in system.SystemPlanets) {
-                hydrogenPre += planet.BodyResourse.Hydrogen;
-                commonMetalsPre += planet.BodyResourse.CommonMetals;
-                rareElementsPre += planet.BodyResourse.RareEarthElements;
-            }
+            hydrogenPre += planet.BodyResourse.Hydrogen;
+            commonMetalsPre += planet.BodyResourse.CommonMetals;
+            rareElementsPre += planet.BodyResourse.RareEarthElements;
 
             hydrogenPre += player.OwnedResourses.Hydrogen;
             commonMetalsPre += player.OwnedResourses.CommonMetals;
@@ -29,19 +27,17 @@ namespace UnitTest4X {
 
             const int turns = 10000;
             for (int i = 0; i < turns; i++) {
-                system.NextTurn(player);
+                planet.NextTurn(player);
             }
 
             double hydrogenPost = player.OwnedResourses.Hydrogen;
             double commonMetalsPost = player.OwnedResourses.CommonMetals;
             double rareElementsPost = player.OwnedResourses.RareEarthElements;
 
-            foreach (var planet in system.SystemPlanets) {
-                hydrogenPost += planet.BodyResourse.Hydrogen;
-                commonMetalsPost += planet.BodyResourse.CommonMetals;
-                rareElementsPost += planet.BodyResourse.RareEarthElements;
-            }
-
+            hydrogenPost += planet.BodyResourse.Hydrogen;
+            commonMetalsPost += planet.BodyResourse.CommonMetals;
+            rareElementsPost += planet.BodyResourse.RareEarthElements;
+            
             double difference = 10_000_000;
 
             bool hydrogenEqual = CompareDoubles(hydrogenPre, hydrogenPost, difference);

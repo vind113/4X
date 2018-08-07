@@ -165,8 +165,7 @@
             <TabControl x:Name="MainTabControl"
                         HorizontalAlignment="Left"
                         Margin="5">
-                <TabItem Header="Systems" Width="100"
-                         HorizontalAlignment="Left">
+                <TabItem Header="Systems" MinWidth="100">
                     <Grid ScrollViewer.CanContentScroll="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -194,15 +193,20 @@
                                 <Grid Background="#FFE5E5E5">
                                     <WrapPanel Orientation="Vertical" DataContext="{Binding ElementName=SystemsGrid,
                                                Path=SelectedItem}">
-                                        <Label Content="Miners in system: 0"/>
+                                        <WrapPanel Orientation="Horizontal">
+                                            <Label Content="{Binding Path=MinersCount, FallbackValue=?}"
+                                                   ContentStringFormat="Miners in system: {0}"/>
 
-                                        <Label Content="{Binding Path=SystemResourses.Hydrogen}"
+                                            <Button Content="Add 10 miners"/>
+                                        </WrapPanel>
+
+                                        <Label Content="{Binding Path=SystemResourses.Hydrogen, FallbackValue=?}"
                                                ContentStringFormat="Hydrogen: {0:E15}"/>
 
-                                        <Label Content="{Binding Path=SystemResourses.CommonMetals}"
+                                        <Label Content="{Binding Path=SystemResourses.CommonMetals, FallbackValue=?}"
                                                ContentStringFormat="Common metals: {0:E15}"/>
 
-                                        <Label Content="{Binding Path=SystemResourses.RareEarthElements}"
+                                        <Label Content="{Binding Path=SystemResourses.RareEarthElements, FallbackValue=?}"
                                                ContentStringFormat="Rare elements: {0:E15}"/>
                                     </WrapPanel>
                                 </Grid>
@@ -323,7 +327,7 @@
                         </TabControl>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Info" Width="100">
+                <TabItem Header="Info" MinWidth="100">
                     <WrapPanel Orientation="Vertical">
 
                         <Label ContentStringFormat="Colonized planets: {0}"
@@ -347,7 +351,7 @@
                                Content="{Binding Path=ThisGame.Player.StarSystems.Count}"/>
                     </WrapPanel>
                 </TabItem>
-                <TabItem Header="Debug Info" Width="100">
+                <TabItem Header="Debug Info" MinWidth="100">
                     <Grid>
                         <Label HorizontalAlignment="Left"
                                Margin="5" VerticalAlignment="Top"

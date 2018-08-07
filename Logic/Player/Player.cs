@@ -18,7 +18,6 @@ namespace Logic.PlayerClasses {
         private ObservableCollection<StarSystem> starSystems;
 
         private Queue<Planet> planetsToColonize;
-
         private Ships ships;
 
         private int ownedStars;
@@ -38,16 +37,8 @@ namespace Logic.PlayerClasses {
             this.AddStarSystem(StarSystemFactory.GetSolarSystem());
 
             this.planetsToColonize = new Queue<Planet>();
-            this.ships = new Ships();
-        }
 
-        public Player(Stockpile stockpile, IEnumerable<StarSystem> starSystems) {
-            this.stockpile = stockpile ?? throw new ArgumentNullException(nameof(stockpile));
-            this.starSystems = new ObservableCollection<StarSystem>(starSystems) ?? throw new ArgumentNullException(nameof(starSystems));
-
-            this.hub = new CitizenHub();
-            this.planetsToColonize = new Queue<Planet>();
-            this.ships = new Ships();
+            this.Ships = new Ships();
         }
 
         public event EventHandler<StockpileChangedEventArgs> StockpileChanged;
@@ -177,14 +168,6 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public Ships Ships {
-            get => this.ships;
-            private set {
-                this.ships = value;
-                OnPropertyChanged();
-            }
-        }
-
         public double PopulationGrowthModifier {
             get => this.populationGrowthModifier;
             set {
@@ -193,6 +176,11 @@ namespace Logic.PlayerClasses {
                     OnPropertyChanged();
                 }
             }
+        }
+
+        public Ships Ships {
+            get => this.ships;
+            private set => this.ships = value;
         }
         #endregion
 

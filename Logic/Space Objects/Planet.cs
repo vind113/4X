@@ -143,7 +143,7 @@ namespace Logic.SpaceObjects {
             double hydrogen = 0;
 
             if(planetType.Name != "Gas giant") {
-                const double massOfTenKmCrust = (10d * ((3d) * 10E9));
+                double massOfTenKmCrust = (10d * ((3d) * 10E9));
 
                 commonMetals = planetArea * (massOfTenKmCrust / 20);
                 rareEarthElements = planetArea * (massOfTenKmCrust / 1E5);
@@ -237,7 +237,7 @@ namespace Logic.SpaceObjects {
         }
 
         private void ExtractResourses(Player player) {
-            if (this.BodyResourse > Resourses.Zero) {
+            if (this.BodyResourse.IsStrictlyGreater(Resourses.Zero)) {
                 double minedResourses = (this.Type.MiningDifficulty * this.Population);
 
                 double minedHydrogen = minedResourses / 10;
@@ -250,7 +250,8 @@ namespace Logic.SpaceObjects {
                     player.OwnedResourses.Add(extracted);
                 }
                 catch (ArgumentException) {
-                    return;
+                    player.OwnedResourses.Add(this.BodyResourse);
+                    this.BodyResourse.SetToZero();
                 }
             }
         }
@@ -270,25 +271,28 @@ namespace Logic.SpaceObjects {
                 return true;
             }
 
+            if (this.MaximumPopulation < Colonizer.Colonists) {
+                return false;
+            }
+
             if (player == null) {
                 throw new ArgumentNullException(nameof(player));
             }
 
-            //рефакторь тут
-            if (this.MaximumPopulation > Colonizer.Colonists) {
-                Colonizer colonizer = Colonizer.TryGetColonizer(player.OwnedResourses);
-                if (colonizer == null) {
-                    player.AddToColonizationQueue(this);
-                    return false;
-                }
+            Colonizer colonizer = Ships.GetColonizerFrom(player.OwnedResourses); 
+
+            if (colonizer != null) {
 
                 this.Population += colonizer.GetColonists(colonizer.ColonistsOnShip);
                 this.IsColonized = true;
 
                 return true;
+
             }
-           
-            return false;
+            else {
+                player.AddToColonizationQueue(this);
+                return false;
+            }
         }
     }
 }

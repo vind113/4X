@@ -32,7 +32,6 @@ namespace Logic.PlayerClasses {
             }
             catch (ArgumentException) {
                 player.OwnedResourses.SetToZero();
-                MessageBox.Show("Zero");
             }
         }
     }

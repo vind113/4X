@@ -74,7 +74,5 @@ namespace _4XGame {
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
 
         }
-
-        
     }
 }
