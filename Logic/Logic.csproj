@@ -59,6 +59,7 @@
     <Compile Include="Space Objects\IHabitable.cs" />
     <Compile Include="Space Objects\Planet.cs" />
     <Compile Include="Space Objects\PlanetFactory.cs" />
+    <Compile Include="Space Objects\SpaceBuildingCompletedEventArgs.cs" />
     <Compile Include="Space Objects\Star.cs" />
     <Compile Include="Space Objects\StarSystem.cs" />
     <Compile Include="Space Objects\StarSystemFactory.cs" />

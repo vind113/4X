@@ -52,6 +52,7 @@
     <Compile Include="PlanetTest.cs" />
     <Compile Include="ResoursesTest.cs" />
     <Compile Include="ShipsTest.cs" />
+    <Compile Include="SpaceBuildingsTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

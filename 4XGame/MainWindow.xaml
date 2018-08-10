@@ -317,10 +317,15 @@
                                     <ListBox Grid.Column="0"
                                              Style="{StaticResource ListBoxStyle}">
                                     </ListBox>
-
-                                    <WrapPanel Grid.Column="1"
+                                    <WrapPanel Grid.Column="1" Orientation="Vertical">
+                                        <WrapPanel
                                                Style="{StaticResource CelestialInfoPanelStyle}">
-                                        
+
+                                        </WrapPanel>
+
+                                        <WrapPanel Margin="5">
+                                            <Button Content="Build new habitat"/>
+                                        </WrapPanel>
                                     </WrapPanel>
                                 </Grid>
                             </TabItem>
