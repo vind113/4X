@@ -1,64 +1,166 @@
 ﻿using System;
-using System.ComponentModel;
 using Logic.SupportClasses;
 using Logic.PlayerClasses;
 using System.Collections.Generic;
 using Logic.Resourse;
 
 namespace Logic.SpaceObjects {
-    public struct PlanetType {
-        private const int goodWorldQuality = 100;
+    //from Space Engine
+    public enum TemperatureClass : byte {
+        ///<summary>90K (-183C)</summary>
+        Frigid,
 
-        private byte quality;
+        ///<summary>max 170K (-103C)</summary>
+        Cold,
+
+        ///<summary>max 250K (-23C)</summary>
+        Cool,
+
+        ///<summary>max 330K (56C)</summary>
+        Temperate,
+
+        ///<summary>max 500K (226C)</summary>
+        Warm,
+
+        ///<summary>max 1000K (726C)</summary>
+        Hot
+    }
+
+    public enum VolatilesClass : byte {
+        Airless, Desertic, Lacustrine, Marine, Oceanic, Superoceanic
+    }
+
+    public enum SubstancesClass : byte {
+        Ferria, Terra, Jupiter
+    }
+
+    public class PlanetCharacteristicsHelper {
+
+        public static double GetPlanetTypeFactor(
+            TemperatureClass temperature, VolatilesClass volatiles, SubstancesClass substances) {
+
+            return (GetTemperatureFactor(temperature) * GetVolatilesFactor(volatiles) * GetSubstancesFactor(substances));
+        }
+
+        private static double GetTemperatureFactor(TemperatureClass temperatureClass) {
+            switch (temperatureClass) {
+                case (TemperatureClass.Frigid):
+                    return 0;
+                case (TemperatureClass.Cold):
+                    return 0.01;
+                case (TemperatureClass.Cool):
+                    return 0.9;
+                case (TemperatureClass.Temperate):
+                    return 1.1;
+                case (TemperatureClass.Warm):
+                    return 0.01;
+                case (TemperatureClass.Hot):
+                    return 0;
+                default:
+                    throw new ArgumentException($"{temperatureClass.ToString()} class is not acceptable");
+            }
+        }
+
+        private static double GetVolatilesFactor(VolatilesClass volatilesClass) {
+            switch (volatilesClass) {
+                case (VolatilesClass.Airless):
+                    return 0;
+                case (VolatilesClass.Desertic):
+                    return 0.01;
+                case (VolatilesClass.Lacustrine):
+                    return 0.05;
+                case (VolatilesClass.Marine):
+                    return 1.2;
+                case (VolatilesClass.Oceanic):
+                    return 0.3;
+                case (VolatilesClass.Superoceanic):
+                    return 0.1;
+                default:
+                    throw new ArgumentException($"{volatilesClass.ToString()} class is not acceptable");
+            }
+        }
+
+        private static double GetSubstancesFactor(SubstancesClass substancesClass) {
+            switch (substancesClass) {
+                case (SubstancesClass.Ferria):
+                    return 0.7;
+                case (SubstancesClass.Terra):
+                    return 1;
+                case (SubstancesClass.Jupiter):
+                    return 0;
+                default:
+                    throw new ArgumentException($"{substancesClass.ToString()} class is not acceptable");
+            }
+        }
+    }
+
+    [Serializable]
+    public struct PlanetType {
+        private const double goodWorldQuality = 100;
+
+        private double quality;
         private string name;
         private double miningDifficulty;
         private byte resourseAbundance;
 
-        public PlanetType(byte quality, string name, byte resourseAbundance = 100) {
-            this.quality = quality;
-            this.name = name ?? throw new ArgumentNullException(nameof(name));
-            this.resourseAbundance = resourseAbundance;
+        private TemperatureClass temperatureClass;
+        private VolatilesClass volatilesClass;
+        private SubstancesClass substancesClass;
+
+        public PlanetType(TemperatureClass temperature, VolatilesClass volatiles, SubstancesClass substances) {
+            this.temperatureClass = temperature;
+            this.volatilesClass = volatiles;
+            this.substancesClass = substances;
+
+            double tempQuality = PlanetCharacteristicsHelper.GetPlanetTypeFactor(temperature,volatiles,substances);
+
+            this.quality = tempQuality * GoodWorldQuality;
+            this.name = $"{temperature}, {volatiles}, {substances}";
+            this.resourseAbundance = 100;
 
             double months = 12;
-            this.miningDifficulty = ((double)quality / (double)PlanetType.GoodWorldQuality) / months;
+            this.miningDifficulty = (quality / PlanetType.GoodWorldQuality) / months;
         }
 
-        public byte Quality {
-            get => this.quality;
-            set => this.quality = value;
-        }
+        public double Quality { get => this.quality; }
+        public string Name { get => this.name; }
 
-        public string Name {
-            get => this.name;
-            set => this.name = value;
-        }
-
-        public static int GoodWorldQuality { get => goodWorldQuality; }
+        public static double GoodWorldQuality { get => goodWorldQuality; }
         public double MiningDifficulty { get => this.miningDifficulty; }
+        public byte ResourseAbundance { get => this.resourseAbundance; }
+
+        public TemperatureClass TemperatureClass { get => this.temperatureClass; }
+        public VolatilesClass VolatilesClass { get => this.volatilesClass; }
+        public SubstancesClass SubstancesClass { get => this.substancesClass; }
     }
 
     public enum PlanetTypeVariants {
-        Continental, Barren, Desert, Paradise, Ocean, GasGiant, IceWorld, Tropical, Tundra
+        Terra, Barren, Desert, Paradise, GasGiant
     }
 
     static public class PlanetTypeContainer {
         static Dictionary<PlanetTypeVariants, PlanetType> planetTypes = new Dictionary<PlanetTypeVariants, PlanetType>();
         static PlanetType[] planetTypesArray = new PlanetType[] {
-            new PlanetType(90, "Continental"),
-            new PlanetType(0, "Barren"),
-            new PlanetType(10, "Desert"),
-            new PlanetType(150, "Paradise"),
-            new PlanetType(40, "Ocean"),
-            new PlanetType(0, "Gas giant"),
-            new PlanetType(0, "Ice world"),
-            new PlanetType(40, "Tropical"),
-            new PlanetType(50, "Tundra")
+            new PlanetType(TemperatureClass.Cool, VolatilesClass.Marine, SubstancesClass.Terra),
+            new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Terra),
+            new PlanetType(TemperatureClass.Cool, VolatilesClass.Desertic, SubstancesClass.Terra),
+            new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra),
+            new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Jupiter)
         }; 
 
         static PlanetTypeContainer() {
+            /*
             for (int i = 0; i < planetTypesArray.Length; i++) {
                 planetTypes.Add((PlanetTypeVariants)i, planetTypesArray[i]);
             }
+            */
+            
+            planetTypes.Add(PlanetTypeVariants.Terra, new PlanetType(TemperatureClass.Cool, VolatilesClass.Marine, SubstancesClass.Terra));
+            planetTypes.Add(PlanetTypeVariants.Barren, new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Terra));
+            planetTypes.Add(PlanetTypeVariants.Desert, new PlanetType(TemperatureClass.Cool, VolatilesClass.Desertic, SubstancesClass.Terra));
+            planetTypes.Add(PlanetTypeVariants.Paradise, new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra));
+            planetTypes.Add(PlanetTypeVariants.GasGiant, new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Jupiter));
+            
         }
 
         public static PlanetType GetPlanetType(PlanetTypeVariants key) {
@@ -107,16 +209,21 @@ namespace Logic.SpaceObjects {
         /// <param name="population">
         ///     Изначальное население планеты
         /// </param>
-        public Planet(string name, double radius, PlanetTypeVariants type, double population) {
+        public Planet(string name, double radius, PlanetTypeVariants type, double population):
+                      this(name, radius, PlanetTypeContainer.GetPlanetType(type), population){
+
+        }
+
+        public Planet(string name, double radius, PlanetType type, double population) {
+            if (radius < 2000) {
+                throw new ArgumentOutOfRangeException(nameof(radius), "Cannnot be lower than 2000");
+            }
+
+            this.type = type;
+
             this.Name = name;
 
-            if (radius < 2000) {
-                throw new ArgumentOutOfRangeException(nameof(radius), "Can't be lower than 2000");
-            }
             this.radius = radius;
-
-            PlanetType planetType = PlanetTypeContainer.GetPlanetType(type);
-            this.type = planetType;
 
             double planetArea = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
             this.area = planetArea;
@@ -130,11 +237,11 @@ namespace Logic.SpaceObjects {
                 this.Population = Math.Floor(population);
             }
 
-            if(this.Population > 0) {
+            if (this.Population > 0) {
                 this.IsColonized = true;
             }
 
-            this.BodyResourse = SetPlanetResourses(planetType, planetArea);
+            this.BodyResourse = SetPlanetResourses(type, planetArea);
         }
 
         private static Resourses SetPlanetResourses(PlanetType planetType, double planetArea) {
@@ -142,11 +249,16 @@ namespace Logic.SpaceObjects {
             double rareEarthElements = 0;
             double hydrogen = 0;
 
-            if(planetType.Name != "Gas giant") {
-                double massOfTenKmCrust = (10d * ((3d) * 10E9));
+            double massOfTenKmCrust = (10d * ((3d) * 10E9));
 
+            if (planetType.SubstancesClass == SubstancesClass.Terra) {
                 commonMetals = planetArea * (massOfTenKmCrust / 20);
                 rareEarthElements = planetArea * (massOfTenKmCrust / 1E5);
+                hydrogen = planetArea * (massOfTenKmCrust / 200);
+            }
+            else if(planetType.SubstancesClass == SubstancesClass.Ferria) {
+                commonMetals = planetArea * (massOfTenKmCrust / 2);
+                rareEarthElements = planetArea * (massOfTenKmCrust / 1E4);
                 hydrogen = planetArea * (massOfTenKmCrust / 200);
             }
 
@@ -218,7 +330,7 @@ namespace Logic.SpaceObjects {
                 return;
             }
 
-            AddPopulation(player.PopulationGrowthModifier);
+            AddPopulation(player.PopulationGrowthFactor);
 
             player.Hub.MigrateHabitatToHub(this);
             player.Hub.MigrateHubToHabitat(this);
@@ -230,7 +342,7 @@ namespace Logic.SpaceObjects {
             double growthCoef = partOfGrowth * HelperRandomFunctions.GetRandomDouble();
 
             double addedPart =
-                growthCoef * ((double)this.Type.Quality / (double)PlanetType.GoodWorldQuality);
+                growthCoef * (this.Type.Quality / PlanetType.GoodWorldQuality);
 
             double addedPopulation = this.Population * addedPart;
             this.Population += addedPopulation;

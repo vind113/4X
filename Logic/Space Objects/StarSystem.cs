@@ -10,6 +10,7 @@ namespace Logic.SpaceObjects {
     /// <summary>
     ///     Представляет звездную систему
     /// </summary>
+    [Serializable]
     public class StarSystem : INotifyPropertyChanged {
         private string name;
 
@@ -22,6 +23,7 @@ namespace Logic.SpaceObjects {
         private byte colonizedCount;
         private double population;
 
+        [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {

@@ -24,7 +24,7 @@ namespace Logic.PlayerClasses {
         private int colonizedPlanets;
         private int ownedPlanets;
 
-        private double populationGrowthModifier = 0.0015;
+        private double populationGrowthFactor = 0.001;
 
         public Player() {
             this.Stockpile = new Stockpile();
@@ -41,9 +41,13 @@ namespace Logic.PlayerClasses {
             this.Ships = new Ships();
         }
 
+        [field: NonSerialized]
         public event EventHandler<StockpileChangedEventArgs> StockpileChanged;
+
+        [field: NonSerialized]
         public event EventHandler<PopulationChangedEventArgs> PopulationChanged;
 
+        [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnStockpileChanged() {
@@ -168,11 +172,11 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public double PopulationGrowthModifier {
-            get => this.populationGrowthModifier;
+        public double PopulationGrowthFactor {
+            get => this.populationGrowthFactor;
             set {
-                if (value >= 0 && value != this.populationGrowthModifier) {
-                    this.populationGrowthModifier = value;
+                if (value >= 0 && value != this.populationGrowthFactor) {
+                    this.populationGrowthFactor = value;
                     OnPropertyChanged();
                 }
             }

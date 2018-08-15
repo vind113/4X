@@ -7,7 +7,8 @@
         xmlns:converters="clr-namespace:_4XGame.ViewModel.Converters"
         mc:Ignorable="d"
         Title="MainWindow"
-        WindowStartupLocation="CenterScreen"
+        MinHeight="660"
+        WindowStartupLocation="Manual"
         Background="Azure" Foreground="Black"
         DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}"
         Closing="CurrentWindow_Closing">
@@ -37,10 +38,10 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
+    <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition MinWidth="200" Width="200"/>
+            <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -53,12 +54,11 @@
             <Menu Margin="5" Height="20">
                 <MenuItem Header="Game" BorderBrush="Black" MinHeight="20">
                     <MenuItem Header="New Game"
-                              Command="{Binding Path=NewGameCmd}"
-                              CommandParameter=
-                                "{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                                                          AncestorType={x:Type Window}}}"/>
-                    <MenuItem Header="Save Game"/>
-                    <MenuItem Header="Load Game"/>
+                              Command="{Binding Path=NewGameCmd}"/>
+                    <MenuItem Header="Save Game"
+                              Command="{Binding Path=SaveGameCmd}"/>
+                    <MenuItem Header="Load Game"
+                              Command="{Binding Path=LoadGameCmd}"/>
                     <Separator/>
                     <MenuItem Header="Exit" Click="ExitMenuItem_Click"/>
                 </MenuItem>
@@ -76,10 +76,10 @@
 
                 <WrapPanel>
                     <Label HorizontalAlignment="Left" FontSize="15"
-                       Content="{Binding Path=ThisGame.GameDate.Turn}" ContentStringFormat="Turn: {0}"/>
+                       Content="{Binding Path=CurrentGame.GameDate.Turn}" ContentStringFormat="Turn: {0}"/>
 
                     <Label HorizontalAlignment="Left" FontSize="15"
-                       Content="{Binding Path=ThisGame.GameDate.Date}" ContentStringFormat="Date: {0}"/>
+                       Content="{Binding Path=CurrentGame.GameDate.Date}" ContentStringFormat="Date: {0}"/>
                 </WrapPanel>
 
                 <Button VerticalAlignment="Bottom" MinHeight="30"
@@ -149,7 +149,7 @@
                         <Button.CommandParameter>
                             <MultiBinding Converter="{StaticResource TurnNumberConverterResourse}">
                                 <Binding Path="Text" ElementName="TurnsNumberTextBox"/>
-                                <Binding Path="ThisGame"/>
+                                <Binding Path="CurrentGame"/>
                             </MultiBinding>
                         </Button.CommandParameter>
                     </Button>
@@ -158,7 +158,7 @@
             <Button x:Name="NextTurnButton" Content="Next Turn"
                     MinHeight="38" MinWidth="190" Margin="5"
                     Command="{Binding Path=NextTurnCmd}"
-                    CommandParameter="{Binding Path=ThisGame}"/>
+                    CommandParameter="{Binding Path=CurrentGame}"/>
         </WrapPanel>
 
         <Grid Grid.Column="0" Grid.Row="2">
@@ -169,15 +169,15 @@
                     <Grid ScrollViewer.CanContentScroll="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <DataGrid x:Name="SystemsGrid" Grid.Column="0"
-                                  MinHeight="340" MinWidth="200" 
+                                  MinWidth="200" 
                                   HorizontalAlignment="Left"
                                   Margin="3" CanUserAddRows="False" BorderThickness="2"
                                   AutoGenerateColumns="False"
                                   VerticalScrollBarVisibility="Visible"
-                                  ItemsSource="{Binding Path=ThisGame.Player.StarSystems}">
+                                  ItemsSource="{Binding Path=CurrentGame.Player.StarSystems}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}"/>
                                 <DataGridTextColumn Header="Colonized" Binding="{Binding ColonizedCount}" IsReadOnly="True"/>
@@ -193,7 +193,7 @@
                                 <Grid Background="#FFE5E5E5">
                                     <WrapPanel Orientation="Vertical" DataContext="{Binding ElementName=SystemsGrid,
                                                Path=SelectedItem}">
-                                        <WrapPanel Orientation="Horizontal">
+                                        <WrapPanel Orientation="Vertical">
                                             <Label Content="{Binding Path=MinersCount, FallbackValue=?}"
                                                    ContentStringFormat="Miners in system: {0}"/>
 
@@ -264,7 +264,7 @@
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
-                                    <WrapPanel Grid.Column="1" Orientation="Vertical">
+                                    <StackPanel Grid.Column="1" Orientation="Vertical">
                                         <WrapPanel Grid.Column="1"
                                                    Style="{StaticResource CelestialInfoPanelStyle}"
                                                    DataContext="{Binding ElementName=SystemPlanetsListBox, Path=SelectedItem}">
@@ -277,6 +277,7 @@
 
                                             <Label Content="{Binding Path=Population}" ContentStringFormat="Population: {0:#,#}"/>
                                             <Label Content="{Binding Path=Type.Name}" ContentStringFormat="Type: {0}"/>
+                                            <Label Content="{Binding Path=Type.Quality}" ContentStringFormat="Quality: {0}"/>
                                             <Label Content="{Binding Path=BuildingSites}" ContentStringFormat="Building sites: {0}"/>
                                             <Label Content="{Binding Path=MaximumPopulation}" ContentStringFormat="Maximum of population: {0:#,#}"/>
 
@@ -295,7 +296,7 @@
                                                 Command="{Binding Path=ColonizePlanetCmd}">
                                                 <Button.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource ColonizePlanetConverterResourse}">
-                                                        <Binding Path="ThisGame.Player"/>
+                                                        <Binding Path="CurrentGame.Player"/>
                                                         <Binding ElementName="SystemPlanetsListBox" Path="SelectedItem"/>
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
@@ -303,9 +304,9 @@
                                             <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
                                                   HorizontalAlignment="Left" Margin="3"
                                                   VerticalAlignment="Top" MinHeight="20" MinWidth="100"
-                                                  IsChecked="{Binding Path=ThisGame.IsAutoColonizationEnabled, Mode=TwoWay}"/>
+                                                  IsChecked="{Binding Path=CurrentGame.IsAutoColonizationEnabled, Mode=TwoWay}"/>
                                         </WrapPanel>
-                                    </WrapPanel>
+                                    </StackPanel>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="Artificial constructtions" MinWidth="100">
@@ -338,22 +339,22 @@
                         <Label ContentStringFormat="Colonized planets: {0}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding Path=ThisGame.Player.ColonizedPlanets}"/>
+                               Content="{Binding Path=CurrentGame.Player.ColonizedPlanets}"/>
 
                         <Label ContentStringFormat="Owned planets: {0}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding Path=ThisGame.Player.OwnedPlanets}"/>
+                               Content="{Binding Path=CurrentGame.Player.OwnedPlanets}"/>
 
                         <Label ContentStringFormat="Owned stars: {0}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding Path=ThisGame.Player.OwnedStars}"/>
+                               Content="{Binding Path=CurrentGame.Player.OwnedStars}"/>
 
                         <Label ContentStringFormat="Owned Systems: {0}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding Path=ThisGame.Player.StarSystems.Count}"/>
+                               Content="{Binding Path=CurrentGame.Player.StarSystems.Count}"/>
                     </WrapPanel>
                 </TabItem>
                 <TabItem Header="Debug Info" MinWidth="100">

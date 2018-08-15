@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="4XGame">
+      <HintPath>..\4XGame\bin\Debug\4XGame.exe</HintPath>
+    </Reference>
     <Reference Include="Logic">
       <HintPath>..\Logic\bin\Debug\Logic.dll</HintPath>
     </Reference>
@@ -51,6 +54,7 @@
   <ItemGroup>
     <Compile Include="PlanetTest.cs" />
     <Compile Include="ResoursesTest.cs" />
+    <Compile Include="SaveLoadTest.cs" />
     <Compile Include="ShipsTest.cs" />
     <Compile Include="SpaceBuildingsTest.cs" />
     <Compile Include="UnitTest1.cs" />

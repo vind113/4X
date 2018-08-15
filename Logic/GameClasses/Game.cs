@@ -1,16 +1,17 @@
 ﻿using Logic.PlayerClasses;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Logic.GameClasses {
+    [Serializable]
     public class Game : INotifyPropertyChanged {
         private Player player;
         private TurnDate gameDate;
         private bool isAutoColonizationEnabled = false;
 
-        #region Events
+        [field:NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
-        #endregion
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
             var handler = PropertyChanged;

@@ -80,7 +80,7 @@ namespace UnitTest4X {
             List<Planet> planetList = new List<Planet>();
 
             for (int i = 0; i < planetsToColonize; i++) {
-                planetList.Add(PlanetFactory.GetPlanet("a", PlanetTypeVariants.Continental));
+                planetList.Add(PlanetFactory.GetPlanet("a", new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra)));
             }
 
             player.AddStarSystem(new StarSystem("system", new List<Star>(), planetList));

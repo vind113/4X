@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using Logic.Resourse;
 using System.Runtime.CompilerServices;
+using System;
 
 namespace Logic.SpaceObjects {
 
+    [Serializable]
     public abstract class CelestialBody : INotifyPropertyChanged {
         protected string name;                //имя небесного тела
         protected double area;      //площадь небесного тела
@@ -26,6 +28,7 @@ namespace Logic.SpaceObjects {
             protected set => this.bodyResourse = value;
         }
 
+        [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {

@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Serialization\Save.cs" />
     <Compile Include="ViewModel\Commands\ColonizePlanetCommand.cs" />
     <Compile Include="ViewModel\Commands\CommandBase.cs" />
     <Compile Include="ViewModel\Commands\RelayCommand\RelayCommand.cs" />

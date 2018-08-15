@@ -14,6 +14,10 @@ namespace Logic.SupportClasses {
             randomizer = new Random();
         }
 
+        public static void SetToInitialSeed(int seed) {
+            randomizer = new Random(seed);
+        }
+
         public static double GetRandomDouble() {
             return randomizer.NextDouble();
         }

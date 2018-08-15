@@ -166,6 +166,7 @@ namespace Logic.Resourse {
 
         public static Resourses Zero => zero;
 
+        [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {

@@ -13,6 +13,7 @@ namespace _4XGame {
     public partial class MainWindow : Window, INotifyPropertyChanged {
         private MainWindowViewModel viewModel;
 
+        [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         public MainWindowViewModel ViewModel {

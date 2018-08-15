@@ -1,6 +1,8 @@
-﻿using _4XGame.ViewModel.Commands;
+﻿using _4XGame.Serialization;
+using _4XGame.ViewModel.Commands;
 using Logic.GameClasses;
 using Logic.Resourse;
+using Logic.SupportClasses;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -8,7 +10,9 @@ using System.Runtime.CompilerServices;
 namespace _4XGame.ViewModel {
     [Serializable]
     public class MainWindowViewModel : INotifyPropertyChanged {
-        private Game thisGame;
+        string savingPath = @"C:\Users\Tom\Desktop\save.dat";
+
+        private Game currentGame;
 
         private double money;
         private double totalPopulation;
@@ -17,6 +21,7 @@ namespace _4XGame.ViewModel {
 
         private string gameEventsLog;
 
+        [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
@@ -24,39 +29,69 @@ namespace _4XGame.ViewModel {
         }
 
         public MainWindowViewModel() {
+            //HelperRandomFunctions.SetToInitialSeed(1);
+
             GameEventsLog = String.Empty;
 
-            ThisGame = new Game();
+            this.SetNewGame(new Game());
+        }
 
-            this.CurrentResourses = new Resourses(0, 0, 0);
+        private void SetNewGame(Game game) {
+            this.CurrentGame = game;
 
-            ThisGame.Player.StockpileChanged += SetStockpile;
-            ThisGame.Player.PopulationChanged += SetTotalPopulation;
+            CurrentGame.Player.StockpileChanged += SetStockpile;
+            CurrentGame.Player.PopulationChanged += SetTotalPopulation;
+
+            this.CurrentResourses = this.CurrentGame.Player.OwnedResourses;
+            this.Money = this.CurrentGame.Player.Money;
+            this.TotalPopulation = this.CurrentGame.Player.TotalPopulation;
         }
 
         #region Commands
+        [NonSerialized]
         private NextTurnCommand nextTurnCommand = null;
         public NextTurnCommand NextTurnCmd => nextTurnCommand ?? (nextTurnCommand = new NextTurnCommand());
 
+        [NonSerialized]
         private MultipleNextTurnsCommand multipleNextTurnsCommand = null;
         public MultipleNextTurnsCommand MultipleNextTurnsCmd =>
             multipleNextTurnsCommand ?? (multipleNextTurnsCommand = new MultipleNextTurnsCommand());
 
+        [NonSerialized]
         private ColonizePlanetCommand colonizePlanetCommand = null;
         public ColonizePlanetCommand ColonizePlanetCmd =>
             colonizePlanetCommand ?? (colonizePlanetCommand = new ColonizePlanetCommand());
 
+        [NonSerialized]
         private RelayCommand<MainWindow> newGameCommand = null;
         public RelayCommand<MainWindow> NewGameCmd =>
             newGameCommand ?? (newGameCommand = new RelayCommand<MainWindow>(
-                (o) => { o.ViewModel = new MainWindowViewModel(); }));
+                (o) => {
+                    this.SetNewGame(new Game());
+                }));
+
+        [NonSerialized]
+        private RelayCommand<MainWindow> saveGameCommand = null;
+        public RelayCommand<MainWindow> SaveGameCmd =>
+            saveGameCommand ?? (saveGameCommand = new RelayCommand<MainWindow>(
+                (o) => {
+                    SavedGame.Save(this.CurrentGame, this.SavingPath);
+                }));
+
+        [NonSerialized]
+        private RelayCommand<MainWindow> loadGameCommand = null;
+        public RelayCommand<MainWindow> LoadGameCmd =>
+            loadGameCommand ?? (loadGameCommand = new RelayCommand<MainWindow>(
+                (o) => {
+                    this.SetNewGame(SavedGame.Load(this.SavingPath));
+                }));
         #endregion
 
         #region Properties
-        public Game ThisGame {
-            get => this.thisGame;
+        public Game CurrentGame {
+            get => this.currentGame;
             set {
-                this.thisGame = value;
+                this.currentGame = value;
                 OnPropertyChanged();
             }
         }
@@ -73,7 +108,6 @@ namespace _4XGame.ViewModel {
         public Resourses CurrentResourses {
             get => this.resourses;
             set {
-                //добавь проверку
                 this.resourses = value;
                 OnPropertyChanged();
             }
@@ -94,8 +128,10 @@ namespace _4XGame.ViewModel {
                 OnPropertyChanged();
             }
         }
+
+        public string SavingPath { get => this.savingPath; }
         #endregion
-        
+
         private void SetStockpile(object sender, StockpileChangedEventArgs e) {
             Money = e.Money;
             CurrentResourses = e.ArgResourses;

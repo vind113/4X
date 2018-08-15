@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace Logic.GameClasses {
+    [Serializable]
     public class TurnDate {
         private int currentTurn;
         private byte currentMonth;
