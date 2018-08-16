@@ -102,7 +102,7 @@ namespace Logic.PlayerClasses {
 
     [Serializable]
     public class Ships {
-        public static Colonizer GetColonizerFrom(Resourses resourses) {
+        public Colonizer GetColonizerFrom(Resourses resourses) {
             if (resourses.CanSubstract(Colonizer.Price)) {
 
                 resourses.Substract(Colonizer.Price);
@@ -112,7 +112,7 @@ namespace Logic.PlayerClasses {
             return null;
         }
 
-        public static int GetMinersFrom(Resourses resourses, int quantity) {
+        public int GetMinersFrom(Resourses resourses, int quantity) {
 
             Resourses neededResourses = new Resourses(
                 quantity * Miner.Price.Hydrogen,

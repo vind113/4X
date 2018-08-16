@@ -134,44 +134,10 @@ namespace Logic.SpaceObjects {
         public SubstancesClass SubstancesClass { get => this.substancesClass; }
     }
 
-    public enum PlanetTypeVariants {
-        Terra, Barren, Desert, Paradise, GasGiant
+    public enum ColonizationState : byte {
+        Unknown, NonColonizable, NotColonized, Colonized
     }
 
-    static public class PlanetTypeContainer {
-        static Dictionary<PlanetTypeVariants, PlanetType> planetTypes = new Dictionary<PlanetTypeVariants, PlanetType>();
-        static PlanetType[] planetTypesArray = new PlanetType[] {
-            new PlanetType(TemperatureClass.Cool, VolatilesClass.Marine, SubstancesClass.Terra),
-            new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Terra),
-            new PlanetType(TemperatureClass.Cool, VolatilesClass.Desertic, SubstancesClass.Terra),
-            new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra),
-            new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Jupiter)
-        }; 
-
-        static PlanetTypeContainer() {
-            /*
-            for (int i = 0; i < planetTypesArray.Length; i++) {
-                planetTypes.Add((PlanetTypeVariants)i, planetTypesArray[i]);
-            }
-            */
-            
-            planetTypes.Add(PlanetTypeVariants.Terra, new PlanetType(TemperatureClass.Cool, VolatilesClass.Marine, SubstancesClass.Terra));
-            planetTypes.Add(PlanetTypeVariants.Barren, new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Terra));
-            planetTypes.Add(PlanetTypeVariants.Desert, new PlanetType(TemperatureClass.Cool, VolatilesClass.Desertic, SubstancesClass.Terra));
-            planetTypes.Add(PlanetTypeVariants.Paradise, new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra));
-            planetTypes.Add(PlanetTypeVariants.GasGiant, new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Jupiter));
-            
-        }
-
-        public static PlanetType GetPlanetType(PlanetTypeVariants key) {
-            if (planetTypes.ContainsKey(key)) {
-                return planetTypes[key];
-            }
-            else {
-                throw new ArgumentException("Passed key does not have a value");
-            }
-        }
-    }
 
     /// <summary>
     /// Представляет планету
@@ -204,16 +170,11 @@ namespace Logic.SpaceObjects {
         ///     Радуис планеты
         /// </param>
         /// <param name="type">
-        ///     Тип планеты(пустынная, океаническая, газовый гигант и т.д)
+        ///     Тип планеты
         /// </param>
         /// <param name="population">
         ///     Изначальное население планеты
         /// </param>
-        public Planet(string name, double radius, PlanetTypeVariants type, double population):
-                      this(name, radius, PlanetTypeContainer.GetPlanetType(type), population){
-
-        }
-
         public Planet(string name, double radius, PlanetType type, double population) {
             if (radius < 2000) {
                 throw new ArgumentOutOfRangeException(nameof(radius), "Cannnot be lower than 2000");
@@ -255,11 +216,19 @@ namespace Logic.SpaceObjects {
                 commonMetals = planetArea * (massOfTenKmCrust / 20);
                 rareEarthElements = planetArea * (massOfTenKmCrust / 1E5);
                 hydrogen = planetArea * (massOfTenKmCrust / 200);
+
             }
             else if(planetType.SubstancesClass == SubstancesClass.Ferria) {
                 commonMetals = planetArea * (massOfTenKmCrust / 2);
                 rareEarthElements = planetArea * (massOfTenKmCrust / 1E4);
                 hydrogen = planetArea * (massOfTenKmCrust / 200);
+
+            }
+            else if(planetType.SubstancesClass == SubstancesClass.Jupiter) {
+                commonMetals = 0;
+                rareEarthElements = 0;
+                hydrogen = planetArea * (1.4 * 10 * 1E3 * 1E9);
+
             }
 
             Resourses planetResourses = new Resourses(hydrogen, commonMetals, rareEarthElements);
@@ -306,7 +275,7 @@ namespace Logic.SpaceObjects {
         public double MaximumPopulation { get => this.maximumPopulation; }
 
         /// <summary>
-        /// Тип планеты
+        /// Возвращает тип планеты
         /// </summary>
         public PlanetType Type { get => this.type; }
 
@@ -317,8 +286,8 @@ namespace Logic.SpaceObjects {
                 $"On this planet can live {this.maximumPopulation:E4} people. " +
                 $"We can build {this.buildingSites} buildings here. ";
         }
-
-        #region Next turn functions
+    
+        #region Next turn methods
         /// <summary>
         ///     Выполняет все операции для перехода на следующий ход
         /// </summary>
@@ -332,10 +301,10 @@ namespace Logic.SpaceObjects {
 
             AddPopulation(player.PopulationGrowthFactor);
 
-            player.Hub.MigrateHabitatToHub(this);
-            player.Hub.MigrateHubToHabitat(this);
+            player.Hub.MigrateToHub(this);
+            player.Hub.MigrateFromHub(this);
 
-            ExtractResourses(player);
+            ExtractResourses(player.OwnedResourses);
         }
 
         private void AddPopulation(double partOfGrowth) {
@@ -348,7 +317,7 @@ namespace Logic.SpaceObjects {
             this.Population += addedPopulation;
         }
 
-        private void ExtractResourses(Player player) {
+        private void ExtractResourses(Resourses extractTo) {
             if (this.BodyResourse.IsStrictlyGreater(Resourses.Zero)) {
                 double minedResourses = (this.Type.MiningDifficulty * this.Population);
 
@@ -359,10 +328,10 @@ namespace Logic.SpaceObjects {
                     Resourses extracted = new Resourses(minedHydrogen, minedCommonMetals, minedRareElements);
 
                     this.BodyResourse.Substract(extracted);
-                    player.OwnedResourses.Add(extracted);
+                    extractTo.Add(extracted);
                 }
                 catch (ArgumentException) {
-                    player.OwnedResourses.Add(this.BodyResourse);
+                    extractTo.Add(this.BodyResourse);
                     this.BodyResourse.SetToZero();
                 }
             }
@@ -378,32 +347,32 @@ namespace Logic.SpaceObjects {
         /// <returns>
         /// Булевое значение, которое показывает успешность колонизации
         /// </returns>
-        public bool Colonize(Player player) {
+        public ColonizationState Colonize(Player player) {
             if (this.Population > 0) {
-                return true;
+                return ColonizationState.Colonized;
             }
 
             if (this.MaximumPopulation < Colonizer.Colonists) {
-                return false;
+                return ColonizationState.NonColonizable;
             }
 
             if (player == null) {
                 throw new ArgumentNullException(nameof(player));
             }
 
-            Colonizer colonizer = Ships.GetColonizerFrom(player.OwnedResourses); 
+            Colonizer colonizer = player.Ships.GetColonizerFrom(player.OwnedResourses);
 
             if (colonizer != null) {
 
                 this.Population += colonizer.GetColonists(colonizer.ColonistsOnShip);
                 this.IsColonized = true;
 
-                return true;
+                return ColonizationState.Colonized;
 
             }
             else {
                 player.AddToColonizationQueue(this);
-                return false;
+                return ColonizationState.NotColonized;
             }
         }
     }

@@ -8,7 +8,9 @@ namespace UnitTest4X {
     public class ShipsTest {
         [TestCase]
         public void ColonizerGetColonists_ParamIsLowerThanColonistsOnShip_GetColonists() {
-            Colonizer colonizer = Ships.GetColonizerFrom(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
+            Ships ships = new Ships();
+
+            Colonizer colonizer = ships.GetColonizerFrom(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
 
             double colonize = colonizer.GetColonists(colonizer.ColonistsOnShip / 4);
 
@@ -17,7 +19,9 @@ namespace UnitTest4X {
 
         [TestCase]
         public void ColonizerGetColonists_ParamIsGreaterThanColonistsOnShip_GetColonists() {
-            Colonizer colonizer = Ships.GetColonizerFrom(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
+            Ships ships = new Ships();
+
+            Colonizer colonizer = ships.GetColonizerFrom(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
 
             double colonize = colonizer.GetColonists(colonizer.ColonistsOnShip * 4);
 
@@ -44,7 +48,9 @@ namespace UnitTest4X {
             );
 
             int result = 0;
-            result = Ships.GetMinersFrom(inPossesion, shipsToBuy);
+            Ships ships = new Ships();
+
+            result = ships.GetMinersFrom(inPossesion, shipsToBuy);
 
             Assert.AreEqual(0, result);
         }
@@ -69,7 +75,9 @@ namespace UnitTest4X {
             );
 
             int result = 0;
-            result = Ships.GetMinersFrom(inPossesion, shipsToBuy);
+            Ships ships = new Ships();
+
+            result = ships.GetMinersFrom(inPossesion, shipsToBuy);
 
             Assert.AreEqual(shipsToBuy, result);
         }

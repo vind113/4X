@@ -26,7 +26,7 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public void MigrateHabitatToHub(IHabitable habitat) {
+        public void MigrateToHub(IHabitable habitat) {
             double partOfTravellers = 0.001d;
 
             double citizensToHubExpected = Math.Floor(habitat.Population * partOfTravellers);
@@ -44,7 +44,7 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public void MigrateHubToHabitat(IHabitable habitat) {
+        public void MigrateFromHub(IHabitable habitat) {
             double citizensFromHub =
                 Math.Floor(HelperRandomFunctions.GetRandomDouble() * this.CitizensInHub);
 

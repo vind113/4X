@@ -74,7 +74,9 @@ namespace Logic.PlayerClasses {
                 return;
             }
 
-            this.planetsToColonize.Enqueue(planet);
+            if (!this.planetsToColonize.Contains(planet)) {
+                this.planetsToColonize.Enqueue(planet);
+            }
         }
 
         public void TryToColonizeQueue() {
@@ -83,8 +85,10 @@ namespace Logic.PlayerClasses {
             }
 
             while (this.planetsToColonize.Count > 0) {
-                bool colonized = this.planetsToColonize.Peek().Colonize(this);
-                if (!colonized) {
+                ColonizationState state =
+                    this.planetsToColonize.Peek().Colonize(this);
+
+                if (state == ColonizationState.NotColonized) {
                     break;
                 }
                 this.planetsToColonize.Dequeue();

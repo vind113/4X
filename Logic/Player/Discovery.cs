@@ -8,7 +8,7 @@ namespace Logic.PlayerClasses {
             //с такой вероятностью каждый ход будет открываться новая система
             //возможно добавить зависимость от уровня технологий
             //оптимальное значение - 0.15
-            double discoveryProbability = 0.15;
+            const double discoveryProbability = 0.15;
 
             if (HelperRandomFunctions.ProbableBool(discoveryProbability)) {
                 int maxSystemsToGenerate = 0;

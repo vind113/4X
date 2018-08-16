@@ -45,6 +45,7 @@
     <Compile Include="GameClasses\Game.cs" />
     <Compile Include="GameClasses\PopulationChangedEventArgs.cs" />
     <Compile Include="GameClasses\StockpileChangedEventArgs.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Player\CitizenHub.cs" />
     <Compile Include="GameClasses\CurrentDate.cs" />
     <Compile Include="Player\Discovery.cs" />

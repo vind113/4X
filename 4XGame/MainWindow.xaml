@@ -283,9 +283,9 @@
 
                                             <Separator MinWidth="200" Background="Black"/>
 
-                                            <Label Content="{Binding Path=BodyResourse.Hydrogen}" ContentStringFormat="Hydrogen: {0:#,#} t"/>
-                                            <Label Content="{Binding Path=BodyResourse.CommonMetals}" ContentStringFormat="Common metals: {0:#,#} t"/>
-                                            <Label Content="{Binding Path=BodyResourse.RareEarthElements}" ContentStringFormat="Rare earth elements: {0:#,#} t"/>
+                                            <Label Content="{Binding Path=BodyResourse.Hydrogen}" ContentStringFormat="Hydrogen: {0:E15} t"/>
+                                            <Label Content="{Binding Path=BodyResourse.CommonMetals}" ContentStringFormat="Common metals: {0:E15} t"/>
+                                            <Label Content="{Binding Path=BodyResourse.RareEarthElements}" ContentStringFormat="Rare earth elements: {0:E15} t"/>
                                         </WrapPanel>
 
                                         <WrapPanel>
