@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Logic.PlayerClasses;
 using Logic.Resourse;
 using Logic.SupportClasses;
+using Logic.Buildings;
 
 namespace Logic.SpaceObjects {
     /// <summary>
@@ -16,6 +18,8 @@ namespace Logic.SpaceObjects {
 
         private readonly List<Star> systemStars;
         private readonly List<Planet> systemPlanets;
+
+        private readonly SystemBuildings buildings;
 
         private Resourses systemResourses;
         private int minersCount;
@@ -64,6 +68,8 @@ namespace Logic.SpaceObjects {
 
             this.systemPlanets = new List<Planet>(planets) ?? throw new ArgumentNullException(nameof(planets));
 
+            this.buildings = new SystemBuildings();
+
             foreach (var planet in this.SystemPlanets) {
                 planet.PropertyChanged += this.Planet_PropertyChanged;
             }
@@ -81,12 +87,14 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Возвращает ссылку на коллекцию объектов <see cref="Star"/> системы
         /// </summary>
-        public List<Star> SystemStars { get => this.systemStars; }
+        //public List<Star> SystemStars { get => this.systemStars; }
+        public ReadOnlyCollection<Star> SystemStars { get => new ReadOnlyCollection<Star>(this.systemStars); }
 
         /// <summary>
         /// Возвращает ссылку на коллекцию объектов <see cref="Planet"/> системы
         /// </summary>
-        public List<Planet> SystemPlanets { get => this.systemPlanets; }
+        //public List<Planet> SystemPlanets { get => this.systemPlanets; }
+        public ReadOnlyCollection<Planet> SystemPlanets { get => new ReadOnlyCollection<Planet>(this.systemPlanets); }
 
         /// <summary>
         /// Возвращает количество планет в системе
@@ -161,6 +169,8 @@ namespace Logic.SpaceObjects {
             }
         }
 
+        public SystemBuildings Buildings { get => this.buildings; }
+
         /// <summary>
         ///     Выполняет все операции для перехода на следующий ход
         /// </summary>
@@ -180,6 +190,8 @@ namespace Logic.SpaceObjects {
             this.SystemPopulation = this.SetSystemPopulation();
 
             MineSystemResourses(player);
+
+            this.Buildings.NextTurn(player.OwnedResourses);
         }
 
         private void MineSystemResourses(Player player) {
@@ -198,6 +210,8 @@ namespace Logic.SpaceObjects {
                     population += planet.Population;
                 }
             }
+
+            population += this.Buildings.TotalPopulation;
 
             return population;
         }

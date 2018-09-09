@@ -177,6 +177,7 @@
                                   Margin="3" CanUserAddRows="False" BorderThickness="2"
                                   AutoGenerateColumns="False"
                                   VerticalScrollBarVisibility="Visible"
+                                  EnableRowVirtualization="True"
                                   ItemsSource="{Binding Path=CurrentGame.Player.StarSystems}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}"/>
@@ -185,21 +186,29 @@
                                 <DataGridTextColumn Header="Stars" Binding="{Binding StarsCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Planets" Binding="{Binding PlanetsCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Habitable" Binding="{Binding HabitablePlanets}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Habitats" Binding="{Binding Path=Buildings.ExistingCount}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <TabControl Grid.Column="1" ScrollViewer.CanContentScroll="True"
                                     Margin="5">
                             <TabItem Header="System Info" MinWidth="100">
-                                <Grid Background="#FFE5E5E5">
-                                    <WrapPanel Orientation="Vertical" DataContext="{Binding ElementName=SystemsGrid,
-                                               Path=SelectedItem}">
-                                        <WrapPanel Orientation="Vertical">
-                                            <Label Content="{Binding Path=MinersCount, FallbackValue=?}"
+                                <Grid Background="#FFE5E5E5" ShowGridLines="True"
+                                      DataContext="{Binding ElementName=SystemsGrid,
+                                                    Path=SelectedItem}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <WrapPanel Orientation="Vertical">
+                                        <Label Content="{Binding Path=MinersCount, FallbackValue=?}"
                                                    ContentStringFormat="Miners in system: {0}"/>
 
-                                            <Button Content="Add 10 miners"/>
-                                        </WrapPanel>
+                                        <Button Content="Add 10 miners"/>
+                                    </WrapPanel>
 
+                                    <WrapPanel Orientation="Vertical"
+                                               Grid.Row="1">
                                         <Label Content="{Binding Path=SystemResourses.Hydrogen, FallbackValue=?}"
                                                ContentStringFormat="Hydrogen: {0:E15}"/>
 
@@ -209,6 +218,7 @@
                                         <Label Content="{Binding Path=SystemResourses.RareEarthElements, FallbackValue=?}"
                                                ContentStringFormat="Rare elements: {0:E15}"/>
                                     </WrapPanel>
+
                                 </Grid>
                             </TabItem>
                             
@@ -233,13 +243,13 @@
                                                Style="{StaticResource CelestialInfoPanelStyle}"
                                                DataContext="{Binding ElementName=SystemStarsListBox, Path=SelectedItem}">
 
-                                        <Label Content="{Binding Path=Name}" ContentStringFormat="Name: {0}"/>
+                                        <Label Content="{Binding Path=Name, FallbackValue=?}" ContentStringFormat="Name: {0}"/>
 
-                                        <Label Content="{Binding Path=Radius}" ContentStringFormat="Radius: {0:#,#}"/>
+                                        <Label Content="{Binding Path=Radius, FallbackValue=?}" ContentStringFormat="Radius: {0:#,#}"/>
 
-                                        <Label Content="{Binding Path=Area}" ContentStringFormat="Area: {0:#,#}"/>
+                                        <Label Content="{Binding Path=Area, FallbackValue=?}" ContentStringFormat="Area: {0:#,#}"/>
 
-                                        <Label Content="{Binding Path=LumClass}" ContentStringFormat="Class: {0}"/>
+                                        <Label Content="{Binding Path=LumClass, FallbackValue=?}" ContentStringFormat="Class: {0}"/>
                                     </WrapPanel>
                                 </Grid>
                             </TabItem>
@@ -269,23 +279,23 @@
                                                    Style="{StaticResource CelestialInfoPanelStyle}"
                                                    DataContext="{Binding ElementName=SystemPlanetsListBox, Path=SelectedItem}">
 
-                                            <Label Content="{Binding Path=Name}" ContentStringFormat="Name: {0}"/>
-                                            <Label Content="{Binding Path=Radius}" ContentStringFormat="Radius: {0:#,#}"/>
-                                            <Label Content="{Binding Path=Area}" ContentStringFormat="Area: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Name, FallbackValue=?}" ContentStringFormat="Name: {0}"/>
+                                            <Label Content="{Binding Path=Radius, FallbackValue=?}" ContentStringFormat="Radius: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Area, FallbackValue=?}" ContentStringFormat="Area: {0:#,#}"/>
 
                                             <Separator MinWidth="200" Background="Black"/>
 
-                                            <Label Content="{Binding Path=Population}" ContentStringFormat="Population: {0:#,#}"/>
-                                            <Label Content="{Binding Path=Type.Name}" ContentStringFormat="Type: {0}"/>
-                                            <Label Content="{Binding Path=Type.Quality}" ContentStringFormat="Quality: {0}"/>
-                                            <Label Content="{Binding Path=BuildingSites}" ContentStringFormat="Building sites: {0}"/>
-                                            <Label Content="{Binding Path=MaximumPopulation}" ContentStringFormat="Maximum of population: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Population, FallbackValue=?}" ContentStringFormat="Population: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Type.Name, FallbackValue=?}" ContentStringFormat="Type: {0}"/>
+                                            <Label Content="{Binding Path=Type.Quality, FallbackValue=?}" ContentStringFormat="Quality: {0}"/>
+                                            <Label Content="{Binding Path=BuildingSites, FallbackValue=?}" ContentStringFormat="Building sites: {0}"/>
+                                            <Label Content="{Binding Path=MaximumPopulation, FallbackValue=?}" ContentStringFormat="Maximum of population: {0:#,#}"/>
 
                                             <Separator MinWidth="200" Background="Black"/>
 
-                                            <Label Content="{Binding Path=BodyResourse.Hydrogen}" ContentStringFormat="Hydrogen: {0:E15} t"/>
-                                            <Label Content="{Binding Path=BodyResourse.CommonMetals}" ContentStringFormat="Common metals: {0:E15} t"/>
-                                            <Label Content="{Binding Path=BodyResourse.RareEarthElements}" ContentStringFormat="Rare earth elements: {0:E15} t"/>
+                                            <Label Content="{Binding Path=BodyResourse.Hydrogen, FallbackValue=?}" ContentStringFormat="Hydrogen: {0:E15} t"/>
+                                            <Label Content="{Binding Path=BodyResourse.CommonMetals, FallbackValue=?}" ContentStringFormat="Common metals: {0:E15} t"/>
+                                            <Label Content="{Binding Path=BodyResourse.RareEarthElements, FallbackValue=?}" ContentStringFormat="Rare earth elements: {0:E15} t"/>
                                         </WrapPanel>
 
                                         <WrapPanel>
@@ -315,17 +325,33 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <ListBox Grid.Column="0"
-                                             Style="{StaticResource ListBoxStyle}">
+                                    <ListBox x:Name="SystemBuildingsGrid" Grid.Column="0"
+                                             Style="{StaticResource ListBoxStyle}"
+                                             ItemsSource="{Binding ElementName=SystemsGrid,
+                                                           Path=SelectedItem.Buildings.Existing}">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Content="{Binding Name}"/>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
                                     </ListBox>
                                     <WrapPanel Grid.Column="1" Orientation="Vertical">
-                                        <WrapPanel
-                                               Style="{StaticResource CelestialInfoPanelStyle}">
+                                        <WrapPanel Style="{StaticResource CelestialInfoPanelStyle}"
+                                                   DataContext="{Binding ElementName=SystemBuildingsGrid, Path=SelectedItem}">
+                                            <Label Content="{Binding Path=Name, FallbackValue=?}" ContentStringFormat="Name: {0}"/>
+                                            <Label Content="{Binding Path=Population, FallbackValue=?}" ContentStringFormat="Population: {0:#,#}"/>
+                                            <Label Content="{Binding Path=MaximumPopulation, FallbackValue=?}" ContentStringFormat="Maximum population: {0:#,#}"/>
 
                                         </WrapPanel>
 
                                         <WrapPanel Margin="5">
-                                            <Button Content="Build new habitat"/>
+                                            <Button Content="Build new habitat"
+                                                    Command="{Binding Path=BuildHabitatCmd}"
+                                                    CommandParameter="{Binding ElementName=SystemsGrid,
+                                                                       Path=SelectedItem}"/>
+                                            <Label Content="{Binding ElementName=SystemsGrid,
+                                                             Path=SelectedItem.Buildings.InConstructionCount}"
+                                                   ContentStringFormat="In construction: {0}"/>
                                         </WrapPanel>
                                     </WrapPanel>
                                 </Grid>

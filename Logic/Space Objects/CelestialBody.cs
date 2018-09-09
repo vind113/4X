@@ -2,15 +2,22 @@
 using Logic.Resourse;
 using System.Runtime.CompilerServices;
 using System;
+using Logic.SupportClasses;
 
 namespace Logic.SpaceObjects {
 
     [Serializable]
     public abstract class CelestialBody : INotifyPropertyChanged {
-        protected string name;                //имя небесного тела
-        protected double area;      //площадь небесного тела
-        protected double radius;    //радиус небесного тела
-        private Resourses bodyResourse;   //ресурсы на небесном теле
+        private string name;                
+        private double area;      
+        private double radius;    
+        private Resourses bodyResourse;
+
+        public CelestialBody(string name, double radius) {
+            this.name = name;
+            this.radius = radius;
+            this.area = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
+        }
 
         public string Name {
             get => this.name;

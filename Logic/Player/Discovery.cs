@@ -26,7 +26,7 @@ namespace Logic.PlayerClasses {
 
                     if (isAutoColonizationEnabled) {
                         foreach (var planet in generatedSystem.SystemPlanets) {
-                            planet.Colonize(player);
+                            if (planet.MaximumPopulation >= 10_000_000_000) planet.Colonize(player);
                         }
                     }
 

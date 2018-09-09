@@ -35,7 +35,16 @@ namespace _4XGame.ViewModel.Commands {
         }
 
         public override bool CanExecute(object parameter) {
-            return true;
+
+            if (parameter != null && parameter is Tuple<object, object> tuple) {
+                if (tuple.Item1 is string turns && tuple.Item2 is Game) {
+                    if (UInt32.TryParse(turns, out uint number)) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public override void Execute(object parameter) {

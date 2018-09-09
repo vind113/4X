@@ -154,13 +154,6 @@ namespace Logic.SpaceObjects {
         private const double citizensPerSector = 100_000_000d;
 
         /// <summary>
-        /// Инициализирует экземпляр класса планеты с значениями по умолчанию
-        /// </summary>
-        public Planet() {
-            
-        }
-
-        /// <summary>
         /// Инициализирует экземпляр класса планеты
         /// </summary>
         /// <param name="name">
@@ -175,21 +168,14 @@ namespace Logic.SpaceObjects {
         /// <param name="population">
         ///     Изначальное население планеты
         /// </param>
-        public Planet(string name, double radius, PlanetType type, double population) {
+        public Planet(string name, double radius, PlanetType type, double population):base(name, radius) {
             if (radius < 2000) {
                 throw new ArgumentOutOfRangeException(nameof(radius), "Cannnot be lower than 2000");
             }
 
             this.type = type;
 
-            this.Name = name;
-
-            this.radius = radius;
-
-            double planetArea = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
-            this.area = planetArea;
-
-            this.maximumPopulation = (double)this.type.Quality * this.Area;
+            this.maximumPopulation = Math.Floor((double)this.type.Quality * this.Area);
 
             this.buildingSites = (int)Math.Ceiling(this.MaximumPopulation / citizensPerSector);
             this.availableSites = this.buildingSites;
@@ -202,7 +188,7 @@ namespace Logic.SpaceObjects {
                 this.IsColonized = true;
             }
 
-            this.BodyResourse = SetPlanetResourses(type, planetArea);
+            this.BodyResourse = SetPlanetResourses(type, this.Area);
         }
 
         private static Resourses SetPlanetResourses(PlanetType planetType, double planetArea) {
@@ -227,7 +213,7 @@ namespace Logic.SpaceObjects {
             else if(planetType.SubstancesClass == SubstancesClass.Jupiter) {
                 commonMetals = 0;
                 rareEarthElements = 0;
-                hydrogen = planetArea * (1.4 * 10 * 1E3 * 1E9);
+                hydrogen = planetArea * (1.4 * 20 * 1E3 * 1E9);
 
             }
 
@@ -280,7 +266,7 @@ namespace Logic.SpaceObjects {
         public PlanetType Type { get => this.type; }
 
         public override string ToString() {
-            return $"{this.Name} is a {this.Type.Name} world with radius of {this.radius} km " +
+            return $"{this.Name} is a {this.Type.Name} world with radius of {this.Radius} km " +
                 $"and area of {this.Area:E4} km^2. " +
                 $"Here lives {this.Population:E4} intelligent creatures. " +
                 $"On this planet can live {this.maximumPopulation:E4} people. " +
@@ -360,7 +346,7 @@ namespace Logic.SpaceObjects {
                 throw new ArgumentNullException(nameof(player));
             }
 
-            Colonizer colonizer = player.Ships.GetColonizerFrom(player.OwnedResourses);
+            Colonizer colonizer = player.Ships.GetColonizer(player.OwnedResourses);
 
             if (colonizer != null) {
 

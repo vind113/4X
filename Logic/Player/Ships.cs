@@ -102,17 +102,24 @@ namespace Logic.PlayerClasses {
 
     [Serializable]
     public class Ships {
-        public Colonizer GetColonizerFrom(Resourses resourses) {
-            if (resourses.CanSubstract(Colonizer.Price)) {
+        public Colonizer GetColonizer(Resourses from) {
+            if (from == null) {
+                throw new ArgumentNullException(nameof(from));
+            }
 
-                resourses.Substract(Colonizer.Price);
+            if (from.CanSubstract(Colonizer.Price)) {
+
+                from.Substract(Colonizer.Price);
                 return Colonizer.GetColonizer();
             }
 
             return null;
         }
 
-        public int GetMinersFrom(Resourses resourses, int quantity) {
+        public int GetMiners(Resourses from, int quantity) {
+            if (from == null) {
+                throw new ArgumentNullException(nameof(from));
+            }
 
             Resourses neededResourses = new Resourses(
                 quantity * Miner.Price.Hydrogen,
@@ -120,14 +127,13 @@ namespace Logic.PlayerClasses {
                 quantity * Miner.Price.RareEarthElements
             );
 
-            if (resourses.CanSubstract(neededResourses)) {
-                resourses.Substract(neededResourses);
+            if (from.CanSubstract(neededResourses)) {
+                from.Substract(neededResourses);
                 return quantity;
             }
             else {
                 return 0;
             }
-
         }
     }
 }

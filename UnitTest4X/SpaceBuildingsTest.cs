@@ -1,5 +1,5 @@
-﻿using Logic.Resourse;
-using Logic.SpaceObjects;
+﻿using Logic.Buildings;
+using Logic.Resourse;
 using NUnit.Framework;
 using System;
 
@@ -8,7 +8,7 @@ namespace UnitTest4X {
     public class SpaceBuildingsTest {
         [TestCase]
         public void HabitatBuilderOneTurnProgress_NotEnoughResourses_NoProgress() {
-            HabitatBuilder habitatBuilder = new HabitatBuilder();
+            HabitatBuilder habitatBuilder = new HabitatBuilder("a");
 
             double resourseFactor = 0.5;
 
@@ -25,7 +25,7 @@ namespace UnitTest4X {
 
         [TestCase]
         public void HabitatBuilderOneTurnProgress_EnoughResourses_ProgressMade() {
-            HabitatBuilder habitatBuilder = new HabitatBuilder();
+            HabitatBuilder habitatBuilder = new HabitatBuilder("a");
 
             double resourseFactor = 5;
 
@@ -43,7 +43,7 @@ namespace UnitTest4X {
 
         [TestCase]
         public void HabitatBuilderOneTurnProgress_EnoughResourses_HabitatBuilt() {
-            HabitatBuilder habitatBuilder = new HabitatBuilder();
+            HabitatBuilder habitatBuilder = new HabitatBuilder("a");
 
             double resourseFactor = Habitat.BuildingTime * 2;
 
@@ -61,8 +61,8 @@ namespace UnitTest4X {
 
         [TestCase]
         public void SystemBuildingsBuildNew_ObjectAddedTwice_CountIsCorrect() {
-            HabitatBuilder habitatBuilder = new HabitatBuilder();
-            HabitatBuilder habitatBuilder2 = new HabitatBuilder();
+            HabitatBuilder habitatBuilder = new HabitatBuilder("a");
+            HabitatBuilder habitatBuilder2 = new HabitatBuilder("a");
 
             SystemBuildings systemBuildings = new SystemBuildings();
 
@@ -92,7 +92,7 @@ namespace UnitTest4X {
             int addedBuildings = 10;
 
             for (int i = 0; i < addedBuildings; i++) {
-                systemBuildings.BuildNew(new HabitatBuilder());
+                systemBuildings.BuildNew(new HabitatBuilder("a"));
             }
             
             Assert.AreEqual(addedBuildings, systemBuildings.InConstructionCount);
@@ -107,7 +107,7 @@ namespace UnitTest4X {
             int turns = 30;
 
             for (int i = 0; i < addedBuildings; i++) {
-                systemBuildings.BuildNew(new HabitatBuilder());
+                systemBuildings.BuildNew(new HabitatBuilder("a"));
             }
 
             for (int i = 0; i < turns; i++) {

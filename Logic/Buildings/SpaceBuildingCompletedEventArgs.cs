@@ -1,7 +1,6 @@
-﻿using Logic.SpaceObjects;
-using System;
+﻿using System;
 
-namespace Logic.SpaceObjects {
+namespace Logic.Buildings {
     public class SpaceBuildingCompletedEventArgs : EventArgs {
         private Habitat habitat;
 

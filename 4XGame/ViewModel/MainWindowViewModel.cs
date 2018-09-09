@@ -33,7 +33,7 @@ namespace _4XGame.ViewModel {
 
             GameEventsLog = String.Empty;
 
-            this.SetNewGame(new Game());
+            //this.SetNewGame(new Game());
         }
 
         private void SetNewGame(Game game) {
@@ -61,6 +61,11 @@ namespace _4XGame.ViewModel {
         private ColonizePlanetCommand colonizePlanetCommand = null;
         public ColonizePlanetCommand ColonizePlanetCmd =>
             colonizePlanetCommand ?? (colonizePlanetCommand = new ColonizePlanetCommand());
+
+        [NonSerialized]
+        private BuildHabitatCommand buildHabitatCommand = null;
+        public BuildHabitatCommand BuildHabitatCmd =>
+            buildHabitatCommand ?? (buildHabitatCommand = new BuildHabitatCommand());
 
         [NonSerialized]
         private RelayCommand<MainWindow> newGameCommand = null;

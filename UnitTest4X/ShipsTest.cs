@@ -10,7 +10,7 @@ namespace UnitTest4X {
         public void ColonizerGetColonists_ParamIsLowerThanColonistsOnShip_GetColonists() {
             Ships ships = new Ships();
 
-            Colonizer colonizer = ships.GetColonizerFrom(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
+            Colonizer colonizer = ships.GetColonizer(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
 
             double colonize = colonizer.GetColonists(colonizer.ColonistsOnShip / 4);
 
@@ -21,7 +21,7 @@ namespace UnitTest4X {
         public void ColonizerGetColonists_ParamIsGreaterThanColonistsOnShip_GetColonists() {
             Ships ships = new Ships();
 
-            Colonizer colonizer = ships.GetColonizerFrom(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
+            Colonizer colonizer = ships.GetColonizer(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
 
             double colonize = colonizer.GetColonists(colonizer.ColonistsOnShip * 4);
 
@@ -50,7 +50,7 @@ namespace UnitTest4X {
             int result = 0;
             Ships ships = new Ships();
 
-            result = ships.GetMinersFrom(inPossesion, shipsToBuy);
+            result = ships.GetMiners(inPossesion, shipsToBuy);
 
             Assert.AreEqual(0, result);
         }
@@ -77,7 +77,7 @@ namespace UnitTest4X {
             int result = 0;
             Ships ships = new Ships();
 
-            result = ships.GetMinersFrom(inPossesion, shipsToBuy);
+            result = ships.GetMiners(inPossesion, shipsToBuy);
 
             Assert.AreEqual(shipsToBuy, result);
         }

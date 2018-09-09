@@ -73,44 +73,47 @@ namespace Logic.Resourse {
         /// Прибавляет ресурсы переданного объекта <see cref="Resourses"/>
         /// </summary>
         public void Add(Resourses parameter) {
-            try {
-                checked {
-                    this.Hydrogen += parameter.Hydrogen;
-                    this.CommonMetals += parameter.CommonMetals;
-                    this.RareEarthElements += parameter.RareEarthElements;
-                }
-            }
-            catch(OverflowException) {
 
-            }
+            this.Hydrogen          += parameter.Hydrogen;
+            this.CommonMetals      += parameter.CommonMetals;
+            this.RareEarthElements += parameter.RareEarthElements;
+            
         }
 
         /// <summary>
         /// Вычитает ресурсы переданного объекта <see cref="Resourses"/>
         /// </summary>
         /// <exception cref="ArgumentException"/>
-        /// <exception cref="OverflowException"/>
         public Resourses Substract(Resourses parameter) {
-            try {
-                checked {
-                    if (!this.CanSubstract(parameter)) {
-                        throw new ArgumentException("Argument can't be greater than parameter");
-                    }
-                    this.Hydrogen -= parameter.Hydrogen;
-                    this.CommonMetals -= parameter.CommonMetals;
-                    this.RareEarthElements -= parameter.RareEarthElements;
-                }
-            }
-            catch (OverflowException) {
 
+            if (!this.CanSubstract(parameter)) {
+                throw new ArgumentException("Argument can't be greater than parameter");
             }
 
+            this.Hydrogen -= parameter.Hydrogen;
+            this.CommonMetals -= parameter.CommonMetals;
+            this.RareEarthElements -= parameter.RareEarthElements;
+            
             return this;
         }
 
+        /// <summary>
+        /// Умножает ресурсы на переданную величину
+        /// </summary>
+        /// <param name="multiplier">
+        /// Число, на которое умножаются ресурсы
+        /// </param>
+        public void Multiply(double multiplier) {
+
+            this.Hydrogen *= multiplier;
+            this.CommonMetals *= multiplier;
+            this.RareEarthElements *= multiplier;
+            
+        }
+
         public bool CanSubstract(Resourses res) {
-            if (this.Hydrogen >= res.Hydrogen
-             && this.CommonMetals >= res.CommonMetals
+            if (this.Hydrogen          >= res.Hydrogen
+             && this.CommonMetals      >= res.CommonMetals
              && this.RareEarthElements >= res.RareEarthElements) {
                 return true;
             }
@@ -118,9 +121,24 @@ namespace Logic.Resourse {
             return false;
         }
 
+        /// <summary>
+        /// TEST
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
+        public bool CanAdd(Resourses res) {
+            if (this.Hydrogen + res.Hydrogen < Double.MaxValue
+             && this.CommonMetals + res.CommonMetals < Double.MaxValue
+             && this.RareEarthElements + res.RareEarthElements < Double.MaxValue) {
+                return true;
+            }
+
+            return false;
+        }
+
         public bool IsStrictlyGreater(Resourses res) {
-            if (this.Hydrogen > res.Hydrogen
-             && this.CommonMetals > res.CommonMetals
+            if (this.Hydrogen          > res.Hydrogen
+             && this.CommonMetals      > res.CommonMetals
              && this.RareEarthElements > res.RareEarthElements) {
                 return true;
             }

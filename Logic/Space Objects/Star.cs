@@ -22,13 +22,6 @@ namespace Logic.SpaceObjects {
         public LuminosityClass LumClass { get => this.lumClass; }
 
         /// <summary>
-        /// Инициализирует экземпляр класса планеты с значениями по умолчанию
-        /// </summary>
-        public Star() {
-
-        }
-
-        /// <summary>
         /// Инициализирует экземпляр класса звезды
         /// </summary>
         /// <param name="name">
@@ -40,13 +33,8 @@ namespace Logic.SpaceObjects {
         /// <param name="luminosityClass">
         ///     Класс светимости звезды
         /// </param>
-        public Star(string name, double radius, LuminosityClass luminosityClass) {
-            this.name = name;
-            this.radius = radius;
-
+        public Star(string name, double radius, LuminosityClass luminosityClass):base(name, radius) {
             this.lumClass = luminosityClass;
-
-            this.area = HelperMathFunctions.SphereArea(this.Radius);
         }
 
         /// <summary>
@@ -109,7 +97,7 @@ namespace Logic.SpaceObjects {
         /// </summary>
         /// <returns>Строку, представляющую объект</returns>
         public override string ToString() {
-            return $"It is a star called {this.name}" +
+            return $"It is a star called {this.Name}" +
                 $" with radius of {this.Radius:E4} km and area of {this.Area:E4} km^2." +
                 $"Luminosity class is {this.LumClass}";
         }

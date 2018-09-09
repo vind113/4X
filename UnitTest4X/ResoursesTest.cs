@@ -71,5 +71,33 @@ namespace UnitTest4X {
 
             Resourses c = a.Substract(b);
         }
+
+        [TestCase]
+        public void Multiply_CorrectConditions_ResoursesMultiplied() {
+            double resourseAmount = 100_000_000;
+            double multiplier = 34;
+            double expected = resourseAmount * multiplier;
+
+            Resourses resourseToMultiply = new Resourses(resourseAmount, resourseAmount, resourseAmount);
+            resourseToMultiply.Multiply(multiplier);
+
+            Assert.AreEqual(expected, resourseToMultiply.Hydrogen, 0.99);
+            Assert.AreEqual(expected, resourseToMultiply.CommonMetals, 0.99);
+            Assert.AreEqual(expected, resourseToMultiply.RareEarthElements, 0.99);
+        }
+
+        /*[TestCase]
+        public void Multiply_Overflow_ExceptionThrown() {
+            double resourseAmount = 1E308;
+            double multiplier = 340;
+
+            Resourses resourseToMultiply = new Resourses(resourseAmount, resourseAmount, resourseAmount);
+
+            Assert.Throws<OverflowException>(() => {
+                resourseToMultiply.Multiply(multiplier);
+                resourseToMultiply.Substract(new Resourses(resourseAmount, resourseAmount, resourseAmount));
+            });
+        }*/
+
     }
 }
