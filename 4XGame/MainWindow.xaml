@@ -285,7 +285,7 @@
 
                                             <Separator MinWidth="200" Background="Black"/>
 
-                                            <Label Content="{Binding Path=Population, FallbackValue=?}" ContentStringFormat="Population: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Population.Value, FallbackValue=?}" ContentStringFormat="Population: {0:#,#}"/>
                                             <Label Content="{Binding Path=Type.Name, FallbackValue=?}" ContentStringFormat="Type: {0}"/>
                                             <Label Content="{Binding Path=Type.Quality, FallbackValue=?}" ContentStringFormat="Quality: {0}"/>
                                             <Label Content="{Binding Path=BuildingSites, FallbackValue=?}" ContentStringFormat="Building sites: {0}"/>

@@ -1,8 +1,8 @@
 ﻿using System;
 using Logic.SupportClasses;
 using Logic.PlayerClasses;
-using System.Collections.Generic;
 using Logic.Resourse;
+using Logic.PopulationClasses;
 
 namespace Logic.SpaceObjects {
     //from Space Engine
@@ -144,12 +144,13 @@ namespace Logic.SpaceObjects {
     /// </summary>
     [Serializable]
     public class Planet : CelestialBody, IHabitable {
-        private PlanetType type;            //тип планеты
+        private PlanetType type;            
+                
+        private readonly int buildingSites;          
+        private int availableSites;
+
+        private Population population;
         private bool isColonized = false;
-        private double population;          //население в особях
-        private int buildingSites;          //количество мест для строительства
-        private int availableSites;         //количество доступных мест для строительства
-        private double maximumPopulation;   //максимальное население планеты
 
         private const double citizensPerSector = 100_000_000d;
 
@@ -168,71 +169,52 @@ namespace Logic.SpaceObjects {
         /// <param name="population">
         ///     Изначальное население планеты
         /// </param>
-        public Planet(string name, double radius, PlanetType type, double population):base(name, radius) {
+        public Planet(string name, double radius, PlanetType type, long population):base(name, radius) {
             if (radius < 2000) {
-                throw new ArgumentOutOfRangeException(nameof(radius), "Cannnot be lower than 2000");
+                throw new ArgumentOutOfRangeException(nameof(radius), "Cannot be lower than 2000");
             }
 
             this.type = type;
 
-            this.maximumPopulation = Math.Floor((double)this.type.Quality * this.Area);
+            this.population = new Population(population, (double)this.type.Quality * this.Area);
 
             this.buildingSites = (int)Math.Ceiling(this.MaximumPopulation / citizensPerSector);
             this.availableSites = this.buildingSites;
 
-            if (this.MaximumPopulation > population) {
-                this.Population = Math.Floor(population);
-            }
-
-            if (this.Population > 0) {
+            if (this.PopulationValue > 0) {
                 this.IsColonized = true;
             }
 
-            this.BodyResourse = SetPlanetResourses(type, this.Area);
+            this.SetPlanetResourses();
         }
 
-        private static Resourses SetPlanetResourses(PlanetType planetType, double planetArea) {
+        private void SetPlanetResourses() {
             double commonMetals = 0;
             double rareEarthElements = 0;
             double hydrogen = 0;
 
             double massOfTenKmCrust = (10d * ((3d) * 10E9));
 
-            if (planetType.SubstancesClass == SubstancesClass.Terra) {
-                commonMetals = planetArea * (massOfTenKmCrust / 20);
-                rareEarthElements = planetArea * (massOfTenKmCrust / 1E5);
-                hydrogen = planetArea * (massOfTenKmCrust / 200);
+            if (this.Type.SubstancesClass == SubstancesClass.Terra) {
+                commonMetals = this.Area * (massOfTenKmCrust / 20);
+                rareEarthElements = this.Area * (massOfTenKmCrust / 1E5);
+                hydrogen = this.Area * (massOfTenKmCrust / 200);
 
             }
-            else if(planetType.SubstancesClass == SubstancesClass.Ferria) {
-                commonMetals = planetArea * (massOfTenKmCrust / 2);
-                rareEarthElements = planetArea * (massOfTenKmCrust / 1E4);
-                hydrogen = planetArea * (massOfTenKmCrust / 200);
+            else if(this.Type.SubstancesClass == SubstancesClass.Ferria) {
+                commonMetals = this.Area * (massOfTenKmCrust / 2);
+                rareEarthElements = this.Area * (massOfTenKmCrust / 1E4);
+                hydrogen = this.Area * (massOfTenKmCrust / 200);
 
             }
-            else if(planetType.SubstancesClass == SubstancesClass.Jupiter) {
+            else if(this.Type.SubstancesClass == SubstancesClass.Jupiter) {
                 commonMetals = 0;
                 rareEarthElements = 0;
-                hydrogen = planetArea * (1.4 * 20 * 1E3 * 1E9);
+                hydrogen = this.Area * (1.4 * 20 * 1E3 * 1E9);
 
             }
 
-            Resourses planetResourses = new Resourses(hydrogen, commonMetals, rareEarthElements);
-
-            return planetResourses;
-        }
-
-        /// <summary>
-        /// Население планеты
-        /// </summary>
-        public double Population {
-            get => this.population;
-            set {
-                if (this.maximumPopulation > value && value > 0) {
-                    this.population = value;
-                    OnPropertyChanged();
-                };
-            }
+            this.BodyResourse = new Resourses(hydrogen, commonMetals, rareEarthElements);
         }
 
         public bool IsColonized {
@@ -256,20 +238,27 @@ namespace Logic.SpaceObjects {
         public int AvailableSites { get => this.availableSites; }
 
         /// <summary>
+        /// Население планеты
+        /// </summary>
+        public long PopulationValue { get => this.population.Value; }
+
+        /// <summary>
         /// Максимально возможное количество жителей на планете
         /// </summary>
-        public double MaximumPopulation { get => this.maximumPopulation; }
+        public long MaximumPopulation { get => this.population.MaxValue; }
 
         /// <summary>
         /// Возвращает тип планеты
         /// </summary>
         public PlanetType Type { get => this.type; }
 
+        public Population Population { get => this.population; }
+
         public override string ToString() {
             return $"{this.Name} is a {this.Type.Name} world with radius of {this.Radius} km " +
                 $"and area of {this.Area:E4} km^2. " +
-                $"Here lives {this.Population:E4} intelligent creatures. " +
-                $"On this planet can live {this.maximumPopulation:E4} people. " +
+                $"Here lives {this.PopulationValue:E4} intelligent creatures. " +
+                $"On this planet can live {this.MaximumPopulation:E4} people. " +
                 $"We can build {this.buildingSites} buildings here. ";
         }
     
@@ -281,7 +270,7 @@ namespace Logic.SpaceObjects {
         ///     Игрок, которому принадлежит планета
         /// </param>
         public void NextTurn(Player player) {
-            if (this.Population == 0) {
+            if (this.PopulationValue == 0) {
                 return;
             }
 
@@ -299,13 +288,14 @@ namespace Logic.SpaceObjects {
             double addedPart =
                 growthCoef * (this.Type.Quality / PlanetType.GoodWorldQuality);
 
-            double addedPopulation = this.Population * addedPart;
-            this.Population += addedPopulation;
+            double addedPopulation = this.PopulationValue * addedPart;
+
+            this.population.Add(addedPopulation);
         }
 
         private void ExtractResourses(Resourses extractTo) {
             if (this.BodyResourse.IsStrictlyGreater(Resourses.Zero)) {
-                double minedResourses = (this.Type.MiningDifficulty * this.Population);
+                double minedResourses = (this.Type.MiningDifficulty * this.PopulationValue);
 
                 double minedHydrogen = minedResourses / 10;
                 double minedCommonMetals = minedResourses;
@@ -334,7 +324,7 @@ namespace Logic.SpaceObjects {
         /// Булевое значение, которое показывает успешность колонизации
         /// </returns>
         public ColonizationState Colonize(Player player) {
-            if (this.Population > 0) {
+            if (this.PopulationValue > 0) {
                 return ColonizationState.Colonized;
             }
 
@@ -350,7 +340,7 @@ namespace Logic.SpaceObjects {
 
             if (colonizer != null) {
 
-                this.Population += colonizer.GetColonists(colonizer.ColonistsOnShip);
+                this.Population.Add(colonizer.GetColonists(colonizer.ColonistsOnShip));
                 this.IsColonized = true;
 
                 return ColonizationState.Colonized;

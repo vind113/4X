@@ -62,14 +62,14 @@ namespace Logic.Buildings {
         //MEMORY LEAK
         //UPD: Fixed but I do not know how(smth related to foreach)
         //UPD2: Try naive foreach implementation
-        public double TotalPopulation {
+        public long TotalPopulation {
             get {
-                double population = 0;
+                long population = 0;
                 /*foreach (var habitat in this.Existing) {
-                    population += habitat.Population;
+                    //population += habitat.Population;
                 }*/
                 for (int i = 0; i < this.ExistingCount; i++) {
-                    population += this.Existing[i].Population;
+                    population += this.Existing[i].PopulationValue;
                 }
                 return population;
             }

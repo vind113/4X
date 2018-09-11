@@ -25,7 +25,7 @@ namespace Logic.SpaceObjects {
         private int minersCount;
 
         private byte colonizedCount;
-        private double population;
+        private long population;
 
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
@@ -140,7 +140,7 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Возвращает количество обитателей системы
         /// </summary>
-        public double SystemPopulation {
+        public long SystemPopulation {
             get => population;
             private set {
                 if (this.population != value) {
@@ -178,36 +178,41 @@ namespace Logic.SpaceObjects {
         ///     Игрок, которому принадлежит система
         /// </param>
         public void NextTurn(Player player) {
-
-            foreach (Planet planet in this.SystemPlanets) {
-                planet.NextTurn(player);
-            }
-
-            foreach (Star star in this.SystemStars) {
-                star.NextTurn();
-            }
+            this.PlanetsNextTurn(player);
+            this.StarsNextTurn();
 
             this.SystemPopulation = this.SetSystemPopulation();
 
-            MineSystemResourses(player);
-
+            this.MineSystemResourses(player.OwnedResourses);
             this.Buildings.NextTurn(player.OwnedResourses);
         }
 
-        private void MineSystemResourses(Player player) {
+        private void PlanetsNextTurn(Player player) {
+            foreach (Planet planet in this.SystemPlanets) {
+                planet.NextTurn(player);
+            }
+        }
+
+        private void StarsNextTurn() {
+            foreach (Star star in this.SystemStars) {
+                star.NextTurn();
+            }
+        }
+
+        private void MineSystemResourses(Resourses destination) {
             if(this.SystemPopulation == 0) {
                 return;
             }
 
-            Miner.Mine(this.MinersCount, this.SystemResourses, player.OwnedResourses);
+            Miner.Mine(this.MinersCount, this.SystemResourses, destination);
         }
 
-        private double SetSystemPopulation() {
-            double population = 0;
+        private long SetSystemPopulation() {
+            long population = 0;
 
             foreach (var planet in this.SystemPlanets) {
                 if (planet.IsColonized) {
-                    population += planet.Population;
+                    population += planet.PopulationValue;
                 }
             }
 

@@ -11,11 +11,8 @@ namespace Logic.Buildings {
 
         private string name;
 
-        public Habitat(string name) {
+        public Habitat(string name):base(0, 20_000_000_000) {
             this.name = name;
-
-            this.MaximumPopulation = 20_000_000_000;
-            this.Population = 0;
         }
 
         public static short BuildingTime { get => buildingTime; }

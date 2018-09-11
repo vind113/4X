@@ -242,15 +242,15 @@ namespace Logic.SpaceObjects {
         public static StarSystem GetSolarSystem() {
             List<Planet> planets = new List<Planet>();
 
-            planets.Add(new Planet("Mercury", 2440, new PlanetType(TemperatureClass.Hot, VolatilesClass.Airless, SubstancesClass.Ferria), 0d));
-            planets.Add(new Planet("Venus", 6051, new PlanetType(TemperatureClass.Hot, VolatilesClass.Desertic, SubstancesClass.Terra), 0d));
-            planets.Add(new Planet("Earth", 6371, new PlanetType(TemperatureClass.Temperate,VolatilesClass.Marine, SubstancesClass.Terra), 20_000_000_000d));
-            planets.Add(new Planet("Mars", 3389, new PlanetType(TemperatureClass.Cool,VolatilesClass.Desertic, SubstancesClass.Terra), 0d));
+            planets.Add(new Planet("Mercury", 2440, new PlanetType(TemperatureClass.Hot, VolatilesClass.Airless, SubstancesClass.Ferria), 0));
+            planets.Add(new Planet("Venus", 6051, new PlanetType(TemperatureClass.Hot, VolatilesClass.Desertic, SubstancesClass.Terra), 0));
+            planets.Add(new Planet("Earth", 6371, new PlanetType(TemperatureClass.Temperate,VolatilesClass.Marine, SubstancesClass.Terra), 20_000_000_000));
+            planets.Add(new Planet("Mars", 3389, new PlanetType(TemperatureClass.Cool,VolatilesClass.Desertic, SubstancesClass.Terra), 0));
 
-            planets.Add(new Planet("Jupiter", 71_492, new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Jupiter), 0d));
-            planets.Add(new Planet("Saturn", 60_268, new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Jupiter), 0d));
-            planets.Add(new Planet("Uranus", 25_559, new PlanetType(TemperatureClass.Frigid, VolatilesClass.Airless, SubstancesClass.Jupiter), 0d));
-            planets.Add(new Planet("Neptune", 24_764, new PlanetType(TemperatureClass.Frigid, VolatilesClass.Airless, SubstancesClass.Jupiter), 0d));
+            planets.Add(new Planet("Jupiter", 71_492, new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Jupiter), 0));
+            planets.Add(new Planet("Saturn", 60_268, new PlanetType(TemperatureClass.Cold, VolatilesClass.Airless, SubstancesClass.Jupiter), 0));
+            planets.Add(new Planet("Uranus", 25_559, new PlanetType(TemperatureClass.Frigid, VolatilesClass.Airless, SubstancesClass.Jupiter), 0));
+            planets.Add(new Planet("Neptune", 24_764, new PlanetType(TemperatureClass.Frigid, VolatilesClass.Airless, SubstancesClass.Jupiter), 0));
 
             List<Star> stars = new List<Star> { new Star("Sun", 696_392d, LuminosityClass.G) };
 

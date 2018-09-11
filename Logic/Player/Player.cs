@@ -131,12 +131,12 @@ namespace Logic.PlayerClasses {
             get => this.planetsToColonize.Count;
         }
 
-        public double TotalPopulation {
+        public long TotalPopulation {
             get {
-                double population = 0;
+                long population = 0;
                 foreach(var system in StarSystems) {
                     foreach(var planet in system.SystemPlanets) {
-                        population += planet.Population;
+                        population += planet.PopulationValue;
                     }
                 }
                 population += this.Hub.CitizensInHub;
@@ -211,7 +211,7 @@ namespace Logic.PlayerClasses {
         }
 
         private void SetCitizenHubCapacity() {
-            double newHubCapacity = Math.Floor(this.TotalPopulation / 1000);
+            long newHubCapacity = this.TotalPopulation / 1000;
 
             if (newHubCapacity > this.Hub.CitizensInHub) {
                 this.Hub.MaximumCount = newHubCapacity;

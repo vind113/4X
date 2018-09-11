@@ -5,10 +5,10 @@ using System;
 namespace Logic.PlayerClasses {
     [Serializable]
     public class CitizenHub {
-        double citizensInHub = 0;
+        long citizensInHub = 0;
         double maximumCount = 1E8;
 
-        public double CitizensInHub {
+        public long CitizensInHub {
             get => citizensInHub;
             private set {
                 if (value <= maximumCount && value >= 0) {
@@ -29,31 +29,31 @@ namespace Logic.PlayerClasses {
         public void MigrateToHub(IHabitable habitat) {
             double partOfTravellers = 0.001d;
 
-            double citizensToHubExpected = Math.Floor(habitat.Population * partOfTravellers);
+            double citizensToHubExpected = Math.Floor(habitat.PopulationValue * partOfTravellers);
 
-            double citizensToHub =
-                Math.Floor(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
+            long citizensFromHabitat =
+                (long)Math.Floor(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
 
-            bool canTravelFromPlanet = citizensToHub < habitat.Population;
+            bool canTravelFromPlanet = citizensFromHabitat < habitat.PopulationValue;
             bool canTravelToHub =
-                (this.CitizensInHub + citizensToHub) < this.MaximumCount;
+                (this.CitizensInHub + citizensFromHabitat) < this.MaximumCount;
 
             if (canTravelFromPlanet && canTravelToHub) {
-                habitat.Population -= citizensToHub;
-                this.CitizensInHub += citizensToHub;
+                habitat.Population.Substract(citizensFromHabitat);
+                this.CitizensInHub += citizensFromHabitat;
             }
         }
 
         public void MigrateFromHub(IHabitable habitat) {
-            double citizensFromHub =
-                Math.Floor(HelperRandomFunctions.GetRandomDouble() * this.CitizensInHub);
+            long citizensToHabitat =
+                (long)Math.Floor(HelperRandomFunctions.GetRandomDouble() * this.CitizensInHub);
 
-            bool canTravelToPlanet = (habitat.Population + citizensFromHub) < habitat.MaximumPopulation;
-            bool canTravelFromHub = citizensFromHub < this.CitizensInHub;
+            bool canTravelToPlanet = (habitat.PopulationValue + citizensToHabitat) < habitat.MaximumPopulation;
+            bool canTravelFromHub = citizensToHabitat < this.CitizensInHub;
 
             if (canTravelToPlanet && canTravelFromHub) {
-                this.CitizensInHub -= citizensFromHub;
-                habitat.Population += citizensFromHub;
+                this.CitizensInHub -= citizensToHabitat;
+                habitat.Population.Add(citizensToHabitat);
             }
         }
     }

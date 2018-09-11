@@ -24,7 +24,7 @@ namespace Logic.SpaceObjects {
         /// <returns></returns>
         public static Planet GetPlanet(string name, PlanetType planetType) {
             string planetName = name;
-            double population = 0;
+            long population = 0;
             double radius = 0;
 
             if (planetType.SubstancesClass == SubstancesClass.Jupiter) {

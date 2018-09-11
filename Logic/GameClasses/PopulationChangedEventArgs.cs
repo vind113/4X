@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Logic.GameClasses {
     public class PopulationChangedEventArgs : EventArgs {
-        private double population;
+        private long population;
 
-        public PopulationChangedEventArgs(double population) {
+        public PopulationChangedEventArgs(long population) {
             if (population >= 0) {
                 this.population = population;
             }

@@ -1,24 +1,18 @@
 ﻿using System;
 using Logic.SpaceObjects;
+using Logic.PopulationClasses;
 
 namespace Logic.Buildings {
     [Serializable]
     public abstract class SpaceBuilding : IHabitable {
-        private double population;
-        private double maximumPopulation;
+        private Population population;
 
-        public virtual double Population {
-            get => population;
-            set {
-                if (value >= 0 && value <= this.MaximumPopulation) population = value;
-            }
+        public SpaceBuilding(long population, long maxPopulation) {
+            this.population = new Population(population, maxPopulation);
         }
 
-        public virtual double MaximumPopulation {
-            get => maximumPopulation;
-            protected set {
-                maximumPopulation = value;
-            }
-        }
+        public virtual long PopulationValue { get => population.Value; }
+        public virtual long MaximumPopulation { get => population.MaxValue; }
+        public Population Population { get => this.population; }
     }
 }
