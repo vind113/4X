@@ -1,4 +1,4 @@
-﻿using Logic.SpaceObjects;
+﻿using Logic.PopulationClasses;
 using Logic.SupportClasses;
 using System;
 
@@ -26,34 +26,34 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public void MigrateToHub(IHabitable habitat) {
+        public void MigrateToHub(Population habitatPopulation) {
             double partOfTravellers = 0.001d;
 
-            double citizensToHubExpected = Math.Floor(habitat.PopulationValue * partOfTravellers);
+            double citizensToHubExpected = Math.Floor(habitatPopulation.Value * partOfTravellers);
 
             long citizensFromHabitat =
                 (long)Math.Floor(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
 
-            bool canTravelFromPlanet = citizensFromHabitat < habitat.PopulationValue;
+            bool canTravelFromPlanet = citizensFromHabitat < habitatPopulation.Value;
             bool canTravelToHub =
                 (this.CitizensInHub + citizensFromHabitat) < this.MaximumCount;
 
             if (canTravelFromPlanet && canTravelToHub) {
-                habitat.Population.Substract(citizensFromHabitat);
+                habitatPopulation.Substract(citizensFromHabitat);
                 this.CitizensInHub += citizensFromHabitat;
             }
         }
 
-        public void MigrateFromHub(IHabitable habitat) {
+        public void MigrateFromHub(Population habitatPopulation) {
             long citizensToHabitat =
                 (long)Math.Floor(HelperRandomFunctions.GetRandomDouble() * this.CitizensInHub);
 
-            bool canTravelToPlanet = (habitat.PopulationValue + citizensToHabitat) < habitat.MaximumPopulation;
+            bool canTravelToPlanet = (habitatPopulation.Value + citizensToHabitat) < habitatPopulation.MaxValue;
             bool canTravelFromHub = citizensToHabitat < this.CitizensInHub;
 
             if (canTravelToPlanet && canTravelFromHub) {
                 this.CitizensInHub -= citizensToHabitat;
-                habitat.Population.Add(citizensToHabitat);
+                habitatPopulation.Add(citizensToHabitat);
             }
         }
     }

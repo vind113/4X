@@ -25,14 +25,19 @@ namespace _4XGame.Serialization {
                 throw new System.ArgumentNullException(nameof(path));
             }
 
-            Game loadedGame = null;
+            Game loadedGame = new Game();
 
-            using (Stream s = new FileStream(path, FileMode.Open, FileAccess.Read)) {
-                BinaryFormatter formatter = new BinaryFormatter();
+            try {
+                using (Stream s = new FileStream(path, FileMode.Open, FileAccess.Read)) {
+                    BinaryFormatter formatter = new BinaryFormatter();
 
-                loadedGame = (Game)formatter.Deserialize(s);
+                    loadedGame = (Game)formatter.Deserialize(s);
+                }
             }
-            
+            catch (FileNotFoundException) {
+                throw new FileNotFoundException("Cannot load game: Path incorrect");
+            }
+
             return loadedGame;
         }
     }

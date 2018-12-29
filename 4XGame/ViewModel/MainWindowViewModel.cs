@@ -2,15 +2,16 @@
 using _4XGame.ViewModel.Commands;
 using Logic.GameClasses;
 using Logic.Resourse;
-using Logic.SupportClasses;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace _4XGame.ViewModel {
     [Serializable]
     public class MainWindowViewModel : INotifyPropertyChanged {
-        string savingPath = @"C:\Users\Tom\Desktop\save.dat";
+        string savingPath = @"C:\Users\Tom\Desktop\test save.dat";
 
         private Game currentGame;
 
@@ -33,7 +34,7 @@ namespace _4XGame.ViewModel {
 
             GameEventsLog = String.Empty;
 
-            //this.SetNewGame(new Game());
+            SetNewGame(new Game());
         }
 
         private void SetNewGame(Game game) {
@@ -88,7 +89,12 @@ namespace _4XGame.ViewModel {
         public RelayCommand<MainWindow> LoadGameCmd =>
             loadGameCommand ?? (loadGameCommand = new RelayCommand<MainWindow>(
                 (o) => {
-                    this.SetNewGame(SavedGame.Load(this.SavingPath));
+                    try {
+                        this.SetNewGame(SavedGame.Load(this.SavingPath));
+                    }
+                    catch (FileNotFoundException ex) {
+                        MessageBox.Show(ex.Message, "Cannot load game");
+                    }
                 }));
         #endregion
 
@@ -134,7 +140,9 @@ namespace _4XGame.ViewModel {
             }
         }
 
-        public string SavingPath { get => this.savingPath; }
+        public string SavingPath {
+            set => this.savingPath = value;
+            get => this.savingPath; }
         #endregion
 
         private void SetStockpile(object sender, StockpileChangedEventArgs e) {

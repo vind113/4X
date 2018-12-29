@@ -87,7 +87,7 @@ namespace Logic.Resourse {
         public Resourses Substract(Resourses parameter) {
 
             if (!this.CanSubstract(parameter)) {
-                throw new ArgumentException("Argument can't be greater than parameter");
+                throw new ArgumentException("Argument can't be greater than object");
             }
 
             this.Hydrogen -= parameter.Hydrogen;

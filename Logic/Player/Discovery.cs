@@ -14,10 +14,10 @@ namespace Logic.PlayerClasses {
                 int maxSystemsToGenerate = 0;
                 int systemsToGenerate = 0;
                 
-                checked {
+                //checked {
                     maxSystemsToGenerate = (int)((Math.Sqrt(player.StarSystemsCount)) / 2);
                     systemsToGenerate = HelperRandomFunctions.GetRandomInt(1, maxSystemsToGenerate + 1);
-                }
+                //}
 
                 StarSystem generatedSystem = null;
 
@@ -26,7 +26,7 @@ namespace Logic.PlayerClasses {
 
                     if (isAutoColonizationEnabled) {
                         foreach (var planet in generatedSystem.SystemPlanets) {
-                            if (planet.MaximumPopulation >= 10_000_000_000) planet.Colonize(player);
+                            if (planet.Population.MaxValue >= 10_000_000_000) planet.Colonize(player);
                         }
                     }
 

@@ -70,7 +70,7 @@ namespace Logic.PlayerClasses {
                 throw new ArgumentNullException(nameof(planet));
             }
 
-            if (planet.MaximumPopulation == 0) {
+            if (planet.Population.MaxValue == 0) {
                 return;
             }
 
@@ -136,7 +136,7 @@ namespace Logic.PlayerClasses {
                 long population = 0;
                 foreach(var system in StarSystems) {
                     foreach(var planet in system.SystemPlanets) {
-                        population += planet.PopulationValue;
+                        population += planet.Population.Value;
                     }
                 }
                 population += this.Hub.CitizensInHub;
@@ -228,6 +228,12 @@ namespace Logic.PlayerClasses {
             system.PropertyChanged += System_PropertyChanged;
         }
 
+        private void AddBodiesCount(StarSystem system) {
+            this.OwnedPlanets += system.PlanetsCount;
+            this.OwnedStars += system.StarsCount;
+            this.ColonizedPlanets += system.ColonizedCount;
+        }
+
         private void System_PropertyChanged(object sender, PropertyChangedEventArgs e) {
             if(e.PropertyName == nameof(StarSystem.ColonizedCount)) {
                 SetColonized();
@@ -246,12 +252,6 @@ namespace Logic.PlayerClasses {
             }
 
             this.ColonizedPlanets = colonized;
-        }
-
-        private void AddBodiesCount(StarSystem system) {
-            this.OwnedPlanets += system.PlanetsCount;
-            this.OwnedStars += system.StarsCount;
-            this.ColonizedPlanets += system.ColonizedCount;
         }
 
         public void RemoveStarSystem(StarSystem system) {

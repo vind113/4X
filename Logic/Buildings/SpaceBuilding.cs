@@ -11,8 +11,6 @@ namespace Logic.Buildings {
             this.population = new Population(population, maxPopulation);
         }
 
-        public virtual long PopulationValue { get => population.Value; }
-        public virtual long MaximumPopulation { get => population.MaxValue; }
         public Population Population { get => this.population; }
     }
 }

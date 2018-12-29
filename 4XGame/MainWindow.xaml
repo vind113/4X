@@ -289,7 +289,7 @@
                                             <Label Content="{Binding Path=Type.Name, FallbackValue=?}" ContentStringFormat="Type: {0}"/>
                                             <Label Content="{Binding Path=Type.Quality, FallbackValue=?}" ContentStringFormat="Quality: {0}"/>
                                             <Label Content="{Binding Path=BuildingSites, FallbackValue=?}" ContentStringFormat="Building sites: {0}"/>
-                                            <Label Content="{Binding Path=MaximumPopulation, FallbackValue=?}" ContentStringFormat="Maximum of population: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Population.MaxValue, FallbackValue=?}" ContentStringFormat="Maximum of population: {0:#,#}"/>
 
                                             <Separator MinWidth="200" Background="Black"/>
 
@@ -339,8 +339,8 @@
                                         <WrapPanel Style="{StaticResource CelestialInfoPanelStyle}"
                                                    DataContext="{Binding ElementName=SystemBuildingsGrid, Path=SelectedItem}">
                                             <Label Content="{Binding Path=Name, FallbackValue=?}" ContentStringFormat="Name: {0}"/>
-                                            <Label Content="{Binding Path=Population, FallbackValue=?}" ContentStringFormat="Population: {0:#,#}"/>
-                                            <Label Content="{Binding Path=MaximumPopulation, FallbackValue=?}" ContentStringFormat="Maximum population: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Population.Value, FallbackValue=?}" ContentStringFormat="Population: {0:#,#}"/>
+                                            <Label Content="{Binding Path=Population.MaxValue, FallbackValue=?}" ContentStringFormat="Maximum population: {0:#,#}"/>
 
                                         </WrapPanel>
 
@@ -384,12 +384,17 @@
                     </WrapPanel>
                 </TabItem>
                 <TabItem Header="Debug Info" MinWidth="100">
-                    <Grid>
+                    <WrapPanel Orientation="Vertical">
                         <Label HorizontalAlignment="Left"
                                Margin="5" VerticalAlignment="Top"
                                Content="{Binding Path=MultipleNextTurnsCmd.LastExecutionTime}"
                                ContentStringFormat="Last Command Elapsed: {0}"/>
-                    </Grid>
+
+                        <TextBox HorizontalAlignment="Left"
+                            MinHeight="20" MinWidth="100" Margin="5"
+                            VerticalAlignment="Bottom" FontSize="16"
+                            Text="{Binding Path=SavingPath, Mode=TwoWay}"/>
+                    </WrapPanel>
                 </TabItem>
             </TabControl>
         </Grid>

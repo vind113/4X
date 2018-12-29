@@ -178,10 +178,10 @@ namespace Logic.SpaceObjects {
 
             this.population = new Population(population, (double)this.type.Quality * this.Area);
 
-            this.buildingSites = (int)Math.Ceiling(this.MaximumPopulation / citizensPerSector);
+            this.buildingSites = (int)Math.Ceiling(this.Population.MaxValue / citizensPerSector);
             this.availableSites = this.buildingSites;
 
-            if (this.PopulationValue > 0) {
+            if (this.Population.Value > 0) {
                 this.IsColonized = true;
             }
 
@@ -237,17 +237,6 @@ namespace Logic.SpaceObjects {
         /// </summary>
         public int AvailableSites { get => this.availableSites; }
 
-        /// <summary>
-        /// Население планеты
-        /// </summary>
-        public long PopulationValue { get => this.population.Value; }
-
-        /// <summary>
-        /// Максимально возможное количество жителей на планете
-        /// </summary>
-        public long MaximumPopulation { get => this.population.MaxValue; }
-
-        /// <summary>
         /// Возвращает тип планеты
         /// </summary>
         public PlanetType Type { get => this.type; }
@@ -257,8 +246,8 @@ namespace Logic.SpaceObjects {
         public override string ToString() {
             return $"{this.Name} is a {this.Type.Name} world with radius of {this.Radius} km " +
                 $"and area of {this.Area:E4} km^2. " +
-                $"Here lives {this.PopulationValue:E4} intelligent creatures. " +
-                $"On this planet can live {this.MaximumPopulation:E4} people. " +
+                $"Here lives {this.Population.Value:E4} intelligent creatures. " +
+                $"On this planet can live {this.Population.MaxValue:E4} people. " +
                 $"We can build {this.buildingSites} buildings here. ";
         }
     
@@ -270,32 +259,36 @@ namespace Logic.SpaceObjects {
         ///     Игрок, которому принадлежит планета
         /// </param>
         public void NextTurn(Player player) {
-            if (this.PopulationValue == 0) {
+            if (this.Population.Value == 0) {
                 return;
             }
 
             AddPopulation(player.PopulationGrowthFactor);
 
-            player.Hub.MigrateToHub(this);
-            player.Hub.MigrateFromHub(this);
+            ConductMigration(player.Hub);
 
             ExtractResourses(player.OwnedResourses);
         }
 
-        private void AddPopulation(double partOfGrowth) {
-            double growthCoef = partOfGrowth * HelperRandomFunctions.GetRandomDouble();
+        private void ConductMigration(CitizenHub migrationHub) {
+            migrationHub.MigrateToHub(this.Population);
+            migrationHub.MigrateFromHub(this.Population);
+        }
+
+        private void AddPopulation(double growthFactor) {
+            double growthCoef = growthFactor * HelperRandomFunctions.GetRandomDouble();
 
             double addedPart =
                 growthCoef * (this.Type.Quality / PlanetType.GoodWorldQuality);
 
-            double addedPopulation = this.PopulationValue * addedPart;
+            double addedPopulation = this.Population.Value * addedPart;
 
             this.population.Add(addedPopulation);
         }
 
         private void ExtractResourses(Resourses extractTo) {
             if (this.BodyResourse.IsStrictlyGreater(Resourses.Zero)) {
-                double minedResourses = (this.Type.MiningDifficulty * this.PopulationValue);
+                double minedResourses = (this.Type.MiningDifficulty * this.Population.Value);
 
                 double minedHydrogen = minedResourses / 10;
                 double minedCommonMetals = minedResourses;
@@ -324,11 +317,11 @@ namespace Logic.SpaceObjects {
         /// Булевое значение, которое показывает успешность колонизации
         /// </returns>
         public ColonizationState Colonize(Player player) {
-            if (this.PopulationValue > 0) {
+            if (this.Population.Value > 0) {
                 return ColonizationState.Colonized;
             }
 
-            if (this.MaximumPopulation < Colonizer.Colonists) {
+            if (this.Population.MaxValue < Colonizer.Colonists) {
                 return ColonizationState.NonColonizable;
             }
 

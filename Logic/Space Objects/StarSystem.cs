@@ -212,7 +212,7 @@ namespace Logic.SpaceObjects {
 
             foreach (var planet in this.SystemPlanets) {
                 if (planet.IsColonized) {
-                    population += planet.PopulationValue;
+                    population += planet.Population.Value;
                 }
             }
 
@@ -236,7 +236,7 @@ namespace Logic.SpaceObjects {
         private int GetHabitableCount() {
             int habitableCount = 0;
             foreach (var planet in this.SystemPlanets) {
-                if (planet.MaximumPopulation > 0) {
+                if (planet.Population.MaxValue > 0) {
                     habitableCount++;
                 }
             }

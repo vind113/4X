@@ -69,7 +69,7 @@ namespace Logic.Buildings {
                     //population += habitat.Population;
                 }*/
                 for (int i = 0; i < this.ExistingCount; i++) {
-                    population += this.Existing[i].PopulationValue;
+                    population += this.Existing[i].Population.Value;
                 }
                 return population;
             }

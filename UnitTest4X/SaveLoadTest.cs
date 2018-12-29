@@ -3,6 +3,7 @@ using NUnit.Framework;
 using _4XGame.Serialization;
 using System;
 using System.ComponentModel;
+using System.IO;
 
 namespace UnitTest4X {
     [TestFixture]
@@ -24,6 +25,17 @@ namespace UnitTest4X {
             Game loadedGame = SavedGame.Load(path);
 
             Assert.AreEqual(game.Player.OwnedPlanets, loadedGame.Player.OwnedPlanets);
+        }
+
+        [TestCase]
+        public void SaveAndLoad_PathIncorrect_ExceptionThrown() {
+            Assert.Throws<FileNotFoundException>(LoadGameWithIncorrectPath);
+        }
+
+        private static void LoadGameWithIncorrectPath() {
+            string path = @"C:\test.dat";
+
+            Game loadedGame = SavedGame.Load(path);
         }
     }
 }

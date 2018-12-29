@@ -11,7 +11,7 @@ namespace Logic.Buildings {
 
         private string name;
 
-        public Habitat(string name):base(0, 20_000_000_000) {
+        public Habitat(string name) : base(0, 20_000_000_000) {
             this.name = name;
         }
 
