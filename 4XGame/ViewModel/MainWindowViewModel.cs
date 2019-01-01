@@ -2,6 +2,7 @@
 using _4XGame.ViewModel.Commands;
 using Logic.GameClasses;
 using Logic.Resourse;
+using Microsoft.Win32;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -11,8 +12,6 @@ using System.Windows;
 namespace _4XGame.ViewModel {
     [Serializable]
     public class MainWindowViewModel : INotifyPropertyChanged {
-        string savingPath = @"C:\Users\Tom\Desktop\test save.dat";
-
         private Game currentGame;
 
         private double money;
@@ -81,7 +80,11 @@ namespace _4XGame.ViewModel {
         public RelayCommand<MainWindow> SaveGameCmd =>
             saveGameCommand ?? (saveGameCommand = new RelayCommand<MainWindow>(
                 (o) => {
-                    SavedGame.Save(this.CurrentGame, this.SavingPath);
+                    SaveFileDialog saveDialog = new SaveFileDialog();
+                    saveDialog.Filter = "save files (*.dat)|*.dat";
+                    if (saveDialog.ShowDialog() == true) {
+                        GameSaveLoad.Save(this.CurrentGame, saveDialog.FileName);
+                    }
                 }));
 
         [NonSerialized]
@@ -90,9 +93,13 @@ namespace _4XGame.ViewModel {
             loadGameCommand ?? (loadGameCommand = new RelayCommand<MainWindow>(
                 (o) => {
                     try {
-                        this.SetNewGame(SavedGame.Load(this.SavingPath));
+                        OpenFileDialog chooseSaveGameDialog = new OpenFileDialog();
+                        chooseSaveGameDialog.Filter = "save files (*.dat)|*.dat|All files (*.*)|*.*";
+                        if (chooseSaveGameDialog.ShowDialog() == true) {
+                            this.SetNewGame(GameSaveLoad.Load(chooseSaveGameDialog.FileName));
+                        }
                     }
-                    catch (FileNotFoundException ex) {
+                    catch (SaveFileException ex) {
                         MessageBox.Show(ex.Message, "Cannot load game");
                     }
                 }));
@@ -139,10 +146,6 @@ namespace _4XGame.ViewModel {
                 OnPropertyChanged();
             }
         }
-
-        public string SavingPath {
-            set => this.savingPath = value;
-            get => this.savingPath; }
         #endregion
 
         private void SetStockpile(object sender, StockpileChangedEventArgs e) {

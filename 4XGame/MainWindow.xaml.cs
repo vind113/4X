@@ -54,10 +54,12 @@ namespace _4XGame {
             Exit(e);
         }
 
-        private static void Exit(CancelEventArgs e) {
+        private void Exit(CancelEventArgs e) {
             var result = MessageBox.Show("Save before exit?", "Exit", MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Yes) {
-                MessageBox.Show("Saving is not implemented yet;(", "Cannot save");
+                if (ViewModel.SaveGameCmd.CanExecute(null)) {
+                    this.ViewModel.SaveGameCmd.Execute(null);
+                }
                 KillApp();
             }
             else if(result == MessageBoxResult.No) {

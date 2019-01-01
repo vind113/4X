@@ -58,6 +58,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Serialization\Save.cs" />
+    <Compile Include="Serialization\SaveFileException.cs" />
     <Compile Include="ViewModel\Commands\BuildHabitatCommand.cs" />
     <Compile Include="ViewModel\Commands\ColonizePlanetCommand.cs" />
     <Compile Include="ViewModel\Commands\CommandBase.cs" />

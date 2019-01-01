@@ -389,11 +389,6 @@
                                Margin="5" VerticalAlignment="Top"
                                Content="{Binding Path=MultipleNextTurnsCmd.LastExecutionTime}"
                                ContentStringFormat="Last Command Elapsed: {0}"/>
-
-                        <TextBox HorizontalAlignment="Left"
-                            MinHeight="20" MinWidth="100" Margin="5"
-                            VerticalAlignment="Bottom" FontSize="16"
-                            Text="{Binding Path=SavingPath, Mode=TwoWay}"/>
                     </WrapPanel>
                 </TabItem>
             </TabControl>

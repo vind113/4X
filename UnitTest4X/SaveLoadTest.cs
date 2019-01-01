@@ -20,22 +20,22 @@ namespace UnitTest4X {
 
             string path = @"C:\Users\Tom\Desktop\test save.dat";
 
-            SavedGame.Save(game, path);
+            GameSaveLoad.Save(game, path);
 
-            Game loadedGame = SavedGame.Load(path);
+            Game loadedGame = GameSaveLoad.Load(path);
 
             Assert.AreEqual(game.Player.OwnedPlanets, loadedGame.Player.OwnedPlanets);
         }
 
         [TestCase]
         public void SaveAndLoad_PathIncorrect_ExceptionThrown() {
-            Assert.Throws<FileNotFoundException>(LoadGameWithIncorrectPath);
+            Assert.Throws<SaveFileException>(LoadGameWithIncorrectPath);
         }
 
         private static void LoadGameWithIncorrectPath() {
             string path = @"C:\test.dat";
 
-            Game loadedGame = SavedGame.Load(path);
+            Game loadedGame = GameSaveLoad.Load(path);
         }
     }
 }
