@@ -51,6 +51,7 @@
     <Compile Include="GameClasses\CurrentDate.cs" />
     <Compile Include="Player\Discovery.cs" />
     <Compile Include="Player\Goods.cs" />
+    <Compile Include="Player\IPlayer.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\Ships.cs" />
     <Compile Include="Player\Stockpile.cs" />

@@ -52,6 +52,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CivilProductionTest.cs" />
+    <Compile Include="Mocks\PlayerMock.cs" />
     <Compile Include="PlanetTest.cs" />
     <Compile Include="PopulationTest.cs" />
     <Compile Include="ResoursesTest.cs" />

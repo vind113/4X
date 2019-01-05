@@ -10,7 +10,8 @@ using Logic.SupportClasses;
 
 namespace Logic.PlayerClasses {
     [Serializable]
-    public class Player : INotifyPropertyChanged {
+    public class Player : INotifyPropertyChanged, IPlayer
+    {
         private string name;
 
         private Stockpile stockpile;
@@ -127,10 +128,6 @@ namespace Logic.PlayerClasses {
             get => this.starSystems.Count;
         }
 
-        public int ToColonize {
-            get => this.planetsToColonize.Count;
-        }
-
         public long TotalPopulation {
             get {
                 long population = 0;
@@ -178,7 +175,7 @@ namespace Logic.PlayerClasses {
 
         public double PopulationGrowthFactor {
             get => this.populationGrowthFactor;
-            set {
+            private set {
                 if (value >= 0 && value != this.populationGrowthFactor) {
                     this.populationGrowthFactor = value;
                     OnPropertyChanged();
@@ -197,11 +194,11 @@ namespace Logic.PlayerClasses {
                 system.NextTurn(this);
             }
 
-            Goods.SustainPopulationNeeds(this);
+            CivilProduction.SustainPopulationNeeds(this);
             this.TryToColonizeQueue();
 
             if (isDiscoveringNewStarSystems) {
-                Discovery.NewStarSystem(isAutoColonizationEnabled, this);
+                Discovery.TryToDiscoverNewStarSystem(isAutoColonizationEnabled, this);
             }
 
             SetCitizenHubCapacity();

@@ -3,29 +3,24 @@ using System;
 using System.Windows;
 
 namespace Logic.PlayerClasses {
-    public class Goods {
-        private readonly static double hydrogenPerPerson = 0.005;
-        private readonly static double commonMetalsPerPerson = 0.05;
-        private readonly static double rareMetalsPerPerson = 0.00_001;
+    public class CivilProduction {
+        public readonly static double HYDROGEN_PER_PERSON = 0.005;
+        public readonly static double COMMON_METALS_PER_PERSON = 0.05;
+        public readonly static double RARE_METALS_PER_PERSON = 0.00001;
 
-        private static Resourses previousTurnUsedResourses;
+        //public static Resourses PreviousTurnUsedResourses { get; private set; }
 
-        public static Resourses PreviousTurnUsedResourses { get => previousTurnUsedResourses; }
-
-        public static void SustainPopulationNeeds(Player player) {
+        public static void SustainPopulationNeeds(IPlayer player)
+        {
             if (player == null) {
                 throw new ArgumentNullException(nameof(player));
             }
 
-            double playerPopulation = player.TotalPopulation;
+            if(player.TotalPopulation <= 0) {
+                return;
+            }
 
-            double hydrogen = hydrogenPerPerson * playerPopulation;
-            double commonMetals = commonMetalsPerPerson * playerPopulation;
-            double rareMetals = rareMetalsPerPerson * playerPopulation;
-
-            Resourses neededResourses = new Resourses(hydrogen, commonMetals, rareMetals);
-
-            previousTurnUsedResourses = neededResourses;
+            Resourses neededResourses = CalculatePopulationNeeds(player.TotalPopulation);
 
             try {
                 player.OwnedResourses.Substract(neededResourses);
@@ -33,6 +28,14 @@ namespace Logic.PlayerClasses {
             catch (ArgumentException) {
                 player.OwnedResourses.SetToZero();
             }
+        }
+
+        private static Resourses CalculatePopulationNeeds(double population) {
+            double hydrogen = HYDROGEN_PER_PERSON * population;
+            double commonMetals = COMMON_METALS_PER_PERSON * population;
+            double rareMetals = RARE_METALS_PER_PERSON * population;
+
+            return new Resourses(hydrogen, commonMetals, rareMetals);
         }
     }
 }
