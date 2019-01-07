@@ -50,12 +50,12 @@ namespace Logic.PopulationClasses {
             this.Add((long)change);
         }
 
-        public void Substract(long change) {
+        public void Subtract(long change) {
             if (change > 0) this.Value -= change;
         }
 
-        public void Substract(double change) {
-            this.Substract((long)change);
+        public void Subtract(double change) {
+            this.Subtract((long)change);
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") {

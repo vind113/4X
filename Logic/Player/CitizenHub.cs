@@ -39,7 +39,7 @@ namespace Logic.PlayerClasses {
                 (this.CitizensInHub + citizensFromHabitat) < this.MaximumCount;
 
             if (canTravelFromPlanet && canTravelToHub) {
-                habitatPopulation.Substract(citizensFromHabitat);
+                habitatPopulation.Subtract(citizensFromHabitat);
                 this.CitizensInHub += citizensFromHabitat;
             }
         }

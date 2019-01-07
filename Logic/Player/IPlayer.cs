@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Logic.GameClasses;
-using Logic.Resourse;
+using Logic.Resource;
 using Logic.SpaceObjects;
 
 namespace Logic.PlayerClasses
@@ -14,7 +14,7 @@ namespace Logic.PlayerClasses
 
         ReadOnlyObservableCollection<StarSystem> StarSystems { get; }
         Stockpile Stockpile { get; }
-        Resourses OwnedResourses { get; set; }
+        Resources OwnedResources { get; set; }
         CitizenHub Hub { get; }
         Ships Ships { get; }
 

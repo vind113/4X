@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Logic.PlayerClasses;
-using Logic.Resourse;
+using Logic.Resource;
 using Logic.SupportClasses;
 using Logic.Buildings;
 
@@ -21,7 +21,7 @@ namespace Logic.SpaceObjects {
 
         private readonly SystemBuildings buildings;
 
-        private Resourses systemResourses;
+        private Resources systemResources;
         private int minersCount;
 
         private byte colonizedCount;
@@ -81,7 +81,7 @@ namespace Logic.SpaceObjects {
             }
 
             this.ColonizedCount = this.SetColonizedPlantes();
-            this.SystemResourses = this.SetResourses();
+            this.SystemResources = this.SetResources();
         }
 
         /// <summary>
@@ -153,9 +153,9 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Возвращает ресурсы системы
         /// </summary>
-        public Resourses SystemResourses {
-            get => this.systemResourses;
-            private set => this.systemResourses = value;
+        public Resources SystemResources {
+            get => this.systemResources;
+            private set => this.systemResources = value;
         }
 
         /// <summary>
@@ -183,8 +183,8 @@ namespace Logic.SpaceObjects {
 
             this.SystemPopulation = this.SetSystemPopulation();
 
-            this.MineSystemResourses(player.OwnedResourses);
-            this.Buildings.NextTurn(player.OwnedResourses);
+            this.MineSystemResources(player.OwnedResources);
+            this.Buildings.NextTurn(player.OwnedResources);
         }
 
         private void PlanetsNextTurn(Player player) {
@@ -199,12 +199,12 @@ namespace Logic.SpaceObjects {
             }
         }
 
-        private void MineSystemResourses(Resourses destination) {
+        private void MineSystemResources(Resources destination) {
             if(this.SystemPopulation == 0) {
                 return;
             }
 
-            Miner.Mine(this.MinersCount, this.SystemResourses, destination);
+            Miner.Mine(this.MinersCount, this.SystemResources, destination);
         }
 
         private long SetSystemPopulation() {
@@ -243,12 +243,12 @@ namespace Logic.SpaceObjects {
             return habitableCount;
         }
 
-        private Resourses SetResourses() {
+        private Resources SetResources() {
             double hydrogen = HelperRandomFunctions.GetRandomDouble() * 1E22;
             double commonMetals = HelperRandomFunctions.GetRandomDouble() * 1E24;
             double rareElements = HelperRandomFunctions.GetRandomDouble() * 1E20;
 
-            return new Resourses(hydrogen, commonMetals, rareElements);
+            return new Resources(hydrogen, commonMetals, rareElements);
         }
     }
 }

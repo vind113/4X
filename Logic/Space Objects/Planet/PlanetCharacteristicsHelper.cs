@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Logic.SpaceObjects {
+namespace Logic.SpaceObjects.PlanetClasses {
     public class PlanetCharacteristicsHelper {
 
         public static double GetPlanetTypeFactor(

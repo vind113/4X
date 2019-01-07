@@ -1,4 +1,4 @@
-﻿using Logic.Resourse;
+﻿using Logic.Resource;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,13 +37,13 @@ namespace Logic.Buildings {
             builder.Completed += AddCompleted;
         }
 
-        public void NextTurn(Resourses resourses) {
+        public void NextTurn(Resources resources) {
             if (inConstruction.Count <= 0) {
                 return;
             }
 
             foreach (var building in inConstruction.ToArray()) {
-                building.OneTurnProgress(resourses);
+                building.OneTurnProgress(resources);
             }
         }
 

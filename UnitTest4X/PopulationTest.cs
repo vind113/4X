@@ -41,37 +41,37 @@ namespace UnitTest4X {
         }
 
         [TestCase]
-        public void Substract_CorrectParameter_ValueDecreased() {
+        public void Subtract_CorrectParameter_ValueDecreased() {
             long populationValue = 10_000_000_000;
             long maxPopualationValue = 20_000_000_000;
             long decreaseValue = 5_000_000_000;
 
             Population population = new Population(populationValue, maxPopualationValue);
-            population.Substract(decreaseValue);
+            population.Subtract(decreaseValue);
 
             Assert.AreEqual(populationValue - decreaseValue, population.Value);
         }
 
         [TestCase]
-        public void Substract_ParameterGreaterThanValue_ValueNotChanged() {
+        public void Subtract_ParameterGreaterThanValue_ValueNotChanged() {
             long populationValue = 10_000_000_000;
             long maxPopualationValue = 20_000_000_000;
             long decreaseValue = 15_000_000_000;
 
             Population population = new Population(populationValue, maxPopualationValue);
-            population.Substract(decreaseValue);
+            population.Subtract(decreaseValue);
 
             Assert.AreEqual(populationValue, population.Value);
         }
 
         [TestCase]
-        public void Substract_ParameterLowerThanZero_ValueNotChanged() {
+        public void Subtract_ParameterLowerThanZero_ValueNotChanged() {
             long populationValue = 10_000_000_000;
             long maxPopualationValue = 20_000_000_000;
             long decreaseValue = -5_000_000_000;
 
             Population population = new Population(populationValue, maxPopualationValue);
-            population.Substract(decreaseValue);
+            population.Subtract(decreaseValue);
 
             Assert.AreEqual(populationValue, population.Value);
         }

@@ -1,10 +1,10 @@
-﻿using Logic.Resourse;
+﻿using Logic.Resource;
 using NUnit.Framework;
 using System;
 
 namespace UnitTest4X {
     [TestFixture]
-    public class ResoursesTest {
+    public class ResourcesTest {
         [TestCase]
         public void Add_NoOverFlow_CorrectResult() {
             double hydrogenA = 1E10;
@@ -16,8 +16,8 @@ namespace UnitTest4X {
             double rareElementsA = 1E10;
             double rareElementsB = 1E10;
 
-            Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
-            Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
+            Resources a = new Resources(hydrogenA, commonMetalsA, rareElementsA);
+            Resources b = new Resources(hydrogenB, commonMetalsB, rareElementsB);
 
             a.Add(b);
 
@@ -43,11 +43,11 @@ namespace UnitTest4X {
             double rareElementsA = 1E10;
             double rareElementsB = 1E11;
 
-            Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
-            Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
+            Resources a = new Resources(hydrogenA, commonMetalsA, rareElementsA);
+            Resources b = new Resources(hydrogenB, commonMetalsB, rareElementsB);
 
             a.Add(b);
-            Resourses c = a;
+            Resources c = a;
         }
 
         [TestCase]
@@ -61,11 +61,11 @@ namespace UnitTest4X {
             double rareElementsA = 1E11;
             double rareElementsB = 1E10;
 
-            Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
-            Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
+            Resources a = new Resources(hydrogenA, commonMetalsA, rareElementsA);
+            Resources b = new Resources(hydrogenB, commonMetalsB, rareElementsB);
 
-            a.Substract(b);
-            Resourses c = a;
+            a.Subtract(b);
+            Resources c = a;
 
             bool hydrogenEqual = c.Hydrogen == (hydrogenA - hydrogenB);
             bool commonMetalsEqual = c.CommonMetals == (commonMetalsA - commonMetalsB);
@@ -76,10 +76,10 @@ namespace UnitTest4X {
 
         [TestCase]
         public void Subtract_SecondArgumentGreater_ExeptionThrown() {
-            Assert.Throws(typeof(ArgumentException), new TestDelegate(SubstractWithException));
+            Assert.Throws(typeof(ArgumentException), new TestDelegate(SubtractWithException));
         }
 
-        private static void SubstractWithException() {
+        private static void SubtractWithException() {
             double hydrogenA = 1E10;
             double hydrogenB = 1E11;
 
@@ -89,39 +89,25 @@ namespace UnitTest4X {
             double rareElementsA = 1E10;
             double rareElementsB = 1E11;
 
-            Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
-            Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
+            Resources a = new Resources(hydrogenA, commonMetalsA, rareElementsA);
+            Resources b = new Resources(hydrogenB, commonMetalsB, rareElementsB);
 
-            a.Substract(b);
-            Resourses c = a;
+            a.Subtract(b);
+            Resources c = a;
         }
 
         [TestCase]
-        public void Multiply_CorrectConditions_ResoursesMultiplied() {
-            double resourseAmount = 100_000_000;
+        public void Multiply_CorrectConditions_ResourcesMultiplied() {
+            double resourceAmount = 100_000_000;
             double multiplier = 34;
-            double expected = resourseAmount * multiplier;
+            double expected = resourceAmount * multiplier;
 
-            Resourses resourseToMultiply = new Resourses(resourseAmount, resourseAmount, resourseAmount);
-            resourseToMultiply.Multiply(multiplier);
+            Resources resourceToMultiply = new Resources(resourceAmount, resourceAmount, resourceAmount);
+            resourceToMultiply.Multiply(multiplier);
 
-            Assert.AreEqual(expected, resourseToMultiply.Hydrogen, 0.99);
-            Assert.AreEqual(expected, resourseToMultiply.CommonMetals, 0.99);
-            Assert.AreEqual(expected, resourseToMultiply.RareEarthElements, 0.99);
+            Assert.AreEqual(expected, resourceToMultiply.Hydrogen, 0.99);
+            Assert.AreEqual(expected, resourceToMultiply.CommonMetals, 0.99);
+            Assert.AreEqual(expected, resourceToMultiply.RareEarthElements, 0.99);
         }
-
-        /*[TestCase]
-        public void Multiply_Overflow_ExceptionThrown() {
-            double resourseAmount = 1E308;
-            double multiplier = 340;
-
-            Resourses resourseToMultiply = new Resourses(resourseAmount, resourseAmount, resourseAmount);
-
-            Assert.Throws<OverflowException>(() => {
-                resourseToMultiply.Multiply(multiplier);
-                resourseToMultiply.Substract(new Resourses(resourseAmount, resourseAmount, resourseAmount));
-            });
-        }*/
-
     }
 }

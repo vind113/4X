@@ -14,8 +14,8 @@
         Closing="CurrentWindow_Closing">
     
     <Window.Resources>
-        <converters:TurnNumberConverter x:Key="TurnNumberConverterResourse"/>
-        <converters:ColonizePlanetConverter x:Key="ColonizePlanetConverterResourse"/>
+        <converters:TurnNumberConverter x:Key="TurnNumberConverterResource"/>
+        <converters:ColonizePlanetConverter x:Key="ColonizePlanetConverterResource"/>
 
         <Style x:Key="ListBoxStyle" TargetType="ListBox">
             <Setter Property="VerticalAlignment" Value="Top"/>
@@ -114,33 +114,33 @@
 
                 <Label Grid.Row="1" Grid.Column="0"
                        Foreground="Blue"
-                       Content="{Binding Path=CurrentResourses.Hydrogen}"
+                       Content="{Binding Path=CurrentResources.Hydrogen}"
                        ContentStringFormat="Hydrogen: {0:#,#}"/>
 
                 <Label Grid.Row="1" Grid.Column="1"
                        Foreground="DimGray"
-                       Content="{Binding Path=CurrentResourses.CommonMetals}"
+                       Content="{Binding Path=CurrentResources.CommonMetals}"
                        ContentStringFormat="Common Metals: {0:#,#}"/>
 
                 <Label Grid.Row="1" Grid.Column="2"
                        Foreground="DarkGreen"
-                       Content="{Binding Path=CurrentResourses.RareEarthElements}"
+                       Content="{Binding Path=CurrentResources.RareEarthElements}"
                        ContentStringFormat="Rare Elements: {0:#,#}"/>
 
                 
                 <Label Grid.Row="2" Grid.Column="0"
                        Foreground="Blue"
-                       Content="{Binding Path=CurrentResourses.Hydrogen}"
+                       Content="{Binding Path=CurrentResources.Hydrogen}"
                        ContentStringFormat="Used Hydrogen: TODO"/>
 
                 <Label Grid.Row="2" Grid.Column="1"
                        Foreground="DimGray"
-                       Content="{Binding Path=CurrentResourses.CommonMetals}"
+                       Content="{Binding Path=CurrentResources.CommonMetals}"
                        ContentStringFormat="Used Common Metals: TODO"/>
 
                 <Label Grid.Row="2" Grid.Column="2"
                        Foreground="DarkGreen"
-                       Content="{Binding Path=CurrentResourses.RareEarthElements}"
+                       Content="{Binding Path=CurrentResources.RareEarthElements}"
                        ContentStringFormat="Used Rare Elements: TODO"/>
             </Grid>
         </Border>
@@ -163,7 +163,7 @@
                             MinHeight="30" MinWidth="120" Margin="5"
                             Command="{Binding Path=MultipleNextTurnsCmd}">
                         <Button.CommandParameter>
-                            <MultiBinding Converter="{StaticResource TurnNumberConverterResourse}">
+                            <MultiBinding Converter="{StaticResource TurnNumberConverterResource}">
                                 <Binding Path="Text" ElementName="TurnsNumberTextBox"/>
                                 <Binding Path="CurrentGame"/>
                             </MultiBinding>
@@ -225,13 +225,13 @@
 
                                     <WrapPanel Orientation="Vertical"
                                                Grid.Row="1">
-                                        <Label Content="{Binding Path=SystemResourses.Hydrogen, FallbackValue=?}"
+                                        <Label Content="{Binding Path=SystemResources.Hydrogen, FallbackValue=?}"
                                                ContentStringFormat="Hydrogen: {0:E15}"/>
 
-                                        <Label Content="{Binding Path=SystemResourses.CommonMetals, FallbackValue=?}"
+                                        <Label Content="{Binding Path=SystemResources.CommonMetals, FallbackValue=?}"
                                                ContentStringFormat="Common metals: {0:E15}"/>
 
-                                        <Label Content="{Binding Path=SystemResourses.RareEarthElements, FallbackValue=?}"
+                                        <Label Content="{Binding Path=SystemResources.RareEarthElements, FallbackValue=?}"
                                                ContentStringFormat="Rare elements: {0:E15}"/>
                                     </WrapPanel>
 
@@ -309,9 +309,9 @@
 
                                             <Separator MinWidth="200" Background="Black"/>
 
-                                            <Label Content="{Binding Path=BodyResourse.Hydrogen, FallbackValue=?}" ContentStringFormat="Hydrogen: {0:E15} t"/>
-                                            <Label Content="{Binding Path=BodyResourse.CommonMetals, FallbackValue=?}" ContentStringFormat="Common metals: {0:E15} t"/>
-                                            <Label Content="{Binding Path=BodyResourse.RareEarthElements, FallbackValue=?}" ContentStringFormat="Rare earth elements: {0:E15} t"/>
+                                            <Label Content="{Binding Path=BodyResource.Hydrogen, FallbackValue=?}" ContentStringFormat="Hydrogen: {0:E15} t"/>
+                                            <Label Content="{Binding Path=BodyResource.CommonMetals, FallbackValue=?}" ContentStringFormat="Common metals: {0:E15} t"/>
+                                            <Label Content="{Binding Path=BodyResource.RareEarthElements, FallbackValue=?}" ContentStringFormat="Rare earth elements: {0:E15} t"/>
                                         </WrapPanel>
 
                                         <StackPanel Orientation="Vertical">
@@ -321,7 +321,7 @@
                                                 Background="LightGray"
                                                 Command="{Binding Path=ColonizePlanetCmd}">
                                                 <Button.CommandParameter>
-                                                    <MultiBinding Converter="{StaticResource ColonizePlanetConverterResourse}">
+                                                    <MultiBinding Converter="{StaticResource ColonizePlanetConverterResource}">
                                                         <Binding Path="CurrentGame.Player"/>
                                                         <Binding ElementName="SystemPlanetsListBox" Path="SelectedItem"/>
                                                     </MultiBinding>

@@ -1,4 +1,4 @@
-﻿using Logic.Resourse;
+﻿using Logic.Resource;
 using System;
 
 namespace Logic.PlayerClasses {
@@ -10,7 +10,7 @@ namespace Logic.PlayerClasses {
     /// Представляет космический корабль-колонизатор
     /// </summary>
     public class Colonizer : Ship {
-        private readonly static Resourses price = new Resourses(1E9, 1E10, 1E6);
+        private readonly static Resources price = new Resources(1E9, 1E10, 1E6);
         private const double colonists = 10_000_000;
 
         private double colonistsOnShip;
@@ -25,7 +25,7 @@ namespace Logic.PlayerClasses {
         /// <summary>
         /// Возвращает цену колонизатора
         /// </summary>
-        public static Resourses Price { get => price; }
+        public static Resources Price { get => price; }
 
         /// <summary>
         /// Возвращает количество колонистов на корабле по умолчанию
@@ -68,26 +68,26 @@ namespace Logic.PlayerClasses {
     }
 
     public class Miner : Ship {
-        private readonly static Resourses price = new Resourses(1E9, 10E9, 100E6);
-        private readonly static Resourses extractsPerTurn = new Resourses(1E7, 1E8, 1E5);
+        private readonly static Resources price = new Resources(1E9, 10E9, 100E6);
+        private readonly static Resources extractsPerTurn = new Resources(1E7, 1E8, 1E5);
 
         public static int GetMiners(int quantity) {
             return quantity;
         }
     
-        public static void Mine(int quantityOfMiners, Resourses from, Resourses to) {
-            Resourses extracted = new Resourses(
+        public static void Mine(int quantityOfMiners, Resources from, Resources to) {
+            Resources extracted = new Resources(
                 quantityOfMiners * Miner.ExtractsPerTurn.Hydrogen,
                 quantityOfMiners * Miner.ExtractsPerTurn.CommonMetals,
                 quantityOfMiners * Miner.ExtractsPerTurn.RareEarthElements
             );
 
-            if (Resourses.AreEqual(from, Resourses.Zero)) {
+            if (Resources.AreEqual(from, Resources.Zero)) {
                 return;
             }
 
             try {
-                from.Substract(extracted);
+                from.Subtract(extracted);
                 to.Add(extracted);
             }
             catch(ArgumentException) {
@@ -96,39 +96,39 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public static Resourses Price { get => price; }
-        public static Resourses ExtractsPerTurn { get => extractsPerTurn; }
+        public static Resources Price { get => price; }
+        public static Resources ExtractsPerTurn { get => extractsPerTurn; }
     }
 
     [Serializable]
     public class Ships {
-        public Colonizer GetColonizer(Resourses from) {
+        public Colonizer GetColonizer(Resources from) {
             if (from == null) {
                 throw new ArgumentNullException(nameof(from));
             }
 
             if (from.CanSubtract(Colonizer.Price)) {
 
-                from.Substract(Colonizer.Price);
+                from.Subtract(Colonizer.Price);
                 return Colonizer.GetColonizer();
             }
 
             return null;
         }
 
-        public int GetMiners(Resourses from, int quantity) {
+        public int GetMiners(Resources from, int quantity) {
             if (from == null) {
                 throw new ArgumentNullException(nameof(from));
             }
 
-            Resourses neededResourses = new Resourses(
+            Resources neededResources = new Resources(
                 quantity * Miner.Price.Hydrogen,
                 quantity * Miner.Price.CommonMetals,
                 quantity * Miner.Price.RareEarthElements
             );
 
-            if (from.CanSubtract(neededResourses)) {
-                from.Substract(neededResourses);
+            if (from.CanSubtract(neededResources)) {
+                from.Subtract(neededResources);
                 return quantity;
             }
             else {

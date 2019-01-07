@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Logic.Resourse;
+using Logic.Resource;
 using System.Runtime.CompilerServices;
 using System;
 using Logic.SupportClasses;
@@ -11,7 +11,7 @@ namespace Logic.SpaceObjects {
         private string name;                
         private double area;      
         private double radius;    
-        private Resourses bodyResourse;
+        private Resources bodyResource;
 
         public CelestialBody(string name, double radius) {
             this.name = name;
@@ -30,9 +30,9 @@ namespace Logic.SpaceObjects {
 
         public double Radius { get => this.radius; }
 
-        public Resourses BodyResourse {
-            get => this.bodyResourse;
-            protected set => this.bodyResourse = value;
+        public Resources BodyResource {
+            get => this.bodyResource;
+            protected set => this.bodyResource = value;
         }
 
         [field: NonSerialized]

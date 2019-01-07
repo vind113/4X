@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Logic.GameClasses;
-using Logic.Resourse;
+using Logic.Resource;
 using Logic.SpaceObjects;
 using Logic.PlayerClasses;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ namespace UnitTest4X {
             Player player = new Player();
             int planetsToColonize = 255;
 
-            player.OwnedResourses = new Resourses(Double.MaxValue, Double.MaxValue, Double.MaxValue);
+            player.OwnedResources = new Resources(Double.MaxValue, Double.MaxValue, Double.MaxValue);
 
             List<Planet> planetList = new List<Planet>();
 

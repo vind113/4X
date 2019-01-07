@@ -8,7 +8,7 @@ namespace UnitTest4X {
     [TestFixture]
     public class PlanetTest {
         [TestCase]
-        public void ExtractResourses_CorrectConditions_ResoursesMined() {
+        public void ExtractResources_CorrectConditions_ResourcesMined() {
 
             double hydrogenPre = 0;
             double commonMetalsPre = 0;
@@ -17,26 +17,26 @@ namespace UnitTest4X {
             Player player = new Player();
             var planet = player.StarSystems[0].SystemPlanets[2];
 
-            hydrogenPre += planet.BodyResourse.Hydrogen;
-            commonMetalsPre += planet.BodyResourse.CommonMetals;
-            rareElementsPre += planet.BodyResourse.RareEarthElements;
+            hydrogenPre += planet.BodyResource.Hydrogen;
+            commonMetalsPre += planet.BodyResource.CommonMetals;
+            rareElementsPre += planet.BodyResource.RareEarthElements;
 
-            hydrogenPre += player.OwnedResourses.Hydrogen;
-            commonMetalsPre += player.OwnedResourses.CommonMetals;
-            rareElementsPre += player.OwnedResourses.RareEarthElements;
+            hydrogenPre += player.OwnedResources.Hydrogen;
+            commonMetalsPre += player.OwnedResources.CommonMetals;
+            rareElementsPre += player.OwnedResources.RareEarthElements;
 
             const int turns = 10000;
             for (int i = 0; i < turns; i++) {
                 planet.NextTurn(player);
             }
 
-            double hydrogenPost = player.OwnedResourses.Hydrogen;
-            double commonMetalsPost = player.OwnedResourses.CommonMetals;
-            double rareElementsPost = player.OwnedResourses.RareEarthElements;
+            double hydrogenPost = player.OwnedResources.Hydrogen;
+            double commonMetalsPost = player.OwnedResources.CommonMetals;
+            double rareElementsPost = player.OwnedResources.RareEarthElements;
 
-            hydrogenPost += planet.BodyResourse.Hydrogen;
-            commonMetalsPost += planet.BodyResourse.CommonMetals;
-            rareElementsPost += planet.BodyResourse.RareEarthElements;
+            hydrogenPost += planet.BodyResource.Hydrogen;
+            commonMetalsPost += planet.BodyResource.CommonMetals;
+            rareElementsPost += planet.BodyResource.RareEarthElements;
             
             double difference = 10_000_000;
 

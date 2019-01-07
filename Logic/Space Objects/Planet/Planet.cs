@@ -1,21 +1,17 @@
 ﻿using System;
 using Logic.SupportClasses;
 using Logic.PlayerClasses;
-using Logic.Resourse;
+using Logic.Resource;
 using Logic.PopulationClasses;
+using Logic.SpaceObjects.PlanetClasses;
 
 namespace Logic.SpaceObjects {
     /// <summary>
     /// Представляет планету
     /// </summary>
     [Serializable]
-    public class Planet : CelestialBody, IHabitable {
-        private PlanetType type;            
-                
-        private readonly int buildingSites;          
-        private int availableSites;
+    public class Planet : CelestialBody, IHabitable, IPlanet {
 
-        private Population population;
         private bool isColonized = false;
 
         private const double citizensPerSector = 100_000_000d;
@@ -40,47 +36,18 @@ namespace Logic.SpaceObjects {
                 throw new ArgumentOutOfRangeException(nameof(radius), "Cannot be lower than 2000");
             }
 
-            this.type = type;
+            this.Type = type;
 
-            this.population = new Population(population, (double)this.type.Quality * this.Area);
+            this.Population = new Population(population, (double)this.Type.Quality * this.Area);
 
-            this.buildingSites = (int)Math.Ceiling(this.Population.MaxValue / citizensPerSector);
-            this.availableSites = this.buildingSites;
+            this.BuildingSites = (int)Math.Ceiling(this.Population.MaxValue / citizensPerSector);
+            this.AvailableSites = this.BuildingSites;
 
             if (this.Population.Value > 0) {
                 this.IsColonized = true;
             }
 
-            this.SetPlanetResourses();
-        }
-
-        private void SetPlanetResourses() {
-            double commonMetals = 0;
-            double rareEarthElements = 0;
-            double hydrogen = 0;
-
-            double massOfTenKmCrust = (10d * ((3d) * 10E9));
-
-            if (this.Type.SubstancesClass == SubstancesClass.Terra) {
-                commonMetals = this.Area * (massOfTenKmCrust / 20);
-                rareEarthElements = this.Area * (massOfTenKmCrust / 1E5);
-                hydrogen = this.Area * (massOfTenKmCrust / 200);
-
-            }
-            else if(this.Type.SubstancesClass == SubstancesClass.Ferria) {
-                commonMetals = this.Area * (massOfTenKmCrust / 2);
-                rareEarthElements = this.Area * (massOfTenKmCrust / 1E4);
-                hydrogen = this.Area * (massOfTenKmCrust / 200);
-
-            }
-            else if(this.Type.SubstancesClass == SubstancesClass.Jupiter) {
-                commonMetals = 0;
-                rareEarthElements = 0;
-                hydrogen = this.Area * (1.4 * 20 * 1E3 * 1E9);
-
-            }
-
-            this.BodyResourse = new Resourses(hydrogen, commonMetals, rareEarthElements);
+            this.BodyResource = new PlanetResourceGenerator().GenerateFor(this);
         }
 
         public bool IsColonized {
@@ -96,25 +63,25 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Общее количество строительных площадок
         /// </summary>
-        public int BuildingSites { get => this.buildingSites; }
+        public int BuildingSites { get; }
 
         /// <summary>
         /// Количество доступных для строительства площадок
         /// </summary>
-        public int AvailableSites { get => this.availableSites; }
+        public int AvailableSites { get; }
 
         /// Возвращает тип планеты
         /// </summary>
-        public PlanetType Type { get => this.type; }
+        public PlanetType Type { get; }
 
-        public Population Population { get => this.population; }
+        public Population Population { get; }
 
         public override string ToString() {
             return $"{this.Name} is a {this.Type.Name} world with radius of {this.Radius} km " +
                 $"and area of {this.Area:E4} km^2. " +
                 $"Here lives {this.Population.Value:E4} intelligent creatures. " +
                 $"On this planet can live {this.Population.MaxValue:E4} people. " +
-                $"We can build {this.buildingSites} buildings here. ";
+                $"We can build {this.BuildingSites} buildings here. ";
         }
     
         #region Next turn methods
@@ -133,7 +100,7 @@ namespace Logic.SpaceObjects {
 
             ConductMigration(player.Hub);
 
-            ExtractResourses(player.OwnedResourses);
+            ExtractResources(player.OwnedResources);
         }
 
         private void ConductMigration(CitizenHub migrationHub) {
@@ -145,29 +112,29 @@ namespace Logic.SpaceObjects {
             double growthCoef = growthFactor * HelperRandomFunctions.GetRandomDouble();
 
             double addedPart =
-                growthCoef * (this.Type.Quality / PlanetType.GoodWorldQuality);
+                growthCoef * (this.Type.Quality / PlanetType.GOOD_WORLD_QUALITY);
 
             double addedPopulation = this.Population.Value * addedPart;
 
-            this.population.Add(addedPopulation);
+            this.Population.Add(addedPopulation);
         }
 
-        private void ExtractResourses(Resourses extractTo) {
-            if (this.BodyResourse.IsStrictlyGreater(Resourses.Zero)) {
-                double minedResourses = (this.Type.MiningDifficulty * this.Population.Value);
+        private void ExtractResources(Resources extractTo) {
+            if (this.BodyResource.IsStrictlyGreater(Resources.Zero)) {
+                double minedResources = (this.Type.MiningDifficulty * this.Population.Value);
 
-                double minedHydrogen = minedResourses / 10;
-                double minedCommonMetals = minedResourses;
-                double minedRareElements = minedResourses / 5_000;
+                double minedHydrogen = minedResources / 10;
+                double minedCommonMetals = minedResources;
+                double minedRareElements = minedResources / 5_000;
                 try {
-                    Resourses extracted = new Resourses(minedHydrogen, minedCommonMetals, minedRareElements);
+                    Resources extracted = new Resources(minedHydrogen, minedCommonMetals, minedRareElements);
 
-                    this.BodyResourse.Substract(extracted);
+                    this.BodyResource.Subtract(extracted);
                     extractTo.Add(extracted);
                 }
                 catch (ArgumentException) {
-                    extractTo.Add(this.BodyResourse);
-                    this.BodyResourse.SetToZero();
+                    extractTo.Add(this.BodyResource);
+                    this.BodyResource.SetToZero();
                 }
             }
         }
@@ -195,7 +162,7 @@ namespace Logic.SpaceObjects {
                 throw new ArgumentNullException(nameof(player));
             }
 
-            Colonizer colonizer = player.Ships.GetColonizer(player.OwnedResourses);
+            Colonizer colonizer = player.Ships.GetColonizer(player.OwnedResources);
 
             if (colonizer != null) {
 

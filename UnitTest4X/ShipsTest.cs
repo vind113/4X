@@ -1,5 +1,5 @@
 ﻿using Logic.PlayerClasses;
-using Logic.Resourse;
+using Logic.Resource;
 using NUnit.Framework;
 using System;
 
@@ -10,7 +10,7 @@ namespace UnitTest4X {
         public void ColonizerGetColonists_ParamIsLowerThanColonistsOnShip_GetColonists() {
             Ships ships = new Ships();
 
-            Colonizer colonizer = ships.GetColonizer(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
+            Colonizer colonizer = ships.GetColonizer(new Resources(double.MaxValue, double.MaxValue, double.MaxValue));
 
             double colonize = colonizer.GetColonists(colonizer.ColonistsOnShip / 4);
 
@@ -21,7 +21,7 @@ namespace UnitTest4X {
         public void ColonizerGetColonists_ParamIsGreaterThanColonistsOnShip_GetColonists() {
             Ships ships = new Ships();
 
-            Colonizer colonizer = ships.GetColonizer(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
+            Colonizer colonizer = ships.GetColonizer(new Resources(double.MaxValue, double.MaxValue, double.MaxValue));
 
             double colonize = colonizer.GetColonists(colonizer.ColonistsOnShip * 4);
 
@@ -31,17 +31,17 @@ namespace UnitTest4X {
         [TestCase]
         public void MinerGetMiners_CannotAffordMiners_ReturnZero() {
             int shipsToBuy = 10;
-            int resoursesInitModifier = 2;
+            int resourcesInitModifier = 2;
 
-            Resourses minerPrice = Miner.Price;
+            Resources minerPrice = Miner.Price;
 
-            Resourses inPossesion = new Resourses(
-                resoursesInitModifier*minerPrice.Hydrogen,
-                resoursesInitModifier*minerPrice.CommonMetals,
-                resoursesInitModifier*minerPrice.RareEarthElements
+            Resources inPossesion = new Resources(
+                resourcesInitModifier*minerPrice.Hydrogen,
+                resourcesInitModifier*minerPrice.CommonMetals,
+                resourcesInitModifier*minerPrice.RareEarthElements
             );
 
-            Resourses neededResourses = new Resourses(
+            Resources neededResources = new Resources(
                 shipsToBuy * minerPrice.Hydrogen,
                 shipsToBuy * minerPrice.CommonMetals,
                 shipsToBuy * minerPrice.RareEarthElements
@@ -58,17 +58,17 @@ namespace UnitTest4X {
         [TestCase]
         public void MinerGetMiners_CanAffordMiners_ReturnMinersQuantity() {
             int shipsToBuy = 10;
-            int resoursesInitModifier = 25;
+            int resourcesInitModifier = 25;
 
-            Resourses minerPrice = Miner.Price;
+            Resources minerPrice = Miner.Price;
 
-            Resourses inPossesion = new Resourses(
-                resoursesInitModifier * minerPrice.Hydrogen,
-                resoursesInitModifier * minerPrice.CommonMetals,
-                resoursesInitModifier * minerPrice.RareEarthElements
+            Resources inPossesion = new Resources(
+                resourcesInitModifier * minerPrice.Hydrogen,
+                resourcesInitModifier * minerPrice.CommonMetals,
+                resourcesInitModifier * minerPrice.RareEarthElements
             );
 
-            Resourses neededResourses = new Resourses(
+            Resources neededResources = new Resources(
                 shipsToBuy * minerPrice.Hydrogen,
                 shipsToBuy * minerPrice.CommonMetals,
                 shipsToBuy * minerPrice.RareEarthElements
@@ -84,15 +84,15 @@ namespace UnitTest4X {
 
         [TestCase]
         public void MinerMine_FromIsZero_ImmediateReturn() {
-            Resourses from = new Resourses(0, 0, 0);
+            Resources from = new Resources(0, 0, 0);
 
-            Resourses to = new Resourses(1E5, 1E5, 1E5);
+            Resources to = new Resources(1E5, 1E5, 1E5);
 
             int miners = 10;
 
             Miner.Mine(miners, from, to);
 
-            Assert.IsTrue(Resourses.AreEqual(from, Resourses.Zero));
+            Assert.IsTrue(Resources.AreEqual(from, Resources.Zero));
         }
 
         [TestCase]
@@ -105,10 +105,10 @@ namespace UnitTest4X {
             double commonMetalsTo = 1E5;
             double rareElementsTo = 1E5;
 
-            Resourses from = new Resourses(hydrogenFrom, commonMetalsFrom, rareElementsFrom);
-            Resourses to = new Resourses(hydrogenTo, commonMetalsTo, rareElementsTo);
+            Resources from = new Resources(hydrogenFrom, commonMetalsFrom, rareElementsFrom);
+            Resources to = new Resources(hydrogenTo, commonMetalsTo, rareElementsTo);
 
-            Resourses sumBefore = new Resourses(
+            Resources sumBefore = new Resources(
                 from.Hydrogen + to.Hydrogen,
                 from.CommonMetals + to.CommonMetals,
                 from.RareEarthElements + to.RareEarthElements
@@ -118,23 +118,23 @@ namespace UnitTest4X {
 
             Miner.Mine(miners, from, to);
 
-            Resourses sumAfter = new Resourses(
+            Resources sumAfter = new Resources(
                 from.Hydrogen + to.Hydrogen,
                 from.CommonMetals + to.CommonMetals,
                 from.RareEarthElements + to.RareEarthElements
             );
 
-            bool isResoursesAmountSame = Resourses.AreEqual(sumBefore, sumAfter);
+            bool isResourcesAmountSame = Resources.AreEqual(sumBefore, sumAfter);
 
-            bool isFromResoursesDecreased = (hydrogenFrom > from.Hydrogen)
+            bool isFromResourcesDecreased = (hydrogenFrom > from.Hydrogen)
                                          && (commonMetalsFrom > from.CommonMetals)
                                          && (rareElementsFrom > from.RareEarthElements);
 
-            bool isToResoursesIncreased = (hydrogenTo < to.Hydrogen)
+            bool isToResourcesIncreased = (hydrogenTo < to.Hydrogen)
                                         && (commonMetalsTo < to.CommonMetals)
                                         && (rareElementsTo < to.RareEarthElements);
 
-            Assert.IsTrue(isResoursesAmountSame && isFromResoursesDecreased && isToResoursesIncreased);
+            Assert.IsTrue(isResourcesAmountSame && isFromResourcesDecreased && isToResourcesIncreased);
         }
 
         [TestCase]
@@ -147,19 +147,19 @@ namespace UnitTest4X {
             double commonMetalsTo = 1E5;
             double rareElementsTo = 1E5;
 
-            Resourses from = new Resourses(hydrogenFrom, commonMetalsFrom, rareElementsFrom);
-            Resourses to = new Resourses(hydrogenTo, commonMetalsTo, rareElementsTo);
+            Resources from = new Resources(hydrogenFrom, commonMetalsFrom, rareElementsFrom);
+            Resources to = new Resources(hydrogenTo, commonMetalsTo, rareElementsTo);
 
             int miners = 10;
             Miner.Mine(miners, from, to);
 
-            bool isFromIsZero = Resourses.AreEqual(from, Resourses.Zero);
+            bool isFromIsZero = Resources.AreEqual(from, Resources.Zero);
 
-            bool isToResoursesIncreased = (hydrogenTo < to.Hydrogen)
+            bool isToResourcesIncreased = (hydrogenTo < to.Hydrogen)
                                         && (commonMetalsTo < to.CommonMetals)
                                         && (rareElementsTo < to.RareEarthElements);
 
-            Assert.IsTrue(isFromIsZero && isToResoursesIncreased);
+            Assert.IsTrue(isFromIsZero && isToResourcesIncreased);
         }
 
     }

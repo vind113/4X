@@ -1,44 +1,35 @@
-﻿using System;
+﻿using Logic.SpaceObjects.PlanetClasses;
+using System;
 
 namespace Logic.SpaceObjects {
     [Serializable]
     public struct PlanetType {
-        private const double goodWorldQuality = 100;
+        public const double GOOD_WORLD_QUALITY = 100;
 
-        private double quality;
-        private string name;
-        private double miningDifficulty;
-        private byte resourseAbundance;
+        public string Name { get; }
+        public double Quality { get; }
 
-        private TemperatureClass temperatureClass;
-        private VolatilesClass volatilesClass;
-        private SubstancesClass substancesClass;
+        public double MiningDifficulty { get; }
+        public byte ResourceAbundance { get; }
+
+        public TemperatureClass TemperatureClass { get; }
+        public VolatilesClass VolatilesClass { get; }
+        public SubstancesClass SubstancesClass { get; }
 
         public PlanetType(TemperatureClass temperature, VolatilesClass volatiles, SubstancesClass substances) {
-            this.temperatureClass = temperature;
-            this.volatilesClass = volatiles;
-            this.substancesClass = substances;
+            this.TemperatureClass = temperature;
+            this.VolatilesClass = volatiles;
+            this.SubstancesClass = substances;
 
             double tempQuality = PlanetCharacteristicsHelper.GetPlanetTypeFactor(temperature, volatiles, substances);
 
-            this.quality = tempQuality * GoodWorldQuality;
-            this.name = $"{temperature}, {volatiles}, {substances}";
-            this.resourseAbundance = 100;
+            this.Quality = tempQuality * GOOD_WORLD_QUALITY;
+            this.Name = $"{temperature}, {volatiles}, {substances}";
+            this.ResourceAbundance = 100;
 
             double months = 12;
-            this.miningDifficulty = (quality / PlanetType.GoodWorldQuality) / months;
+            this.MiningDifficulty = (Quality / GOOD_WORLD_QUALITY) / months;
         }
-
-        public double Quality { get => this.quality; }
-        public string Name { get => this.name; }
-
-        public static double GoodWorldQuality { get => goodWorldQuality; }
-        public double MiningDifficulty { get => this.miningDifficulty; }
-        public byte ResourseAbundance { get => this.resourseAbundance; }
-
-        public TemperatureClass TemperatureClass { get => this.temperatureClass; }
-        public VolatilesClass VolatilesClass { get => this.volatilesClass; }
-        public SubstancesClass SubstancesClass { get => this.substancesClass; }
     }
 
     public enum ColonizationState : byte {

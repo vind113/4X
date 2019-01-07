@@ -1,6 +1,6 @@
 ﻿using Logic.GameClasses;
 using Logic.PlayerClasses;
-using Logic.Resourse;
+using Logic.Resource;
 using Logic.SpaceObjects;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace UnitTest4X.Mocks
 
         public Stockpile Stockpile => throw new NotImplementedException();
 
-        public Resourses OwnedResourses { get; set; }
+        public Resources OwnedResources { get; set; }
 
         public CitizenHub Hub => throw new NotImplementedException();
 

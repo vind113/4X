@@ -2,29 +2,29 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Logic.Resourse {
+namespace Logic.Resource {
     /// <summary>
     /// Представляет ресурсы
     /// </summary>
     [Serializable]
-    public class Resourses : INotifyPropertyChanged {
+    public class Resources : INotifyPropertyChanged {
         private double hydrogen;
         private double commonMetals;
         private double rareEarthElements;
 
-        private static readonly Resourses zero = new Resourses();
+        private static readonly Resources zero = new Resources();
 
         /// <summary>
-        /// Инициализирует новый объект <see cref="Resourses"/> значениями по умолчанию
+        /// Инициализирует новый объект <see cref="Resources"/> значениями по умолчанию
         /// </summary>
-        public Resourses() {
+        public Resources() {
             this.Hydrogen = 0;
             this.CommonMetals = 0;
             this.RareEarthElements = 0;
         }
 
         /// <summary>
-        /// Инициализирует новый объект <see cref="Resourses"/> заданными значениями
+        /// Инициализирует новый объект <see cref="Resources"/> заданными значениями
         /// </summary>
         /// <param name="hydrogen">
         /// Количество энергетических ресурсов
@@ -35,26 +35,26 @@ namespace Logic.Resourse {
         /// <param name="rareEarthElements">
         /// Количество редких элементов
         /// </param>
-        public Resourses(double hydrogen, double commonMetals, double rareEarthElements) {
+        public Resources(double hydrogen, double commonMetals, double rareEarthElements) {
             this.Hydrogen = hydrogen;
             this.CommonMetals = commonMetals;
             this.RareEarthElements = rareEarthElements;
         }
 
         /// <summary>
-        /// Инициализирует новый объект <see cref="Resourses"/> переданным объектом <see cref="Resourses"/>
+        /// Инициализирует новый объект <see cref="Resources"/> переданным объектом <see cref="Resources"/>
         /// </summary>
         /// <param name="res">
-        /// Объект, с которого создастся новый объект <see cref="Resourses"/>
+        /// Объект, с которого создастся новый объект <see cref="Resources"/>
         /// </param>
-        public Resourses(Resourses res)
+        public Resources(Resources res)
             :this(res.Hydrogen, res.CommonMetals, res.RareEarthElements) { }
 
         /// <summary>
-        /// Сравнивает два объекта <see cref="Resourses"/>
+        /// Сравнивает два объекта <see cref="Resources"/>
         /// </summary>
-        /// <returns>Булевое значение, показывающее, равны ли соответствующие составные объектов <see cref="Resourses"/></returns>
-        public static bool AreEqual(Resourses res1, Resourses res2) {
+        /// <returns>Булевое значение, показывающее, равны ли соответствующие составные объектов <see cref="Resources"/></returns>
+        public static bool AreEqual(Resources res1, Resources res2) {
             if (res1.Hydrogen == res2.Hydrogen
              && res1.CommonMetals == res2.CommonMetals
              && res1.RareEarthElements == res2.RareEarthElements) {
@@ -65,10 +65,10 @@ namespace Logic.Resourse {
         }
 
         /// <summary>
-        /// Сравнивает два объекта <see cref="Resourses"/>
+        /// Сравнивает два объекта <see cref="Resources"/>
         /// </summary>
-        /// <returns>Булевое значение, показывающее, отличаются ли соответствующие составные объектов <see cref="Resourses"/></returns>
-        public static bool AreNotEqual(Resourses res1, Resourses res2) {
+        /// <returns>Булевое значение, показывающее, отличаются ли соответствующие составные объектов <see cref="Resources"/></returns>
+        public static bool AreNotEqual(Resources res1, Resources res2) {
             if (res1.Hydrogen != res2.Hydrogen
              || res1.CommonMetals != res2.CommonMetals
              || res1.RareEarthElements != res2.RareEarthElements) {
@@ -79,9 +79,9 @@ namespace Logic.Resourse {
         }
 
         /// <summary>
-        /// Прибавляет ресурсы переданного объекта <see cref="Resourses"/>
+        /// Прибавляет ресурсы переданного объекта <see cref="Resources"/>
         /// </summary>
-        public void Add(Resourses parameter) {
+        public void Add(Resources parameter) {
             if (!this.CanAdd(parameter)) {
                 throw new ArgumentException("Sum of resorses is greater than limit");
             }
@@ -92,10 +92,10 @@ namespace Logic.Resourse {
         }
 
         /// <summary>
-        /// Вычитает ресурсы переданного объекта <see cref="Resourses"/>
+        /// Вычитает ресурсы переданного объекта <see cref="Resources"/>
         /// </summary>
         /// <exception cref="ArgumentException"/>
-        public void Substract(Resourses parameter) {
+        public void Subtract(Resources parameter) {
 
             if (!this.CanSubtract(parameter)) {
                 throw new ArgumentException("Argument can't be greater than object");
@@ -129,7 +129,7 @@ namespace Logic.Resourse {
         /// <returns>
         /// Логическое значение, показывающее, возможно ли вычесть из объекта ресурсов другой объект ресурсов
         /// </returns>
-        public bool CanSubtract(Resourses res) {
+        public bool CanSubtract(Resources res) {
             if (this.Hydrogen          >= res.Hydrogen
              && this.CommonMetals      >= res.CommonMetals
              && this.RareEarthElements >= res.RareEarthElements) {
@@ -148,7 +148,7 @@ namespace Logic.Resourse {
         /// <returns>
         /// Логическое значение, показывающее, возможно ли прибавить один объект ресурсов к второму
         /// </returns>
-        public bool CanAdd(Resourses res) {
+        public bool CanAdd(Resources res) {
             if(double.IsInfinity(this.Hydrogen + res.Hydrogen)
             || double.IsInfinity(this.CommonMetals + res.CommonMetals)
             || double.IsInfinity(this.RareEarthElements + res.RareEarthElements)){
@@ -158,7 +158,7 @@ namespace Logic.Resourse {
             return true;
         }
 
-        public bool IsStrictlyGreater(Resourses res) {
+        public bool IsStrictlyGreater(Resources res) {
             if (this.Hydrogen          > res.Hydrogen
              && this.CommonMetals      > res.CommonMetals
              && this.RareEarthElements > res.RareEarthElements) {
@@ -204,7 +204,7 @@ namespace Logic.Resourse {
             }
         }
 
-        public static Resourses Zero => zero;
+        public static Resources Zero => zero;
 
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;

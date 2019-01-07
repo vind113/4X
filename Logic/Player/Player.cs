@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Logic.Resourse;
+using Logic.Resource;
 using Logic.SpaceObjects;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -29,7 +29,7 @@ namespace Logic.PlayerClasses {
 
         public Player() {
             this.Stockpile = new Stockpile();
-            this.Stockpile.PlayerResourses.Add(new Resourses(1_000_000_000, 10_000_000_000, 10_000_000));
+            this.Stockpile.PlayerResources.Add(new Resources(1_000_000_000, 10_000_000_000, 10_000_000));
 
             this.hub = new CitizenHub();
 
@@ -53,7 +53,7 @@ namespace Logic.PlayerClasses {
 
         private void OnStockpileChanged() {
             var handler = StockpileChanged;
-            handler?.Invoke(this, new StockpileChangedEventArgs(this.Money, this.OwnedResourses));
+            handler?.Invoke(this, new StockpileChangedEventArgs(this.Money, this.OwnedResources));
         }
 
         private void OnPopulationChanged() {
@@ -110,9 +110,9 @@ namespace Logic.PlayerClasses {
             private set => this.hub = value;
         }
 
-        public Resourses OwnedResourses {
-            get => this.stockpile.PlayerResourses;
-            set => this.stockpile.PlayerResourses = value;
+        public Resources OwnedResources {
+            get => this.stockpile.PlayerResources;
+            set => this.stockpile.PlayerResources = value;
         }
 
         public double Money {

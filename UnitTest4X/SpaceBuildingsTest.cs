@@ -1,5 +1,5 @@
 ﻿using Logic.Buildings;
-using Logic.Resourse;
+using Logic.Resource;
 using NUnit.Framework;
 using System;
 
@@ -7,53 +7,53 @@ namespace UnitTest4X {
     [TestFixture]
     public class SpaceBuildingsTest {
         [TestCase]
-        public void HabitatBuilderOneTurnProgress_NotEnoughResourses_NoProgress() {
+        public void HabitatBuilderOneTurnProgress_NotEnoughResources_NoProgress() {
             HabitatBuilder habitatBuilder = new HabitatBuilder("a");
 
-            double resourseFactor = 0.5;
+            double resourceFactor = 0.5;
 
-            Resourses neededResourses = new Resourses(
-                resourseFactor * habitatBuilder.CostPerTurn.Hydrogen,
-                resourseFactor * habitatBuilder.CostPerTurn.CommonMetals,
-                resourseFactor * habitatBuilder.CostPerTurn.RareEarthElements
+            Resources neededResources = new Resources(
+                resourceFactor * habitatBuilder.CostPerTurn.Hydrogen,
+                resourceFactor * habitatBuilder.CostPerTurn.CommonMetals,
+                resourceFactor * habitatBuilder.CostPerTurn.RareEarthElements
             );
 
-            habitatBuilder.OneTurnProgress(neededResourses);
+            habitatBuilder.OneTurnProgress(neededResources);
 
             Assert.AreEqual(0, habitatBuilder.BuildingProgress);
         }
 
         [TestCase]
-        public void HabitatBuilderOneTurnProgress_EnoughResourses_ProgressMade() {
+        public void HabitatBuilderOneTurnProgress_EnoughResources_ProgressMade() {
             HabitatBuilder habitatBuilder = new HabitatBuilder("a");
 
-            double resourseFactor = 5;
+            double resourceFactor = 5;
 
-            Resourses neededResourses = new Resourses(
-                resourseFactor * habitatBuilder.CostPerTurn.Hydrogen,
-                resourseFactor * habitatBuilder.CostPerTurn.CommonMetals,
-                resourseFactor * habitatBuilder.CostPerTurn.RareEarthElements
+            Resources neededResources = new Resources(
+                resourceFactor * habitatBuilder.CostPerTurn.Hydrogen,
+                resourceFactor * habitatBuilder.CostPerTurn.CommonMetals,
+                resourceFactor * habitatBuilder.CostPerTurn.RareEarthElements
             );
-            for (int i = 0; i < resourseFactor; i++) {
-                habitatBuilder.OneTurnProgress(neededResourses);
+            for (int i = 0; i < resourceFactor; i++) {
+                habitatBuilder.OneTurnProgress(neededResources);
             }
             
-            Assert.AreEqual((int)resourseFactor, habitatBuilder.BuildingProgress);
+            Assert.AreEqual((int)resourceFactor, habitatBuilder.BuildingProgress);
         }
 
         [TestCase]
-        public void HabitatBuilderOneTurnProgress_EnoughResourses_HabitatBuilt() {
+        public void HabitatBuilderOneTurnProgress_EnoughResources_HabitatBuilt() {
             HabitatBuilder habitatBuilder = new HabitatBuilder("a");
 
-            double resourseFactor = Habitat.BuildingTime * 2;
+            double resourceFactor = Habitat.BuildingTime * 2;
 
-            Resourses neededResourses = new Resourses(
-                resourseFactor * habitatBuilder.CostPerTurn.Hydrogen,
-                resourseFactor * habitatBuilder.CostPerTurn.CommonMetals,
-                resourseFactor * habitatBuilder.CostPerTurn.RareEarthElements
+            Resources neededResources = new Resources(
+                resourceFactor * habitatBuilder.CostPerTurn.Hydrogen,
+                resourceFactor * habitatBuilder.CostPerTurn.CommonMetals,
+                resourceFactor * habitatBuilder.CostPerTurn.RareEarthElements
             );
-            for (int i = 0; i < resourseFactor; i++) {
-                habitatBuilder.OneTurnProgress(neededResourses);
+            for (int i = 0; i < resourceFactor; i++) {
+                habitatBuilder.OneTurnProgress(neededResources);
             }
 
             Assert.AreEqual(Habitat.BuildingTime, habitatBuilder.BuildingProgress);
@@ -71,7 +71,7 @@ namespace UnitTest4X {
 
             systemBuildings.BuildNew(habitatBuilder2);
 
-            habitatBuilder2.OneTurnProgress(new Resourses(double.MaxValue, double.MaxValue, double.MaxValue));
+            habitatBuilder2.OneTurnProgress(new Resources(double.MaxValue, double.MaxValue, double.MaxValue));
             systemBuildings.BuildNew(habitatBuilder2);
 
             Assert.AreEqual(2, systemBuildings.InConstructionCount);
@@ -101,7 +101,7 @@ namespace UnitTest4X {
         [TestCase]
         public void SystemBuildingsNextTurn_ArgsAreValid_Built() {
             SystemBuildings systemBuildings = new SystemBuildings();
-            Resourses resourses = new Resourses(double.MaxValue, double.MaxValue, double.MaxValue);
+            Resources resources = new Resources(double.MaxValue, double.MaxValue, double.MaxValue);
 
             int addedBuildings = 10_000;
             int turns = 30;
@@ -111,7 +111,7 @@ namespace UnitTest4X {
             }
 
             for (int i = 0; i < turns; i++) {
-                systemBuildings.NextTurn(resourses);
+                systemBuildings.NextTurn(resources);
             }
 
             Assert.AreEqual(addedBuildings, systemBuildings.ExistingCount);

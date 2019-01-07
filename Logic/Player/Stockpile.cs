@@ -1,20 +1,20 @@
 ﻿using System;
-using Logic.Resourse;
+using Logic.Resource;
 
 namespace Logic.PlayerClasses {
     [Serializable]
     public class Stockpile {
         private double money = 0;            //деньги, доступные игроку
-        private Resourses playerResourses;  //ресурсы на складе
+        private Resources playerResources;  //ресурсы на складе
 
         public Stockpile() {
             this.Money = 111_222_333_444;
-            this.PlayerResourses = new Resourses(0, 0, 0);
+            this.PlayerResources = new Resources(0, 0, 0);
         }
 
-        public Stockpile(double money, Resourses playerResourses) {
+        public Stockpile(double money, Resources playerResources) {
             this.money = money;
-            this.playerResourses = playerResourses ?? throw new ArgumentNullException(nameof(playerResourses));
+            this.playerResources = playerResources ?? throw new ArgumentNullException(nameof(playerResources));
         }
 
         public double Money {
@@ -22,14 +22,14 @@ namespace Logic.PlayerClasses {
             set => money = value;
         }
 
-        public Resourses PlayerResourses {
-            get => playerResourses;
+        public Resources PlayerResources {
+            get => playerResources;
             set {
                 if (value.CommonMetals >= 0 &&
                     value.Hydrogen >= 0 &&
                     value.RareEarthElements >= 0) {
 
-                    playerResourses = value;
+                    playerResources = value;
                 }
             }
         }
