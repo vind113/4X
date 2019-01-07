@@ -107,7 +107,7 @@ namespace Logic.PlayerClasses {
                 throw new ArgumentNullException(nameof(from));
             }
 
-            if (from.CanSubstract(Colonizer.Price)) {
+            if (from.CanSubtract(Colonizer.Price)) {
 
                 from.Substract(Colonizer.Price);
                 return Colonizer.GetColonizer();
@@ -127,7 +127,7 @@ namespace Logic.PlayerClasses {
                 quantity * Miner.Price.RareEarthElements
             );
 
-            if (from.CanSubstract(neededResourses)) {
+            if (from.CanSubtract(neededResourses)) {
                 from.Substract(neededResourses);
                 return quantity;
             }

@@ -6,7 +6,7 @@ namespace UnitTest4X {
     [TestFixture]
     public class ResoursesTest {
         [TestCase]
-        public void Plus_NoOverFlow_CorrectResult() {
+        public void Add_NoOverFlow_CorrectResult() {
             double hydrogenA = 1E10;
             double hydrogenB = 1E10;
 
@@ -29,7 +29,29 @@ namespace UnitTest4X {
         }
 
         [TestCase]
-        public void Minus_NoOverFlow_CorrectResult() {
+        public void Add_OverflowCaused_ExeptionThrown() {
+            Assert.Throws(typeof(ArgumentException), new TestDelegate(AddWithOverflow));
+        }
+
+        private static void AddWithOverflow() {
+            double hydrogenA = 1E308;
+            double hydrogenB = 1E308;
+
+            double commonMetalsA = 1E30;
+            double commonMetalsB = 1E11;
+
+            double rareElementsA = 1E10;
+            double rareElementsB = 1E11;
+
+            Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
+            Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
+
+            a.Add(b);
+            Resourses c = a;
+        }
+
+        [TestCase]
+        public void Subtract_NoOverFlow_CorrectResult() {
             double hydrogenA = 1E11;
             double hydrogenB = 1E10;
 
@@ -42,7 +64,8 @@ namespace UnitTest4X {
             Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
             Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
 
-            Resourses c = a.Substract(b);
+            a.Substract(b);
+            Resourses c = a;
 
             bool hydrogenEqual = c.Hydrogen == (hydrogenA - hydrogenB);
             bool commonMetalsEqual = c.CommonMetals == (commonMetalsA - commonMetalsB);
@@ -52,7 +75,7 @@ namespace UnitTest4X {
         }
 
         [TestCase]
-        public void Minus_SecondArgumentGreater_ExeptionThrown() {
+        public void Subtract_SecondArgumentGreater_ExeptionThrown() {
             Assert.Throws(typeof(ArgumentException), new TestDelegate(SubstractWithException));
         }
 
@@ -69,7 +92,8 @@ namespace UnitTest4X {
             Resourses a = new Resourses(hydrogenA, commonMetalsA, rareElementsA);
             Resourses b = new Resourses(hydrogenB, commonMetalsB, rareElementsB);
 
-            Resourses c = a.Substract(b);
+            a.Substract(b);
+            Resourses c = a;
         }
 
         [TestCase]

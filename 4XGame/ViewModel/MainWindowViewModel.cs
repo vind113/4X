@@ -5,7 +5,6 @@ using Logic.Resourse;
 using Microsoft.Win32;
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 

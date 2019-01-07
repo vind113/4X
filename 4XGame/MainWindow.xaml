@@ -7,7 +7,7 @@
         xmlns:converters="clr-namespace:_4XGame.ViewModel.Converters"
         mc:Ignorable="d"
         Title="MainWindow"
-        MinHeight="660"
+        MinHeight="690"
         WindowStartupLocation="Manual"
         Background="Azure" Foreground="Black"
         DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}"
@@ -45,7 +45,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="90"/>
             <RowDefinition/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
@@ -94,6 +94,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -101,6 +102,15 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0"
+                       Content="{Binding Path=Money}"
+                       ContentStringFormat="Money: {0:#,#}"/>
+
+                <Label Grid.Row="0" Grid.Column="1"
+                       Content="{Binding Path=TotalPopulation}"
+                       ContentStringFormat="Population: {0:#,#}"/>
+
 
                 <Label Grid.Row="1" Grid.Column="0"
                        Foreground="Blue"
@@ -118,14 +128,20 @@
                        ContentStringFormat="Rare Elements: {0:#,#}"/>
 
                 
-                <Label Grid.Row="0" Grid.Column="0"
-                       Content="{Binding Path=Money}"
-                       ContentStringFormat="Money: {0:#,#}"/>
+                <Label Grid.Row="2" Grid.Column="0"
+                       Foreground="Blue"
+                       Content="{Binding Path=CurrentResourses.Hydrogen}"
+                       ContentStringFormat="Used Hydrogen: TODO"/>
 
-                <Label Grid.Row="0" Grid.Column="1"
-                       Content="{Binding Path=TotalPopulation}"
-                       ContentStringFormat="Population: {0:#,#}"/>
+                <Label Grid.Row="2" Grid.Column="1"
+                       Foreground="DimGray"
+                       Content="{Binding Path=CurrentResourses.CommonMetals}"
+                       ContentStringFormat="Used Common Metals: TODO"/>
 
+                <Label Grid.Row="2" Grid.Column="2"
+                       Foreground="DarkGreen"
+                       Content="{Binding Path=CurrentResourses.RareEarthElements}"
+                       ContentStringFormat="Used Rare Elements: TODO"/>
             </Grid>
         </Border>
 
@@ -298,10 +314,10 @@
                                             <Label Content="{Binding Path=BodyResourse.RareEarthElements, FallbackValue=?}" ContentStringFormat="Rare earth elements: {0:E15} t"/>
                                         </WrapPanel>
 
-                                        <WrapPanel>
+                                        <StackPanel Orientation="Vertical">
                                             <Button x:Name="ColonizePlanetButton"
-                                                Content="Colonize planet" HorizontalAlignment="Left"
-                                                VerticalAlignment="Top" Margin="3" MinWidth="95"
+                                                Content="Colonize planet"
+                                                VerticalAlignment="Top" Margin="3"
                                                 Background="LightGray"
                                                 Command="{Binding Path=ColonizePlanetCmd}">
                                                 <Button.CommandParameter>
@@ -311,11 +327,7 @@
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
                                             </Button>
-                                            <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
-                                                  HorizontalAlignment="Left" Margin="3"
-                                                  VerticalAlignment="Top" MinHeight="20" MinWidth="100"
-                                                  IsChecked="{Binding Path=CurrentGame.IsAutoColonizationEnabled, Mode=TwoWay}"/>
-                                        </WrapPanel>
+                                        </StackPanel>
                                     </StackPanel>
                                 </Grid>
                             </TabItem>
@@ -423,7 +435,10 @@
         <Border Grid.Column="1" Grid.Row="2" Margin="5"
                 BorderBrush="Red" BorderThickness="1"
                 Background="Aqua">
-            
+            <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
+                      HorizontalAlignment="Left" Margin="5"
+                      VerticalAlignment="Top" MinHeight="20" MinWidth="100"
+                      IsChecked="{Binding Path=CurrentGame.IsAutoColonizationEnabled, Mode=TwoWay}"/>
         </Border>
     </Grid>
 </Window>

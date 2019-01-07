@@ -42,6 +42,15 @@ namespace Logic.Resourse {
         }
 
         /// <summary>
+        /// Инициализирует новый объект <see cref="Resourses"/> переданным объектом <see cref="Resourses"/>
+        /// </summary>
+        /// <param name="res">
+        /// Объект, с которого создастся новый объект <see cref="Resourses"/>
+        /// </param>
+        public Resourses(Resourses res)
+            :this(res.Hydrogen, res.CommonMetals, res.RareEarthElements) { }
+
+        /// <summary>
         /// Сравнивает два объекта <see cref="Resourses"/>
         /// </summary>
         /// <returns>Булевое значение, показывающее, равны ли соответствующие составные объектов <see cref="Resourses"/></returns>
@@ -73,35 +82,35 @@ namespace Logic.Resourse {
         /// Прибавляет ресурсы переданного объекта <see cref="Resourses"/>
         /// </summary>
         public void Add(Resourses parameter) {
+            if (!this.CanAdd(parameter)) {
+                throw new ArgumentException("Sum of resorses is greater than limit");
+            }
 
             this.Hydrogen          += parameter.Hydrogen;
             this.CommonMetals      += parameter.CommonMetals;
             this.RareEarthElements += parameter.RareEarthElements;
-            
         }
 
         /// <summary>
         /// Вычитает ресурсы переданного объекта <see cref="Resourses"/>
         /// </summary>
         /// <exception cref="ArgumentException"/>
-        public Resourses Substract(Resourses parameter) {
+        public void Substract(Resourses parameter) {
 
-            if (!this.CanSubstract(parameter)) {
+            if (!this.CanSubtract(parameter)) {
                 throw new ArgumentException("Argument can't be greater than object");
             }
 
             this.Hydrogen -= parameter.Hydrogen;
             this.CommonMetals -= parameter.CommonMetals;
             this.RareEarthElements -= parameter.RareEarthElements;
-            
-            return this;
         }
 
         /// <summary>
-        /// Умножает ресурсы на переданную величину
+        /// Умножает ресурсы в определеное количество раз
         /// </summary>
         /// <param name="multiplier">
-        /// Число, на которое умножаются ресурсы
+        /// Число, указывающее, в сколько раз увеличить ресурсы
         /// </param>
         public void Multiply(double multiplier) {
 
@@ -111,7 +120,16 @@ namespace Logic.Resourse {
             
         }
 
-        public bool CanSubstract(Resourses res) {
+        /// <summary>
+        /// Проверяет, возможно ли вычесть из объекта ресурсов другой объект ресурсов
+        /// </summary>
+        /// <param name="res">
+        /// Ресурс, который вычитается
+        /// </param>
+        /// <returns>
+        /// Логическое значение, показывающее, возможно ли вычесть из объекта ресурсов другой объект ресурсов
+        /// </returns>
+        public bool CanSubtract(Resourses res) {
             if (this.Hydrogen          >= res.Hydrogen
              && this.CommonMetals      >= res.CommonMetals
              && this.RareEarthElements >= res.RareEarthElements) {
@@ -122,18 +140,22 @@ namespace Logic.Resourse {
         }
 
         /// <summary>
-        /// TEST
+        /// Проверяет, возможно ли прибавить один объект ресурсов к второму
         /// </summary>
-        /// <param name="res"></param>
-        /// <returns></returns>
+        /// <param name="res">
+        /// Ресурс, который прибавляется
+        /// </param>
+        /// <returns>
+        /// Логическое значение, показывающее, возможно ли прибавить один объект ресурсов к второму
+        /// </returns>
         public bool CanAdd(Resourses res) {
-            if (this.Hydrogen + res.Hydrogen < Double.MaxValue
-             && this.CommonMetals + res.CommonMetals < Double.MaxValue
-             && this.RareEarthElements + res.RareEarthElements < Double.MaxValue) {
-                return true;
+            if(double.IsInfinity(this.Hydrogen + res.Hydrogen)
+            || double.IsInfinity(this.CommonMetals + res.CommonMetals)
+            || double.IsInfinity(this.RareEarthElements + res.RareEarthElements)){
+                return false;
             }
 
-            return false;
+            return true;
         }
 
         public bool IsStrictlyGreater(Resourses res) {

@@ -42,6 +42,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Buildings\HabitatBuilder.cs" />
     <Compile Include="Buildings\SystemBuildings.cs" />
     <Compile Include="GameClasses\Game.cs" />
     <Compile Include="GameClasses\PopulationChangedEventArgs.cs" />
@@ -61,10 +62,13 @@
     <Compile Include="Space Objects\CelestialBody.cs" />
     <Compile Include="Buildings\Habitat.cs" />
     <Compile Include="Space Objects\IHabitable.cs" />
-    <Compile Include="Space Objects\Planet.cs" />
+    <Compile Include="Space Objects\Planet\Enums.cs" />
+    <Compile Include="Space Objects\Planet\Planet.cs" />
     <Compile Include="Space Objects\PlanetFactory.cs" />
     <Compile Include="Buildings\SpaceBuilding.cs" />
     <Compile Include="Buildings\SpaceBuildingCompletedEventArgs.cs" />
+    <Compile Include="Space Objects\Planet\PlanetCharacteristicsHelper.cs" />
+    <Compile Include="Space Objects\Planet\PlanetType.cs" />
     <Compile Include="Space Objects\Star.cs" />
     <Compile Include="Space Objects\StarSystem.cs" />
     <Compile Include="Space Objects\StarSystemFactory.cs" />

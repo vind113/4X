@@ -8,7 +8,7 @@ namespace Logic.PlayerClasses {
         public readonly static double COMMON_METALS_PER_PERSON = 0.05;
         public readonly static double RARE_METALS_PER_PERSON = 0.00001;
 
-        //public static Resourses PreviousTurnUsedResourses { get; private set; }
+        public static Resourses PreviousTurnUsedResourses { get; private set; } = new Resourses(0, 0, 0);
 
         public static void SustainPopulationNeeds(IPlayer player)
         {
@@ -22,10 +22,12 @@ namespace Logic.PlayerClasses {
 
             Resourses neededResourses = CalculatePopulationNeeds(player.TotalPopulation);
 
-            try {
+            if (player.OwnedResourses.CanSubtract(neededResourses)) {
                 player.OwnedResourses.Substract(neededResourses);
+                PreviousTurnUsedResourses = neededResourses;
             }
-            catch (ArgumentException) {
+            else {
+                PreviousTurnUsedResourses = new Resourses(player.OwnedResourses);
                 player.OwnedResourses.SetToZero();
             }
         }
