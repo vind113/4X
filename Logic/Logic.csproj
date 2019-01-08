@@ -50,6 +50,7 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Player\CitizenHub.cs" />
     <Compile Include="GameClasses\CurrentDate.cs" />
+    <Compile Include="Player\ColoniztionQueue.cs" />
     <Compile Include="Player\Discovery.cs" />
     <Compile Include="Player\Goods.cs" />
     <Compile Include="Player\IPlayer.cs" />
@@ -63,6 +64,8 @@
     <Compile Include="Buildings\Habitat.cs" />
     <Compile Include="Space Objects\IHabitable.cs" />
     <Compile Include="Space Objects\Planet\Enums.cs" />
+    <Compile Include="Space Objects\Planet\HabitablePlanet.cs" />
+    <Compile Include="Space Objects\Planet\IHabitablePlanet.cs" />
     <Compile Include="Space Objects\Planet\IPlanet.cs" />
     <Compile Include="Space Objects\Planet\Planet.cs" />
     <Compile Include="Space Objects\PlanetFactory.cs" />

@@ -201,7 +201,7 @@
                                 <DataGridTextColumn Header="Population" Binding="{Binding SystemPopulation, StringFormat={}{0:#,#}}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Stars" Binding="{Binding StarsCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Planets" Binding="{Binding PlanetsCount}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Habitable" Binding="{Binding HabitablePlanets}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Habitable" Binding="{Binding HabitablePlanetsCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Habitats" Binding="{Binding Path=Buildings.ExistingCount}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>

@@ -33,7 +33,7 @@ namespace Logic.PlayerClasses
         void AddStarSystem(StarSystem system);
         void RemoveStarSystem(StarSystem system);
 
-        void AddToColonizationQueue(Planet planet);
+        void AddToColonizationQueue(HabitablePlanet planet);
         void NextTurn(bool isAutoColonizationEnabled, bool isDiscoveringNewStarSystems);
         void TryToColonizeQueue();
     }

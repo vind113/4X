@@ -1,10 +1,6 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Logic.GameClasses;
-using Logic.Resource;
 using Logic.SpaceObjects;
-using Logic.PlayerClasses;
-using System.Collections.Generic;
 
 namespace UnitTest4X {
     [TestFixture]
@@ -62,38 +58,5 @@ namespace UnitTest4X {
             Assert.AreEqual(oStar.LumClass, LuminosityClass.M);
         }
         #endregion
-
-        [TestCase]
-        public void TryToColonizeQueue_QueueCountIsZero_ImmediateReturn() {
-            Player player = new Player();
-
-            Assert.DoesNotThrow(new TestDelegate(player.TryToColonizeQueue));
-        }
-
-        [TestCase]
-        public void TryToColonizeQueue_QueueCountIsGreaterThanZero() {
-            Player player = new Player();
-            int planetsToColonize = 255;
-
-            player.OwnedResources = new Resources(Double.MaxValue, Double.MaxValue, Double.MaxValue);
-
-            List<Planet> planetList = new List<Planet>();
-
-            for (int i = 0; i < planetsToColonize; i++) {
-                planetList.Add(PlanetFactory.GetPlanet("a", new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra)));
-            }
-
-            player.AddStarSystem(new StarSystem("system", new List<Star>(), planetList));
-
-            foreach (var system in player.StarSystems) {
-                for (int planetIndex = 0; planetIndex < system.PlanetsCount; planetIndex++) {
-                    player.AddToColonizationQueue(system.SystemPlanets[planetIndex]);
-                }
-            }
-
-            player.TryToColonizeQueue();
-
-            Assert.AreEqual(planetsToColonize + player.StarSystems[0].HabitablePlanets, player.ColonizedPlanets);
-        }
     }
 }

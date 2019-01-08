@@ -44,13 +44,6 @@ namespace UnitTest4X {
             bool commonMetalsEqual = CompareDoubles(commonMetalsPre, commonMetalsPost, difference);
             bool rareElementsEqual = CompareDoubles(rareElementsPre, rareElementsPost, difference);
 
-            /*
-            Assert.Warn($"{Environment.NewLine}" +
-                $"{hydrogenPre} and {hydrogenPost} ({hydrogenPre - hydrogenPost}) {hydrogenEqual} {Environment.NewLine}" +
-                $"{commonMetalsPre} and {commonMetalsPost} ({(commonMetalsPre - commonMetalsPost)}) {commonMetalsEqual} {Environment.NewLine}" +
-                $"{rareElementsPre} and {rareElementsPost} ({(rareElementsPre - rareElementsPost)}) {rareElementsEqual} {Environment.NewLine}");
-            */
-
             Assert.IsTrue(hydrogenEqual && commonMetalsEqual && rareElementsEqual);
         }
       

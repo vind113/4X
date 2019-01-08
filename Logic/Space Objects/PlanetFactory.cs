@@ -24,7 +24,6 @@ namespace Logic.SpaceObjects {
         /// <returns></returns>
         public static Planet GetPlanet(string name, PlanetType planetType) {
             string planetName = name;
-            long population = 0;
             double radius = 0;
 
             if (planetType.SubstancesClass == SubstancesClass.Jupiter) {
@@ -34,7 +33,14 @@ namespace Logic.SpaceObjects {
                 radius = RockyPlanetRadiusGeneration();
             }
 
-            return new Planet(planetName, radius, planetType, population);
+            return new Planet(planetName, radius, planetType);
+        }
+
+        public static HabitablePlanet GetHabitablePlanet(string name, PlanetType planetType) {
+            string planetName = name;
+            double radius = RockyPlanetRadiusGeneration();
+
+            return new HabitablePlanet(planetName, radius, planetType, 0);
         }
 
         private static double RockyPlanetRadiusGeneration() {

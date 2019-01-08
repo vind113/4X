@@ -49,7 +49,7 @@ namespace UnitTest4X.Mocks
             throw new NotImplementedException();
         }
 
-        public void AddToColonizationQueue(Planet planet)
+        public void AddToColonizationQueue(HabitablePlanet planet)
         {
             throw new NotImplementedException();
         }

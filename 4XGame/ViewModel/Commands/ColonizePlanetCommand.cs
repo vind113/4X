@@ -12,7 +12,7 @@ namespace _4XGame.ViewModel.Commands {
             }
 
             Player player = tuple.Item1 as Player;
-            Planet planet = tuple.Item2 as Planet;
+            HabitablePlanet planet = tuple.Item2 as HabitablePlanet;
 
             if (player != null && planet != null) {
                 if (planet.Population.MaxValue > 0 && planet.Population.Value == 0) {
@@ -26,7 +26,7 @@ namespace _4XGame.ViewModel.Commands {
         public override void Execute(object parameter) {
             Tuple<object, object> tuple = (Tuple<object, object>)parameter;
 
-            if (tuple.Item1 is Player player && tuple.Item2 is Planet planet) {
+            if (tuple.Item1 is Player player && tuple.Item2 is HabitablePlanet planet) {
                 planet.Colonize(player);
             }
         }

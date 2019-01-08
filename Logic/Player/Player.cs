@@ -12,20 +12,21 @@ namespace Logic.PlayerClasses {
     [Serializable]
     public class Player : INotifyPropertyChanged, IPlayer
     {
+        private readonly double POPULATION_GROWTH_FACTOR = 0.001;
+
         private string name;
 
         private Stockpile stockpile;
         private CitizenHub hub;
         private ObservableCollection<StarSystem> starSystems;
 
-        private Queue<Planet> planetsToColonize;
+        private ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
+
         private Ships ships;
 
         private int ownedStars;
         private int colonizedPlanets;
         private int ownedPlanets;
-
-        private double populationGrowthFactor = 0.001;
 
         public Player() {
             this.Stockpile = new Stockpile();
@@ -36,8 +37,6 @@ namespace Logic.PlayerClasses {
             this.starSystems = new ObservableCollection<StarSystem>();
 
             this.AddStarSystem(StarSystemFactory.GetSolarSystem());
-
-            this.planetsToColonize = new Queue<Planet>();
 
             this.Ships = new Ships();
         }
@@ -66,34 +65,12 @@ namespace Logic.PlayerClasses {
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void AddToColonizationQueue(Planet planet) {
-            if (planet == null) {
-                throw new ArgumentNullException(nameof(planet));
-            }
-
-            if (planet.Population.MaxValue == 0) {
-                return;
-            }
-
-            if (!this.planetsToColonize.Contains(planet)) {
-                this.planetsToColonize.Enqueue(planet);
-            }
+        public void AddToColonizationQueue(HabitablePlanet planet) {
+            coloniztionQueue.Add(planet);
         }
 
         public void TryToColonizeQueue() {
-            if(this.planetsToColonize.Count == 0) {
-                return;
-            }
-
-            while (this.planetsToColonize.Count > 0) {
-                ColonizationState state =
-                    this.planetsToColonize.Peek().Colonize(this);
-
-                if (state == ColonizationState.NotColonized) {
-                    break;
-                }
-                this.planetsToColonize.Dequeue();
-            }
+            coloniztionQueue.ColonizeWhilePossible(this);
         }
 
         #region Properties
@@ -132,7 +109,7 @@ namespace Logic.PlayerClasses {
             get {
                 long population = 0;
                 foreach(var system in StarSystems) {
-                    foreach(var planet in system.SystemPlanets) {
+                    foreach(var planet in system.SystemHabitablePlanets) {
                         population += planet.Population.Value;
                     }
                 }
@@ -174,13 +151,7 @@ namespace Logic.PlayerClasses {
         }
 
         public double PopulationGrowthFactor {
-            get => this.populationGrowthFactor;
-            private set {
-                if (value >= 0 && value != this.populationGrowthFactor) {
-                    this.populationGrowthFactor = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => this.POPULATION_GROWTH_FACTOR;
         }
 
         public Ships Ships {
@@ -241,7 +212,7 @@ namespace Logic.PlayerClasses {
             int colonized = 0;
 
             foreach (var system in this.StarSystems) {
-                foreach (var planet in system.SystemPlanets) {
+                foreach (var planet in system.SystemHabitablePlanets) {
                     if (planet.IsColonized) {
                         colonized++;
                     }

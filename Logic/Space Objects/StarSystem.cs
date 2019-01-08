@@ -36,7 +36,7 @@ namespace Logic.SpaceObjects {
         }
 
         private void Planet_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            if(e.PropertyName == nameof(Planet.IsColonized) && sender is Planet planet) {
+            if(e.PropertyName == nameof(HabitablePlanet.IsColonized) && sender is HabitablePlanet planet) {
                 this.ColonizedCount += (byte)((planet.IsColonized) ? 1 : -1);
             }
         }
@@ -93,8 +93,24 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Возвращает ссылку на коллекцию объектов <see cref="Planet"/> системы
         /// </summary>
-        //public List<Planet> SystemPlanets { get => this.systemPlanets; }
         public ReadOnlyCollection<Planet> SystemPlanets { get => new ReadOnlyCollection<Planet>(this.systemPlanets); }
+
+        /// <summary>
+        /// Возвращает ссылку на коллекцию объектов <see cref="HabitablePlanet"/> системы
+        /// </summary>
+        public ReadOnlyCollection<HabitablePlanet> SystemHabitablePlanets {
+            get {
+                List<HabitablePlanet> habitablePlanets = new List<HabitablePlanet>(); 
+
+                foreach (var planet in this.SystemPlanets) {
+                    if(planet is HabitablePlanet habitablePlanet) {
+                        habitablePlanets.Add(habitablePlanet);
+                    }
+                }
+
+                return new ReadOnlyCollection<HabitablePlanet>(habitablePlanets);
+            }
+        }
 
         /// <summary>
         /// Возвращает количество планет в системе
@@ -104,7 +120,7 @@ namespace Logic.SpaceObjects {
         /// <summary>
         /// Возвращает количество колонизируемых планет в системе
         /// </summary>
-        public int HabitablePlanets { get => this.GetHabitableCount(); }
+        public int HabitablePlanetsCount { get => this.SystemHabitablePlanets.Count; }
 
         /// <summary>
         /// Возвращает количество звезд в системе
@@ -210,7 +226,7 @@ namespace Logic.SpaceObjects {
         private long SetSystemPopulation() {
             long population = 0;
 
-            foreach (var planet in this.SystemPlanets) {
+            foreach (var planet in this.SystemHabitablePlanets) {
                 if (planet.IsColonized) {
                     population += planet.Population.Value;
                 }
@@ -224,23 +240,13 @@ namespace Logic.SpaceObjects {
         private byte SetColonizedPlantes() {
             byte colonized = 0;
 
-            foreach (var planet in this.SystemPlanets) {
+            foreach (var planet in this.SystemHabitablePlanets) {
                 if (planet.IsColonized) {
                     colonized++;
                 }
             }
 
             return colonized;
-        }
-
-        private int GetHabitableCount() {
-            int habitableCount = 0;
-            foreach (var planet in this.SystemPlanets) {
-                if (planet.Population.MaxValue > 0) {
-                    habitableCount++;
-                }
-            }
-            return habitableCount;
         }
 
         private Resources SetResources() {
