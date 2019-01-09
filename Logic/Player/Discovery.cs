@@ -40,7 +40,9 @@ namespace Logic.PlayerClasses {
         private static void ColonizeSystem(Player player, StarSystem generatedSystem) {
             foreach (var planet in generatedSystem.SystemHabitablePlanets) {
                 if (planet.Population.MaxValue >= PERSPECTIVE_COLONY_MIN_POPULATION) {
-                    planet.Colonize(player);
+                    if (planet.Colonize(player.Ships.GetColonizer(player.OwnedResources)) == ColonizationState.NotColonized) {
+                        player.AddToColonizationQueue(planet);
+                    }
                 }
             }
         }

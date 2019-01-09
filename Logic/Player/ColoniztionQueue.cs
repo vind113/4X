@@ -1,4 +1,5 @@
-﻿using Logic.SpaceObjects;
+﻿using Logic.Resource;
+using Logic.SpaceObjects;
 using System;
 using System.Collections.Generic;
 
@@ -17,14 +18,18 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public void ColonizeWhilePossible(Player player) {
-            if (this.planetsToColonize.Count == 0) {
-                return;
+        public void ColonizeWhilePossible(Ships ships, Resources resources) {
+            if (ships == null) {
+                throw new ArgumentNullException(nameof(ships));
+            }
+
+            if (resources == null) {
+                throw new ArgumentNullException(nameof(resources));
             }
 
             while (this.planetsToColonize.Count > 0) {
                 ColonizationState state =
-                    this.planetsToColonize.Peek().Colonize(player);
+                    this.planetsToColonize.Peek().Colonize(ships.GetColonizer(resources));
 
                 if (state == ColonizationState.NotColonized) {
                     break;

@@ -27,7 +27,9 @@ namespace _4XGame.ViewModel.Commands {
             Tuple<object, object> tuple = (Tuple<object, object>)parameter;
 
             if (tuple.Item1 is Player player && tuple.Item2 is HabitablePlanet planet) {
-                planet.Colonize(player);
+                if (planet.Colonize(player.Ships.GetColonizer(player.OwnedResources)) == ColonizationState.NotColonized) {
+                    player.AddToColonizationQueue(planet);
+                }
             }
         }
     }

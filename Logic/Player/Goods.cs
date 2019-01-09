@@ -10,25 +10,25 @@ namespace Logic.PlayerClasses {
 
         public static Resources PreviousTurnUsedResources { get; private set; } = new Resources(0, 0, 0);
 
-        public static void SustainPopulationNeeds(IPlayer player)
+        public static void SustainPopulationNeeds(long population, Resources from)
         {
-            if (player == null) {
-                throw new ArgumentNullException(nameof(player));
+            if (from == null) {
+                throw new ArgumentNullException(nameof(from));
             }
 
-            if(player.TotalPopulation <= 0) {
+            if (population <= 0) {
                 return;
             }
 
-            Resources neededResources = CalculatePopulationNeeds(player.TotalPopulation);
+            Resources neededResources = CalculatePopulationNeeds(population);
 
-            if (player.OwnedResources.CanSubtract(neededResources)) {
-                player.OwnedResources.Subtract(neededResources);
+            if (from.CanSubtract(neededResources)) {
+                from.Subtract(neededResources);
                 PreviousTurnUsedResources = neededResources;
             }
             else {
-                PreviousTurnUsedResources = new Resources(player.OwnedResources);
-                player.OwnedResources.SetToZero();
+                PreviousTurnUsedResources = new Resources(from);
+                from.SetToZero();
             }
         }
 

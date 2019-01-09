@@ -12,7 +12,7 @@ namespace Logic.PlayerClasses {
     [Serializable]
     public class Player : INotifyPropertyChanged, IPlayer
     {
-        private readonly double POPULATION_GROWTH_FACTOR = 0.001;
+        public const double POPULATION_GROWTH_FACTOR = 0.001;
 
         private string name;
 
@@ -70,7 +70,7 @@ namespace Logic.PlayerClasses {
         }
 
         public void TryToColonizeQueue() {
-            coloniztionQueue.ColonizeWhilePossible(this);
+            coloniztionQueue.ColonizeWhilePossible(this.Ships, this.OwnedResources);
         }
 
         #region Properties
@@ -150,10 +150,6 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public double PopulationGrowthFactor {
-            get => this.POPULATION_GROWTH_FACTOR;
-        }
-
         public Ships Ships {
             get => this.ships;
             private set => this.ships = value;
@@ -165,7 +161,7 @@ namespace Logic.PlayerClasses {
                 system.NextTurn(this);
             }
 
-            CivilProduction.SustainPopulationNeeds(this);
+            CivilProduction.SustainPopulationNeeds(this.TotalPopulation, this.OwnedResources);
             this.TryToColonizeQueue();
 
             if (isDiscoveringNewStarSystems) {

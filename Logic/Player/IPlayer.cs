@@ -19,7 +19,6 @@ namespace Logic.PlayerClasses
         Ships Ships { get; }
 
         long TotalPopulation { get; }
-        double PopulationGrowthFactor { get; }
 
         int StarSystemsCount { get; }
         int OwnedStars { get; }

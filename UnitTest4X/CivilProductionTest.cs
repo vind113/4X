@@ -2,64 +2,52 @@
 using Logic.Resource;
 using NUnit.Framework;
 using System;
-using UnitTest4X.Mocks;
 
 namespace UnitTest4X {
     [TestFixture]
     public class CivilProductionTest {
         [TestCase]
-        public void SustainPopulationNeeds_PlayerIsNull_ExceptionThrown() {
-            Assert.Throws<ArgumentNullException>(() => CivilProduction.SustainPopulationNeeds(null));
+        public void SustainPopulationNeeds_ResourceIsNull_ExceptionThrown() {
+            Assert.Throws<ArgumentNullException>(() => CivilProduction.SustainPopulationNeeds(1, null));
         }
 
         [TestCase]
         public void SustainPopulationNeeds_PopulationLessEqualZero_ResourcesDidNotChange() {
-            IPlayer player = new PlayerMock() {
-                TotalPopulation = 0,
-                OwnedResources = new Resources(1, 1, 1)
-            };
+            Resources from = new Resources(1, 1, 1);
+            CivilProduction.SustainPopulationNeeds(0, from);
 
-            CivilProduction.SustainPopulationNeeds(player);
-
-            Assert.AreEqual(1, player.OwnedResources.Hydrogen);
-            Assert.AreEqual(1, player.OwnedResources.CommonMetals);
-            Assert.AreEqual(1, player.OwnedResources.RareEarthElements);
+            Assert.AreEqual(1, from.Hydrogen);
+            Assert.AreEqual(1, from.CommonMetals);
+            Assert.AreEqual(1, from.RareEarthElements);
         }
 
         [TestCase]
         public void SustainPopulationNeeds_CorrectCondtions_ResourcesDecreased() {
             const int resourcesAmount = 10000;
             const int population = 100_000;
-            IPlayer player = new PlayerMock() {
-                TotalPopulation = population,
-                OwnedResources = new Resources(resourcesAmount, resourcesAmount, resourcesAmount)
-            };
 
-            CivilProduction.SustainPopulationNeeds(player);
+            Resources from = new Resources(resourcesAmount, resourcesAmount, resourcesAmount);
+            CivilProduction.SustainPopulationNeeds(100_000, from);
 
             Assert.AreEqual(resourcesAmount - (CivilProduction.HYDROGEN_PER_PERSON * population),
-                player.OwnedResources.Hydrogen);
+                from.Hydrogen);
             Assert.AreEqual(resourcesAmount - (CivilProduction.COMMON_METALS_PER_PERSON * population),
-                player.OwnedResources.CommonMetals);
+                from.CommonMetals);
             Assert.AreEqual(resourcesAmount - (CivilProduction.RARE_METALS_PER_PERSON * population),
-                player.OwnedResources.RareEarthElements);
+                from.RareEarthElements);
         }
 
         [TestCase]
         public void SustainPopulationNeeds_NotEnoughResources_ResourcesDecreasedToZero() {
-            const int resourcesAmount = 4_999;
+            const int resourcesAmount = 4999;
             const int population = 100_000;
 
-            IPlayer player = new PlayerMock() {
-                TotalPopulation = population,
-                OwnedResources = new Resources(resourcesAmount, resourcesAmount, resourcesAmount)
-            };
+            Resources from = new Resources(resourcesAmount, resourcesAmount, resourcesAmount);
+            CivilProduction.SustainPopulationNeeds(population, from);
 
-            CivilProduction.SustainPopulationNeeds(player);
-
-            Assert.AreEqual(0, player.OwnedResources.Hydrogen);
-            Assert.AreEqual(0, player.OwnedResources.CommonMetals);
-            Assert.AreEqual(0, player.OwnedResources.RareEarthElements);
+            Assert.AreEqual(0, from.Hydrogen);
+            Assert.AreEqual(0, from.CommonMetals);
+            Assert.AreEqual(0, from.RareEarthElements);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Logic.Resource {
         private double commonMetals;
         private double rareEarthElements;
 
-        private static readonly Resources zero = new Resources();
+        public static Resources Zero { get; } = new Resources();
 
         /// <summary>
         /// Инициализирует новый объект <see cref="Resources"/> значениями по умолчанию
@@ -203,8 +203,6 @@ namespace Logic.Resource {
                 }
             }
         }
-
-        public static Resources Zero => zero;
 
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;

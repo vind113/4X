@@ -58,7 +58,7 @@ namespace Logic.SpaceObjects {
                 return;
             }
 
-            AddPopulation(player.PopulationGrowthFactor);
+            AddPopulation(Player.POPULATION_GROWTH_FACTOR);
 
             ConductMigration(player.Hub);
 
@@ -108,9 +108,9 @@ namespace Logic.SpaceObjects {
         ///     Игрок, который колонизирует планету
         /// </param>
         /// <returns>
-        /// Булевое значение, которое показывает успешность колонизации
+        ///     Значение <see cref="ColonizationState"/>, которое показывает статус колонизации
         /// </returns>
-        public ColonizationState Colonize(Player player) {
+        public ColonizationState Colonize(Colonizer colonizer) {
             if (this.Population.Value > 0) {
                 return ColonizationState.Colonized;
             }
@@ -119,22 +119,13 @@ namespace Logic.SpaceObjects {
                 return ColonizationState.NonColonizable;
             }
 
-            if (player == null) {
-                throw new ArgumentNullException(nameof(player));
-            }
-
-            Colonizer colonizer = player.Ships.GetColonizer(player.OwnedResources);
-
             if (colonizer != null) {
-
                 this.Population.Add(colonizer.GetColonists(colonizer.ColonistsOnShip));
                 this.IsColonized = true;
 
                 return ColonizationState.Colonized;
-
             }
             else {
-                player.AddToColonizationQueue(this);
                 return ColonizationState.NotColonized;
             }
         }

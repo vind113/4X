@@ -1,45 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnitTest4X.Mocks;
 using Logic.Resource;
 using Logic.SpaceObjects;
 using Logic.PlayerClasses;
+using Autofac.Extras.Moq;
 
 namespace UnitTest4X {
     [TestFixture]
     public class ColoniztionQueueTest {
         [TestCase]
         public void TryToColonizeQueue_QueueCountIsZero_ImmediateReturn() {
-            Player player = new Player();
+            using (var mock = AutoMock.GetLoose()) {
+                ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
 
-            Assert.DoesNotThrow(new TestDelegate(player.TryToColonizeQueue));
+                Assert.DoesNotThrow(() => {
+                    coloniztionQueue.ColonizeWhilePossible(new Ships(), new Resources());
+                });
+            }
         }
 
         [TestCase]
         public void TryToColonizeQueue_QueueCountIsGreaterThanZero() {
-            Player player = new Player();
-            int planetsToColonize = 255;
+            using (var mock = AutoMock.GetLoose()) {
+                ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
+                int planetsToColonize = 1000;
 
-            player.OwnedResources = new Resources(Double.MaxValue, Double.MaxValue, Double.MaxValue);
+                List<HabitablePlanet> planetList = new List<HabitablePlanet>();
 
-            List<Planet> planetList = new List<Planet>();
-
-            for (int i = 0; i < planetsToColonize; i++) {
-                planetList.Add(PlanetFactory.GetHabitablePlanet("a", new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra)));
-            }
-
-            player.AddStarSystem(new StarSystem("system", new List<Star>(), planetList));
-
-            foreach (var system in player.StarSystems) {
-                foreach (var planet in system.SystemHabitablePlanets) {
-                    player.AddToColonizationQueue(planet);
+                for (int i = 0; i < planetsToColonize; i++) {
+                    planetList.Add(new HabitablePlanet("a", 10_000,
+                        new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra), 0));
                 }
+
+                foreach (var planet in planetList) {
+                    coloniztionQueue.Add(planet);
+                }
+
+                coloniztionQueue.ColonizeWhilePossible(
+                    new Ships(), new Resources(Double.MaxValue, Double.MaxValue, Double.MaxValue));
+
+                int colonizedPlanets = 0;
+                foreach(var planet in planetList) {
+                    if (planet.IsColonized) {
+                        colonizedPlanets++;
+                    }
+                }
+
+                Assert.AreEqual(planetsToColonize, colonizedPlanets);
             }
-
-            player.TryToColonizeQueue();
-
-            Assert.AreEqual(planetsToColonize + player.StarSystems[0].HabitablePlanetsCount, player.ColonizedPlanets);
         }
     }
 }

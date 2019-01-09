@@ -6,6 +6,6 @@ namespace Logic.SpaceObjects {
         int BuildingSites { get; }
         bool IsColonized { get; }
 
-        ColonizationState Colonize(Player player);
+        ColonizationState Colonize(Colonizer colonizer);
     }
 }
