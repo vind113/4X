@@ -1,9 +1,5 @@
 ﻿using Logic.SupportClasses;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logic.SpaceObjects {
     public class StarSystemFactory {
@@ -61,7 +57,7 @@ namespace Logic.SpaceObjects {
             }
 
             for (int index = 0; index < starsCount; index++) {
-                stars.Add(Star.GenerateStar($"{name} Star #{index + 1}"));
+                stars.Add(StarFactory.GenerateStar($"{name} Star #{index + 1}"));
             }
         
             return stars;

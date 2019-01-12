@@ -5,6 +5,7 @@ using System;
 namespace Logic.PlayerClasses {
     [Serializable]
     public class CitizenHub {
+        private const double partOfTravellers = 0.001d;
         long citizensInHub = 0;
         double maximumCount = 1E8;
 
@@ -26,10 +27,13 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public void MigrateToHub(Population habitatPopulation) {
-            double partOfTravellers = 0.001d;
+        public void ConductMigration(Population population) {
+            this.MigrateToHub(population);
+            this.MigrateFromHub(population);
+        }
 
-            double citizensToHubExpected = Math.Floor(habitatPopulation.Value * partOfTravellers);
+        private void MigrateToHub(Population habitatPopulation) {
+            long citizensToHubExpected = (long)Math.Floor(habitatPopulation.Value * partOfTravellers);
 
             long citizensFromHabitat =
                 (long)Math.Floor(citizensToHubExpected * HelperRandomFunctions.GetRandomDouble());
@@ -44,7 +48,7 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public void MigrateFromHub(Population habitatPopulation) {
+        private void MigrateFromHub(Population habitatPopulation) {
             long citizensToHabitat =
                 (long)Math.Floor(HelperRandomFunctions.GetRandomDouble() * this.CitizensInHub);
 

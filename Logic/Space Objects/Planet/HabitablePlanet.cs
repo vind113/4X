@@ -15,7 +15,8 @@ namespace Logic.SpaceObjects {
         private const double citizensPerSector = 100_000_000d;
 
         public HabitablePlanet(string name, double radius, PlanetType type, long population) : base(name, radius, type) {
-            this.Population = new Population(population, (double)this.Type.Quality * this.Area);
+            double maximumPopulation = (double)this.Type.Quality * this.Area;
+            this.Population = new Population(population, maximumPopulation);
 
             this.BuildingSites = (int)Math.Ceiling(this.Population.MaxValue / citizensPerSector);
             this.AvailableSites = this.BuildingSites;
@@ -58,7 +59,7 @@ namespace Logic.SpaceObjects {
                 return;
             }
 
-            AddPopulation(Player.POPULATION_GROWTH_FACTOR);
+            AddPopulation(Player.PopulationGrowthFactor * HelperRandomFunctions.GetRandomDouble());
 
             ConductMigration(player.Hub);
 
@@ -66,17 +67,13 @@ namespace Logic.SpaceObjects {
         }
 
         private void ConductMigration(CitizenHub migrationHub) {
-            migrationHub.MigrateToHub(this.Population);
-            migrationHub.MigrateFromHub(this.Population);
+            migrationHub.ConductMigration(this.Population);
         }
-
+                
         private void AddPopulation(double growthFactor) {
-            double growthCoef = growthFactor * HelperRandomFunctions.GetRandomDouble();
+            double growthPart = growthFactor * (this.Type.Quality / PlanetType.GOOD_WORLD_QUALITY);
 
-            double addedPart =
-                growthCoef * (this.Type.Quality / PlanetType.GOOD_WORLD_QUALITY);
-
-            double addedPopulation = this.Population.Value * addedPart;
+            double addedPopulation = this.Population.Value * growthPart;
 
             this.Population.Add(addedPopulation);
         }
@@ -115,11 +112,7 @@ namespace Logic.SpaceObjects {
                 return ColonizationState.Colonized;
             }
 
-            if (this.Population.MaxValue < Colonizer.Colonists) {
-                return ColonizationState.NonColonizable;
-            }
-
-            if (colonizer != null) {
+            if (colonizer != null && this.Population.MaxValue >= Colonizer.Colonists) {
                 this.Population.Add(colonizer.GetColonists(colonizer.ColonistsOnShip));
                 this.IsColonized = true;
 

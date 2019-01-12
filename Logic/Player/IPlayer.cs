@@ -16,7 +16,7 @@ namespace Logic.PlayerClasses
         Stockpile Stockpile { get; }
         Resources OwnedResources { get; set; }
         CitizenHub Hub { get; }
-        Ships Ships { get; }
+        IShips Ships { get; }
 
         long TotalPopulation { get; }
 

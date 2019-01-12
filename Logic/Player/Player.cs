@@ -12,7 +12,7 @@ namespace Logic.PlayerClasses {
     [Serializable]
     public class Player : INotifyPropertyChanged, IPlayer
     {
-        public const double POPULATION_GROWTH_FACTOR = 0.001;
+        public const double PopulationGrowthFactor = 0.001;
 
         private string name;
 
@@ -22,7 +22,7 @@ namespace Logic.PlayerClasses {
 
         private ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
 
-        private Ships ships;
+        private IShips ships;
 
         private int ownedStars;
         private int colonizedPlanets;
@@ -150,7 +150,7 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public Ships Ships {
+        public IShips Ships {
             get => this.ships;
             private set => this.ships = value;
         }

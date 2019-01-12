@@ -7,7 +7,7 @@ namespace Logic.Resource {
     /// Представляет ресурсы
     /// </summary>
     [Serializable]
-    public class Resources : INotifyPropertyChanged {
+    public class Resources : INotifyPropertyChanged, IResources {
         private double hydrogen;
         private double commonMetals;
         private double rareEarthElements;
@@ -81,29 +81,29 @@ namespace Logic.Resource {
         /// <summary>
         /// Прибавляет ресурсы переданного объекта <see cref="Resources"/>
         /// </summary>
-        public void Add(Resources parameter) {
-            if (!this.CanAdd(parameter)) {
+        public void Add(Resources res) {
+            if (!this.CanAdd(res)) {
                 throw new ArgumentException("Sum of resorses is greater than limit");
             }
 
-            this.Hydrogen          += parameter.Hydrogen;
-            this.CommonMetals      += parameter.CommonMetals;
-            this.RareEarthElements += parameter.RareEarthElements;
+            this.Hydrogen          += res.Hydrogen;
+            this.CommonMetals      += res.CommonMetals;
+            this.RareEarthElements += res.RareEarthElements;
         }
 
         /// <summary>
         /// Вычитает ресурсы переданного объекта <see cref="Resources"/>
         /// </summary>
         /// <exception cref="ArgumentException"/>
-        public void Subtract(Resources parameter) {
+        public void Subtract(Resources res) {
 
-            if (!this.CanSubtract(parameter)) {
+            if (!this.CanSubtract(res)) {
                 throw new ArgumentException("Argument can't be greater than object");
             }
 
-            this.Hydrogen -= parameter.Hydrogen;
-            this.CommonMetals -= parameter.CommonMetals;
-            this.RareEarthElements -= parameter.RareEarthElements;
+            this.Hydrogen -= res.Hydrogen;
+            this.CommonMetals -= res.CommonMetals;
+            this.RareEarthElements -= res.RareEarthElements;
         }
 
         /// <summary>

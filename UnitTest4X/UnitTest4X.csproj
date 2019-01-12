@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="CivilProductionTest.cs" />
     <Compile Include="ColoniztionQueueTest.cs" />
+    <Compile Include="HabitablePlanetTest.cs" />
     <Compile Include="PlanetTest.cs" />
     <Compile Include="PopulationTest.cs" />
     <Compile Include="ResoursesTest.cs" />

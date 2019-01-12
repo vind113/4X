@@ -4,51 +4,47 @@ using NUnit.Framework;
 using Logic.Resource;
 using Logic.SpaceObjects;
 using Logic.PlayerClasses;
-using Autofac.Extras.Moq;
+using Moq;
 
 namespace UnitTest4X {
     [TestFixture]
     public class ColoniztionQueueTest {
         [TestCase]
         public void TryToColonizeQueue_QueueCountIsZero_ImmediateReturn() {
-            using (var mock = AutoMock.GetLoose()) {
-                ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
+            ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
 
-                Assert.DoesNotThrow(() => {
-                    coloniztionQueue.ColonizeWhilePossible(new Ships(), new Resources());
-                });
-            }
+            Assert.DoesNotThrow(() => {
+                coloniztionQueue.ColonizeWhilePossible(new Mock<IShips>().Object, new Mock<IResources>().Object);
+            });
         }
 
         [TestCase]
         public void TryToColonizeQueue_QueueCountIsGreaterThanZero() {
-            using (var mock = AutoMock.GetLoose()) {
-                ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
-                int planetsToColonize = 1000;
+            int planetsToColonize = 10;
 
-                List<HabitablePlanet> planetList = new List<HabitablePlanet>();
+            List<IHabitablePlanet> planetList = new List<IHabitablePlanet>();
+            
+            for (int i = 0; i < planetsToColonize; i++) {
+                var mock = new Mock<IHabitablePlanet>();
+                
+                mock.Setup(x => x.Colonize(It.IsNotNull<Colonizer>()) )
+                    .Returns(ColonizationState.Colonized);
 
-                for (int i = 0; i < planetsToColonize; i++) {
-                    planetList.Add(new HabitablePlanet("a", 10_000,
-                        new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra), 0));
-                }
-
-                foreach (var planet in planetList) {
-                    coloniztionQueue.Add(planet);
-                }
-
-                coloniztionQueue.ColonizeWhilePossible(
-                    new Ships(), new Resources(Double.MaxValue, Double.MaxValue, Double.MaxValue));
-
-                int colonizedPlanets = 0;
-                foreach(var planet in planetList) {
-                    if (planet.IsColonized) {
-                        colonizedPlanets++;
-                    }
-                }
-
-                Assert.AreEqual(planetsToColonize, colonizedPlanets);
+                planetList.Add(mock.Object);
             }
+
+            ColoniztionQueue coloniztionQueue = new ColoniztionQueue(planetList);
+
+            var shipsMock = new Mock<IShips>();
+
+            shipsMock.Setup(x => x.GetColonizer(It.IsNotNull<IResources>()))
+                .Returns(Colonizer.GetColonizer());
+
+            var resourcesMock = new Mock<IResources>();
+
+            coloniztionQueue.ColonizeWhilePossible(shipsMock.Object, resourcesMock.Object);
+
+            Assert.AreEqual(0, coloniztionQueue.PlanetsInQueue);
         }
     }
 }

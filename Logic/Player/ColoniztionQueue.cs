@@ -6,9 +6,19 @@ using System.Collections.Generic;
 namespace Logic.PlayerClasses {
     [Serializable]
     public class ColoniztionQueue {
-        private Queue<HabitablePlanet> planetsToColonize = new Queue<HabitablePlanet>();
+        private Queue<IHabitablePlanet> planetsToColonize = new Queue<IHabitablePlanet>();
 
-        public void Add(HabitablePlanet planet) {
+        public int PlanetsInQueue { get => planetsToColonize.Count; }
+
+        public ColoniztionQueue() {
+
+        }
+
+        public ColoniztionQueue(IEnumerable<IHabitablePlanet> planets) {
+            planetsToColonize = new Queue<IHabitablePlanet>(planets);
+        }
+
+        public void Add(IHabitablePlanet planet) {
             if (planet == null) {
                 throw new ArgumentNullException(nameof(planet));
             }
@@ -18,7 +28,7 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public void ColonizeWhilePossible(Ships ships, Resources resources) {
+        public void ColonizeWhilePossible(IShips ships, IResources resources) {
             if (ships == null) {
                 throw new ArgumentNullException(nameof(ships));
             }
@@ -28,13 +38,17 @@ namespace Logic.PlayerClasses {
             }
 
             while (this.planetsToColonize.Count > 0) {
+                Colonizer colonizer = ships.GetColonizer(resources);
                 ColonizationState state =
-                    this.planetsToColonize.Peek().Colonize(ships.GetColonizer(resources));
+                    this.planetsToColonize.Peek().Colonize(colonizer);
 
-                if (state == ColonizationState.NotColonized) {
+                if (state == ColonizationState.NotColonized
+                 || state == ColonizationState.Unknown) {
                     break;
                 }
-                this.planetsToColonize.Dequeue();
+                else {
+                    this.planetsToColonize.Dequeue();
+                }
             }
         }
     }
