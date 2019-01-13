@@ -4,33 +4,28 @@ using System;
 namespace Logic.PlayerClasses {
     [Serializable]
     public class Ships : IShips {
-        public Colonizer GetColonizer(IResources from) {
-            if (from == null) {
-                throw new ArgumentNullException(nameof(from));
-            }
+        private IResources storage;
 
-            if (from.CanSubtract(Colonizer.Price)) {
+        public Ships(IResources resources) {
+            storage = resources;
+        }
 
-                from.Subtract(Colonizer.Price);
+        public Colonizer GetColonizer() {
+            if (storage.CanSubtract(Colonizer.Price)) {
+
+                storage.Subtract(Colonizer.Price);
                 return Colonizer.GetColonizer();
             }
 
             return null;
         }
 
-        public int GetMiners(Resources from, int quantity) {
-            if (from == null) {
-                throw new ArgumentNullException(nameof(from));
-            }
+        public int GetMiners(int quantity) {
+            Resources neededResources = new Resources(Miner.Price);
+            neededResources.Multiply(quantity);
 
-            Resources neededResources = new Resources(
-                quantity * Miner.Price.Hydrogen,
-                quantity * Miner.Price.CommonMetals,
-                quantity * Miner.Price.RareEarthElements
-            );
-
-            if (from.CanSubtract(neededResources)) {
-                from.Subtract(neededResources);
+            if (storage.CanSubtract(neededResources)) {
+                storage.Subtract(neededResources);
                 return quantity;
             }
             else {

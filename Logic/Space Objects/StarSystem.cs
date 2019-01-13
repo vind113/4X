@@ -76,10 +76,6 @@ namespace Logic.SpaceObjects {
 
             this.SystemPopulation = this.SetSystemPopulation();
 
-            if(this.SystemPopulation > 0) {
-                this.MinersCount = 10;
-            }
-
             this.ColonizedCount = this.SetColonizedPlantes();
             this.SystemResources = this.SetResources();
         }
@@ -215,12 +211,12 @@ namespace Logic.SpaceObjects {
             }
         }
 
-        private void MineSystemResources(Resources destination) {
+        private void MineSystemResources(Resources to) {
             if(this.SystemPopulation == 0) {
                 return;
             }
 
-            Miner.Mine(this.MinersCount, this.SystemResources, destination);
+            Miner.Mine(this.MinersCount, this.SystemResources, to);
         }
 
         private long SetSystemPopulation() {

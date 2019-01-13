@@ -8,11 +8,14 @@ namespace Logic.Resource {
     /// </summary>
     [Serializable]
     public class Resources : INotifyPropertyChanged, IResources {
+        public static Resources Zero { get; } = new Resources();
+
         private double hydrogen;
         private double commonMetals;
         private double rareEarthElements;
 
-        public static Resources Zero { get; } = new Resources();
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Инициализирует новый объект <see cref="Resources"/> значениями по умолчанию
@@ -48,16 +51,18 @@ namespace Logic.Resource {
         /// Объект, с которого создастся новый объект <see cref="Resources"/>
         /// </param>
         public Resources(Resources res)
-            :this(res.Hydrogen, res.CommonMetals, res.RareEarthElements) { }
+            :this(res.Hydrogen, res.CommonMetals, res.RareEarthElements) {
+
+        }
 
         /// <summary>
-        /// Сравнивает два объекта <see cref="Resources"/>
+        /// Сравнивает объекты <see cref="Resources"/>
         /// </summary>
         /// <returns>Булевое значение, показывающее, равны ли соответствующие составные объектов <see cref="Resources"/></returns>
-        public static bool AreEqual(Resources res1, Resources res2) {
-            if (res1.Hydrogen == res2.Hydrogen
-             && res1.CommonMetals == res2.CommonMetals
-             && res1.RareEarthElements == res2.RareEarthElements) {
+        public bool IsEqual(Resources res) {
+            if (this.Hydrogen == res.Hydrogen
+             && this.CommonMetals == res.CommonMetals
+             && this.RareEarthElements == res.RareEarthElements) {
                 return true;
             }
 
@@ -65,13 +70,13 @@ namespace Logic.Resource {
         }
 
         /// <summary>
-        /// Сравнивает два объекта <see cref="Resources"/>
+        /// Сравнивает объекты <see cref="Resources"/>
         /// </summary>
         /// <returns>Булевое значение, показывающее, отличаются ли соответствующие составные объектов <see cref="Resources"/></returns>
-        public static bool AreNotEqual(Resources res1, Resources res2) {
-            if (res1.Hydrogen != res2.Hydrogen
-             || res1.CommonMetals != res2.CommonMetals
-             || res1.RareEarthElements != res2.RareEarthElements) {
+        public bool IsNotEqual(Resources res) {
+            if (this.Hydrogen != res.Hydrogen
+             || this.CommonMetals != res.CommonMetals
+             || this.RareEarthElements != res.RareEarthElements) {
                 return true;
             }
 
@@ -86,8 +91,8 @@ namespace Logic.Resource {
                 throw new ArgumentException("Sum of resorses is greater than limit");
             }
 
-            this.Hydrogen          += res.Hydrogen;
-            this.CommonMetals      += res.CommonMetals;
+            this.Hydrogen += res.Hydrogen;
+            this.CommonMetals += res.CommonMetals;
             this.RareEarthElements += res.RareEarthElements;
         }
 
@@ -96,7 +101,6 @@ namespace Logic.Resource {
         /// </summary>
         /// <exception cref="ArgumentException"/>
         public void Subtract(Resources res) {
-
             if (!this.CanSubtract(res)) {
                 throw new ArgumentException("Argument can't be greater than object");
             }
@@ -113,6 +117,9 @@ namespace Logic.Resource {
         /// Число, указывающее, в сколько раз увеличить ресурсы
         /// </param>
         public void Multiply(double multiplier) {
+            if (multiplier < 0) {
+                throw new ArgumentException($"{nameof(multiplier)} should be greater than or equal to zero");
+            }
 
             this.Hydrogen *= multiplier;
             this.CommonMetals *= multiplier;
@@ -149,9 +156,9 @@ namespace Logic.Resource {
         /// Логическое значение, показывающее, возможно ли прибавить один объект ресурсов к второму
         /// </returns>
         public bool CanAdd(Resources res) {
-            if(double.IsInfinity(this.Hydrogen + res.Hydrogen)
-            || double.IsInfinity(this.CommonMetals + res.CommonMetals)
-            || double.IsInfinity(this.RareEarthElements + res.RareEarthElements)){
+            if (double.IsInfinity(this.Hydrogen + res.Hydrogen)
+             || double.IsInfinity(this.CommonMetals + res.CommonMetals)
+             || double.IsInfinity(this.RareEarthElements + res.RareEarthElements)) {
                 return false;
             }
 
@@ -203,9 +210,6 @@ namespace Logic.Resource {
                 }
             }
         }
-
-        [field: NonSerialized]
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
             var handler = PropertyChanged;

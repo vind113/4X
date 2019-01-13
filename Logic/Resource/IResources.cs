@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Logic.Resource {
+﻿namespace Logic.Resource {
     public interface IResources {
         double CommonMetals { get; set; }
         double Hydrogen { get; set; }
@@ -8,12 +6,15 @@ namespace Logic.Resource {
 
         void Add(Resources res);
         void Subtract(Resources res);
+        void Multiply(double multiplier);
+
+        void SetToZero();
 
         bool CanAdd(Resources res);
         bool CanSubtract(Resources res);
 
         bool IsStrictlyGreater(Resources res);
-        void Multiply(double multiplier);
-        void SetToZero();
+        bool IsEqual(Resources res);
+        bool IsNotEqual(Resources res);
     }
 }

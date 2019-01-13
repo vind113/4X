@@ -28,17 +28,13 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public void ColonizeWhilePossible(IShips ships, IResources resources) {
+        public void ColonizeWhilePossible(IShips ships) {
             if (ships == null) {
                 throw new ArgumentNullException(nameof(ships));
             }
 
-            if (resources == null) {
-                throw new ArgumentNullException(nameof(resources));
-            }
-
             while (this.planetsToColonize.Count > 0) {
-                Colonizer colonizer = ships.GetColonizer(resources);
+                Colonizer colonizer = ships.GetColonizer();
                 ColonizationState state =
                     this.planetsToColonize.Peek().Colonize(colonizer);
 

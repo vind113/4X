@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Logic.Resource;
 using Logic.SpaceObjects;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Logic.GameClasses;
-using Logic.SupportClasses;
 
 namespace Logic.PlayerClasses {
     [Serializable]
@@ -38,7 +36,7 @@ namespace Logic.PlayerClasses {
 
             this.AddStarSystem(StarSystemFactory.GetSolarSystem());
 
-            this.Ships = new Ships();
+            this.Ships = new Ships(this.OwnedResources);
         }
 
         [field: NonSerialized]
@@ -70,7 +68,7 @@ namespace Logic.PlayerClasses {
         }
 
         public void TryToColonizeQueue() {
-            coloniztionQueue.ColonizeWhilePossible(this.Ships, this.OwnedResources);
+            coloniztionQueue.ColonizeWhilePossible(this.Ships);
         }
 
         #region Properties

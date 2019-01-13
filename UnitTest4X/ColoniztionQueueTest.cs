@@ -10,16 +10,16 @@ namespace UnitTest4X {
     [TestFixture]
     public class ColoniztionQueueTest {
         [TestCase]
-        public void TryToColonizeQueue_QueueCountIsZero_ImmediateReturn() {
+        public void ColonizeWhilePossible_QueueCountIsZero_ImmediateReturn() {
             ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
 
             Assert.DoesNotThrow(() => {
-                coloniztionQueue.ColonizeWhilePossible(new Mock<IShips>().Object, new Mock<IResources>().Object);
+                coloniztionQueue.ColonizeWhilePossible(new Mock<IShips>().Object);
             });
         }
 
         [TestCase]
-        public void TryToColonizeQueue_QueueCountIsGreaterThanZero() {
+        public void ColonizeWhilePossible_QueueCountIsGreaterThanZero() {
             int planetsToColonize = 10;
 
             List<IHabitablePlanet> planetList = new List<IHabitablePlanet>();
@@ -37,12 +37,12 @@ namespace UnitTest4X {
 
             var shipsMock = new Mock<IShips>();
 
-            shipsMock.Setup(x => x.GetColonizer(It.IsNotNull<IResources>()))
+            shipsMock.Setup(x => x.GetColonizer())
                 .Returns(Colonizer.GetColonizer());
 
             var resourcesMock = new Mock<IResources>();
 
-            coloniztionQueue.ColonizeWhilePossible(shipsMock.Object, resourcesMock.Object);
+            coloniztionQueue.ColonizeWhilePossible(shipsMock.Object);
 
             Assert.AreEqual(0, coloniztionQueue.PlanetsInQueue);
         }

@@ -6,7 +6,7 @@ namespace UnitTest4X {
     [TestFixture]
     public class ResourcesTest {
         [TestCase]
-        public void Add_NoOverFlow_CorrectResult() {
+        public void Add_NoOverflow_CorrectResult() {
             double hydrogenA = 1E10;
             double hydrogenB = 1E10;
 
@@ -51,7 +51,7 @@ namespace UnitTest4X {
         }
 
         [TestCase]
-        public void Subtract_NoOverFlow_CorrectResult() {
+        public void Subtract_NoOverflow_CorrectResult() {
             double hydrogenA = 1E11;
             double hydrogenB = 1E10;
 
@@ -76,7 +76,7 @@ namespace UnitTest4X {
 
         [TestCase]
         public void Subtract_SecondArgumentGreater_ExeptionThrown() {
-            Assert.Throws(typeof(ArgumentException), new TestDelegate(SubtractWithException));
+            Assert.Throws<ArgumentException>(new TestDelegate(SubtractWithException));
         }
 
         private static void SubtractWithException() {
@@ -94,6 +94,17 @@ namespace UnitTest4X {
 
             a.Subtract(b);
             Resources c = a;
+        }
+
+        [TestCase]
+        public void Multiply_MultiplierLowerThanZero_ExceptionThrown() {
+            double resourceAmount = 100_000_000;
+            double multiplier = -1;
+            double expected = resourceAmount * multiplier;
+
+            Resources resourceToMultiply = new Resources(resourceAmount, resourceAmount, resourceAmount);
+
+            Assert.Throws<ArgumentException>(() => { resourceToMultiply.Multiply(multiplier); });
         }
 
         [TestCase]
