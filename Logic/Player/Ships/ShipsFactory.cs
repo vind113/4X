@@ -3,10 +3,10 @@ using System;
 
 namespace Logic.PlayerClasses {
     [Serializable]
-    public class Ships : IShips {
-        private IResources storage;
+    public class ShipsFactory : IShipsFactory {
+        private IMutableResources storage;
 
-        public Ships(IResources resources) {
+        public ShipsFactory(IMutableResources resources) {
             storage = resources;
         }
 
@@ -21,7 +21,7 @@ namespace Logic.PlayerClasses {
         }
 
         public int GetMiners(int quantity) {
-            Resources neededResources = new Resources(Miner.Price);
+            Resources neededResources = new Resources(MinerFleet.ShipPrice);
             neededResources.Multiply(quantity);
 
             if (storage.CanSubtract(neededResources)) {

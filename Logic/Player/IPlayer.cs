@@ -14,9 +14,9 @@ namespace Logic.PlayerClasses
 
         ReadOnlyObservableCollection<StarSystem> StarSystems { get; }
         Stockpile Stockpile { get; }
-        Resources OwnedResources { get; set; }
+        IMutableResources OwnedResources { get; set; }
         CitizenHub Hub { get; }
-        IShips Ships { get; }
+        IShipsFactory Ships { get; }
 
         long TotalPopulation { get; }
 

@@ -14,7 +14,7 @@ namespace UnitTest4X {
             ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
 
             Assert.DoesNotThrow(() => {
-                coloniztionQueue.ColonizeWhilePossible(new Mock<IShips>().Object);
+                coloniztionQueue.ColonizeWhilePossible(new Mock<IShipsFactory>().Object);
             });
         }
 
@@ -35,12 +35,12 @@ namespace UnitTest4X {
 
             ColoniztionQueue coloniztionQueue = new ColoniztionQueue(planetList);
 
-            var shipsMock = new Mock<IShips>();
+            var shipsMock = new Mock<IShipsFactory>();
 
             shipsMock.Setup(x => x.GetColonizer())
                 .Returns(Colonizer.GetColonizer());
 
-            var resourcesMock = new Mock<IResources>();
+            var resourcesMock = new Mock<IMutableResources>();
 
             coloniztionQueue.ColonizeWhilePossible(shipsMock.Object);
 

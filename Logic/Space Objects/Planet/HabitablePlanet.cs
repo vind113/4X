@@ -78,7 +78,7 @@ namespace Logic.SpaceObjects {
             this.Population.Add(addedPopulation);
         }
 
-        private void ExtractResources(Resources extractTo) {
+        private void ExtractResources(IMutableResources extractTo) {
             if (this.BodyResource.IsStrictlyGreater(Resources.Zero)) {
                 double minedResources = (this.Type.MiningDifficulty * this.Population.Value);
 
@@ -86,7 +86,7 @@ namespace Logic.SpaceObjects {
                 double minedCommonMetals = minedResources;
                 double minedRareElements = minedResources / 5_000;
                 try {
-                    Resources extracted = new Resources(minedHydrogen, minedCommonMetals, minedRareElements);
+                    IBasicResources extracted = new Resources(minedHydrogen, minedCommonMetals, minedRareElements);
 
                     this.BodyResource.Subtract(extracted);
                     extractTo.Add(extracted);

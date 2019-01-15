@@ -8,7 +8,7 @@ namespace UnitTest4X {
     public class ShipsTest {
         [TestCase]
         public void ColonizerGetColonists_ParamIsLowerThanColonistsOnShip_GetColonists() {
-            Ships ships = new Ships(new Resources(double.MaxValue, double.MaxValue, double.MaxValue));
+            ShipsFactory ships = new ShipsFactory(new Resources(double.MaxValue, double.MaxValue, double.MaxValue));
 
             Colonizer colonizer = ships.GetColonizer();
 
@@ -19,7 +19,7 @@ namespace UnitTest4X {
 
         [TestCase]
         public void ColonizerGetColonists_ParamIsGreaterThanColonistsOnShip_GetColonists() {
-            Ships ships = new Ships(new Resources(double.MaxValue, double.MaxValue, double.MaxValue));
+            ShipsFactory ships = new ShipsFactory(new Resources(double.MaxValue, double.MaxValue, double.MaxValue));
 
             Colonizer colonizer = ships.GetColonizer();
 
@@ -33,12 +33,10 @@ namespace UnitTest4X {
             int shipsToBuy = 10;
             int resourcesInitModifier = 9;
 
-            Resources minerPrice = Miner.Price;
-
-            Resources inPossesion = new Resources(minerPrice);
+            Resources inPossesion = new Resources(MinerFleet.ShipPrice);
             inPossesion.Multiply(resourcesInitModifier);
 
-            Ships ships = new Ships(inPossesion);
+            ShipsFactory ships = new ShipsFactory(inPossesion);
 
             int result = ships.GetMiners(shipsToBuy);
 
@@ -50,12 +48,10 @@ namespace UnitTest4X {
             int shipsToBuy = 10;
             int resourcesInitModifier = 10;
 
-            Resources minerPrice = Miner.Price;
-
-            Resources inPossesion = new Resources(minerPrice);
+            Resources inPossesion = new Resources(MinerFleet.ShipPrice);
             inPossesion.Multiply(resourcesInitModifier);
 
-            Ships ships = new Ships(inPossesion);
+            ShipsFactory ships = new ShipsFactory(inPossesion);
 
             int result = ships.GetMiners(shipsToBuy);
 
@@ -68,9 +64,8 @@ namespace UnitTest4X {
 
             Resources to = new Resources(1E5, 1E5, 1E5);
 
-            int miners = 10;
-
-            Miner.Mine(miners, from, to);
+            MinerFleet miner = new MinerFleet(10);
+            miner.Mine(from, to);
 
             Assert.IsTrue(from.IsEqual(Resources.Zero));
         }
@@ -94,9 +89,8 @@ namespace UnitTest4X {
                 from.RareEarthElements + to.RareEarthElements
             );
 
-            int miners = 10;
-
-            Miner.Mine(miners, from, to);
+            MinerFleet miner = new MinerFleet(10);
+            miner.Mine(from, to);
 
             Resources sumAfter = new Resources(
                 from.Hydrogen + to.Hydrogen,
@@ -130,8 +124,8 @@ namespace UnitTest4X {
             Resources from = new Resources(hydrogenFrom, commonMetalsFrom, rareElementsFrom);
             Resources to = new Resources(hydrogenTo, commonMetalsTo, rareElementsTo);
 
-            int miners = 10;
-            Miner.Mine(miners, from, to);
+            MinerFleet miner = new MinerFleet(10);
+            miner.Mine(from, to);
 
             bool isFromIsZero = from.IsEqual(Resources.Zero);
 
@@ -141,6 +135,5 @@ namespace UnitTest4X {
 
             Assert.IsTrue(isFromIsZero && isToResourcesIncreased);
         }
-
     }
 }

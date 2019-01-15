@@ -28,7 +28,7 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public void ColonizeWhilePossible(IShips ships) {
+        public void ColonizeWhilePossible(IShipsFactory ships) {
             if (ships == null) {
                 throw new ArgumentNullException(nameof(ships));
             }

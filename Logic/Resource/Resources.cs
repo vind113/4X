@@ -7,8 +7,8 @@ namespace Logic.Resource {
     /// Представляет ресурсы
     /// </summary>
     [Serializable]
-    public class Resources : INotifyPropertyChanged, IResources {
-        public static Resources Zero { get; } = new Resources();
+    public class Resources : INotifyPropertyChanged, IMutableResources {
+        public static IComparableResources Zero { get; } = new Resources();
 
         private double hydrogen;
         private double commonMetals;
@@ -45,21 +45,21 @@ namespace Logic.Resource {
         }
 
         /// <summary>
-        /// Инициализирует новый объект <see cref="Resources"/> переданным объектом <see cref="Resources"/>
+        /// Инициализирует новый объект <see cref="Resources"/> переданным объектом <see cref="IBasicResources"/>
         /// </summary>
         /// <param name="res">
         /// Объект, с которого создастся новый объект <see cref="Resources"/>
         /// </param>
-        public Resources(Resources res)
+        public Resources(IBasicResources res)
             :this(res.Hydrogen, res.CommonMetals, res.RareEarthElements) {
 
         }
 
         /// <summary>
-        /// Сравнивает объекты <see cref="Resources"/>
+        /// Сравнивает объекты ресурсов
         /// </summary>
-        /// <returns>Булевое значение, показывающее, равны ли соответствующие составные объектов <see cref="Resources"/></returns>
-        public bool IsEqual(Resources res) {
+        /// <returns>Булевое значение, показывающее, равны ли соответствующие составные объектов ресурсов</returns>
+        public bool IsEqual(IBasicResources res) {
             if (this.Hydrogen == res.Hydrogen
              && this.CommonMetals == res.CommonMetals
              && this.RareEarthElements == res.RareEarthElements) {
@@ -70,10 +70,10 @@ namespace Logic.Resource {
         }
 
         /// <summary>
-        /// Сравнивает объекты <see cref="Resources"/>
+        /// Сравнивает объекты ресурсов
         /// </summary>
-        /// <returns>Булевое значение, показывающее, отличаются ли соответствующие составные объектов <see cref="Resources"/></returns>
-        public bool IsNotEqual(Resources res) {
+        /// <returns>Булевое значение, показывающее, отличаются ли соответствующие составные объектов ресурсов</returns>
+        public bool IsNotEqual(IBasicResources res) {
             if (this.Hydrogen != res.Hydrogen
              || this.CommonMetals != res.CommonMetals
              || this.RareEarthElements != res.RareEarthElements) {
@@ -84,11 +84,11 @@ namespace Logic.Resource {
         }
 
         /// <summary>
-        /// Прибавляет ресурсы переданного объекта <see cref="Resources"/>
+        /// Прибавляет ресурсы переданного объекта <see cref="IBasicResources"/>
         /// </summary>
-        public void Add(Resources res) {
+        public void Add(IBasicResources res) {
             if (!this.CanAdd(res)) {
-                throw new ArgumentException("Sum of resorses is greater than limit");
+                throw new ArgumentException("Sum of resources is greater than limit");
             }
 
             this.Hydrogen += res.Hydrogen;
@@ -97,10 +97,10 @@ namespace Logic.Resource {
         }
 
         /// <summary>
-        /// Вычитает ресурсы переданного объекта <see cref="Resources"/>
+        /// Вычитает ресурсы переданного объекта <see cref="IBasicResources"/>
         /// </summary>
         /// <exception cref="ArgumentException"/>
-        public void Subtract(Resources res) {
+        public void Subtract(IBasicResources res) {
             if (!this.CanSubtract(res)) {
                 throw new ArgumentException("Argument can't be greater than object");
             }
@@ -136,7 +136,7 @@ namespace Logic.Resource {
         /// <returns>
         /// Логическое значение, показывающее, возможно ли вычесть из объекта ресурсов другой объект ресурсов
         /// </returns>
-        public bool CanSubtract(Resources res) {
+        public bool CanSubtract(IBasicResources res) {
             if (this.Hydrogen          >= res.Hydrogen
              && this.CommonMetals      >= res.CommonMetals
              && this.RareEarthElements >= res.RareEarthElements) {
@@ -155,7 +155,7 @@ namespace Logic.Resource {
         /// <returns>
         /// Логическое значение, показывающее, возможно ли прибавить один объект ресурсов к второму
         /// </returns>
-        public bool CanAdd(Resources res) {
+        public bool CanAdd(IBasicResources res) {
             if (double.IsInfinity(this.Hydrogen + res.Hydrogen)
              || double.IsInfinity(this.CommonMetals + res.CommonMetals)
              || double.IsInfinity(this.RareEarthElements + res.RareEarthElements)) {
@@ -165,7 +165,7 @@ namespace Logic.Resource {
             return true;
         }
 
-        public bool IsStrictlyGreater(Resources res) {
+        public bool IsStrictlyGreater(IBasicResources res) {
             if (this.Hydrogen          > res.Hydrogen
              && this.CommonMetals      > res.CommonMetals
              && this.RareEarthElements > res.RareEarthElements) {

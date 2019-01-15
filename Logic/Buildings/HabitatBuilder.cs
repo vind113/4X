@@ -7,7 +7,7 @@ namespace Logic.Buildings {
         private readonly int buildingTarget;
         private string habitatName;
 
-        public Resources CostPerTurn { get; } = new Resources(10E9, 100E9, 100E6);
+        public IComparableResources CostPerTurn { get; } = new Resources(10E9, 100E9, 100E6);
         public int BuildingProgress { get; private set; }
 
         public event EventHandler<SpaceBuildingCompletedEventArgs> Completed;
@@ -19,7 +19,7 @@ namespace Logic.Buildings {
             this.buildingTarget = Habitat.BuildingTime;
         }
 
-        public void OneTurnProgress(Resources resources) {
+        public void OneTurnProgress(IMutableResources resources) {
             if (resources.CanSubtract(this.CostPerTurn) && this.BuildingProgress < this.buildingTarget) {
                 resources.Subtract(this.CostPerTurn);
                 this.BuildingProgress++;

@@ -8,9 +8,9 @@ namespace Logic.PlayerClasses {
         public readonly static double COMMON_METALS_PER_PERSON = 0.05;
         public readonly static double RARE_METALS_PER_PERSON = 0.00001;
 
-        public static Resources PreviousTurnUsedResources { get; private set; } = new Resources(0, 0, 0);
+        public static IBasicResources PreviousTurnUsedResources { get; private set; } = new Resources(0, 0, 0);
 
-        public static void SustainPopulationNeeds(long population, Resources from)
+        public static void SustainPopulationNeeds(long population, IMutableResources from)
         {
             if (from == null) {
                 throw new ArgumentNullException(nameof(from));
@@ -20,7 +20,7 @@ namespace Logic.PlayerClasses {
                 return;
             }
 
-            Resources neededResources = CalculatePopulationNeeds(population);
+            IBasicResources neededResources = CalculatePopulationNeeds(population);
 
             if (from.CanSubtract(neededResources)) {
                 from.Subtract(neededResources);
@@ -32,7 +32,7 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        private static Resources CalculatePopulationNeeds(double population) {
+        private static IBasicResources CalculatePopulationNeeds(double population) {
             double hydrogen = HYDROGEN_PER_PERSON * population;
             double commonMetals = COMMON_METALS_PER_PERSON * population;
             double rareMetals = RARE_METALS_PER_PERSON * population;

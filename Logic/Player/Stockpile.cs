@@ -5,14 +5,14 @@ namespace Logic.PlayerClasses {
     [Serializable]
     public class Stockpile {
         private double money = 0;            //деньги, доступные игроку
-        private Resources playerResources;  //ресурсы на складе
+        private IMutableResources playerResources;  //ресурсы на складе
 
         public Stockpile() {
             this.Money = 111_222_333_444;
             this.PlayerResources = new Resources(0, 0, 0);
         }
 
-        public Stockpile(double money, Resources playerResources) {
+        public Stockpile(double money, IMutableResources playerResources) {
             this.money = money;
             this.playerResources = playerResources ?? throw new ArgumentNullException(nameof(playerResources));
         }
@@ -22,7 +22,7 @@ namespace Logic.PlayerClasses {
             set => money = value;
         }
 
-        public Resources PlayerResources {
+        public IMutableResources PlayerResources {
             get => playerResources;
             set {
                 if (value.CommonMetals >= 0 &&

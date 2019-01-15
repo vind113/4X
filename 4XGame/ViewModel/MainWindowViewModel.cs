@@ -16,7 +16,7 @@ namespace _4XGame.ViewModel {
         private double money;
         private double totalPopulation;
 
-        private Resources resources;
+        private IMutableResources resources;
 
         private string gameEventsLog;
 
@@ -122,7 +122,7 @@ namespace _4XGame.ViewModel {
             }
         }
 
-        public Resources CurrentResources {
+        public IMutableResources CurrentResources {
             get => this.resources;
             set {
                 this.resources = value;

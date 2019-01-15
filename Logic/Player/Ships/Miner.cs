@@ -2,17 +2,28 @@
 using System;
 
 namespace Logic.PlayerClasses {
-    public class Miner : Ship {
-        private static readonly Resources price = new Resources(1E9, 10E9, 100E6);
-        private static readonly Resources extractsPerTurn = new Resources(1E7, 1E8, 1E5);
+    [Serializable]
+    public class MinerFleet {
+        public static IComparableResources ShipPrice { get; } = new Resources(1E9, 10E9, 100E6);
+        public static IComparableResources OneMinerExtractsPerTurn { get; } = new Resources(1E7, 1E8, 1E5);
 
-        public static int GetMiners(int quantity) {
-            return quantity;
+        public int MinersCount { get; private set; } = 0;
+
+        public MinerFleet() {
+
         }
 
-        public static void Mine(int quantityOfMiners, Resources from, Resources to) {
-            Resources extracted = new Resources(ExtractsPerTurn);
-            extracted.Multiply(quantityOfMiners);
+        public MinerFleet(int initialMiners) {
+            this.MinersCount += initialMiners;
+        }
+
+        public void AddMiners(IShipsFactory ships, int quantity) {
+            this.MinersCount += ships.GetMiners(quantity);
+        }
+
+        public void Mine(IMutableResources from, IMutableResources to) {
+            IMutableResources extracted = new Resources(OneMinerExtractsPerTurn);
+            extracted.Multiply(this.MinersCount);
 
             if (from.IsEqual(Resources.Zero)) {
                 return;
@@ -27,8 +38,5 @@ namespace Logic.PlayerClasses {
                 from.SetToZero();
             }
         }
-
-        public static Resources Price { get => price; }
-        public static Resources ExtractsPerTurn { get => extractsPerTurn; }
     }
 }

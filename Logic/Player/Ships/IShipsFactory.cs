@@ -1,5 +1,5 @@
 ﻿namespace Logic.PlayerClasses {
-    public interface IShips {
+    public interface IShipsFactory {
         Colonizer GetColonizer();
         int GetMiners(int quantity);
     }

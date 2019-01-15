@@ -21,8 +21,9 @@ namespace Logic.SpaceObjects {
 
         private readonly SystemBuildings buildings;
 
+        private MinerFleet systemMiners;
+
         private Resources systemResources;
-        private int minersCount;
 
         private byte colonizedCount;
         private long population;
@@ -69,6 +70,9 @@ namespace Logic.SpaceObjects {
             this.systemPlanets = new List<Planet>(planets) ?? throw new ArgumentNullException(nameof(planets));
 
             this.buildings = new SystemBuildings();
+
+            this.systemMiners = new MinerFleet();
+            SetMiners();
 
             foreach (var planet in this.SystemPlanets) {
                 planet.PropertyChanged += this.Planet_PropertyChanged;
@@ -174,14 +178,16 @@ namespace Logic.SpaceObjects {
         /// Возвращает количество добывающих кораблей системы
         /// </summary>
         public int MinersCount {
-            get => this.minersCount;
-            private set {
-                this.minersCount = value;
-                OnPropertyChanged();
-            }
+            get => this.systemMiners.MinersCount;
         }
 
         public SystemBuildings Buildings { get => this.buildings; }
+
+        //TODO: переработать этот костыль
+        public void SetMiners() {
+            int minersToAdd = 50;
+            this.systemMiners = new MinerFleet(minersToAdd);
+        }
 
         /// <summary>
         ///     Выполняет все операции для перехода на следующий ход
@@ -211,12 +217,12 @@ namespace Logic.SpaceObjects {
             }
         }
 
-        private void MineSystemResources(Resources to) {
+        private void MineSystemResources(IMutableResources to) {
             if(this.SystemPopulation == 0) {
                 return;
             }
 
-            Miner.Mine(this.MinersCount, this.SystemResources, to);
+            systemMiners.Mine(this.SystemResources, to);
         }
 
         private long SetSystemPopulation() {

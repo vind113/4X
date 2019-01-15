@@ -37,7 +37,7 @@ namespace Logic.Buildings {
             builder.Completed += AddCompleted;
         }
 
-        public void NextTurn(Resources resources) {
+        public void NextTurn(IMutableResources resources) {
             if (inConstruction.Count <= 0) {
                 return;
             }

@@ -20,7 +20,7 @@ namespace Logic.PlayerClasses {
 
         private ColoniztionQueue coloniztionQueue = new ColoniztionQueue();
 
-        private IShips ships;
+        private IShipsFactory ships;
 
         private int ownedStars;
         private int colonizedPlanets;
@@ -36,7 +36,7 @@ namespace Logic.PlayerClasses {
 
             this.AddStarSystem(StarSystemFactory.GetSolarSystem());
 
-            this.Ships = new Ships(this.OwnedResources);
+            this.Ships = new ShipsFactory(this.OwnedResources);
         }
 
         [field: NonSerialized]
@@ -85,7 +85,7 @@ namespace Logic.PlayerClasses {
             private set => this.hub = value;
         }
 
-        public Resources OwnedResources {
+        public IMutableResources OwnedResources {
             get => this.stockpile.PlayerResources;
             set => this.stockpile.PlayerResources = value;
         }
@@ -148,7 +148,7 @@ namespace Logic.PlayerClasses {
             }
         }
 
-        public IShips Ships {
+        public IShipsFactory Ships {
             get => this.ships;
             private set => this.ships = value;
         }
