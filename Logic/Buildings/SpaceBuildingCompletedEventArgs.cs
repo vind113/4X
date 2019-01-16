@@ -2,12 +2,12 @@
 
 namespace Logic.Buildings {
     public class SpaceBuildingCompletedEventArgs : EventArgs {
-        private Habitat habitat;
+        private SpaceBuilding building;
 
-        public SpaceBuildingCompletedEventArgs(Habitat habitat) {
-            this.habitat = habitat ?? throw new ArgumentNullException(nameof(habitat));
+        public SpaceBuildingCompletedEventArgs(SpaceBuilding building) {
+            this.building = building ?? throw new ArgumentNullException(nameof(building));
         }
 
-        public Habitat Habitat { get => this.habitat; }
+        public SpaceBuilding Building { get => this.building; }
     }
 }

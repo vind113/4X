@@ -87,7 +87,7 @@ namespace Logic.Buildings {
                 this.inConstruction.Remove(builder);
                 OnPropertyChanged(nameof(SystemBuildings.InConstructionCount));
 
-                this.existing.Add(e.Habitat);
+                this.existing.Add(e.Building);
                 OnPropertyChanged(nameof(SystemBuildings.ExistingCount));
             }
         }

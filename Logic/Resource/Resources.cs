@@ -7,8 +7,8 @@ namespace Logic.Resource {
     /// Представляет ресурсы
     /// </summary>
     [Serializable]
-    public class Resources : INotifyPropertyChanged, IMutableResources {
-        public static IComparableResources Zero { get; } = new Resources();
+    public class Resources : IMutableObservableResources {
+        public static IComparableResources Zero { get; } = new ReadOnlyResources();
 
         private double hydrogen;
         private double commonMetals;

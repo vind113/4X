@@ -5,12 +5,18 @@ using Logic.PopulationClasses;
 namespace Logic.Buildings {
     [Serializable]
     public abstract class SpaceBuilding : IHabitable {
-        private Population population;
+        private readonly Population population;
 
-        public SpaceBuilding(long population, long maxPopulation) {
+        public string Name { get; private set; }
+        public Population Population { get; }
+
+        public SpaceBuilding(string name, long population, long maxPopulation) {
+            this.Name = name;
             this.population = new Population(population, maxPopulation);
         }
 
-        public Population Population { get => this.population; }
+        public void Colonize() {
+            this.Population.Add(10_000_000);
+        }
     }
 }

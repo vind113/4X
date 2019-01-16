@@ -3,11 +3,12 @@ using System;
 
 namespace Logic.Buildings {
     [Serializable]
-    public class HabitatBuilder {
-        private readonly int buildingTarget;
+    public class HabitatBuilder : IBuilder {
+        public const int BuildingDuration = 24;
+
         private string habitatName;
 
-        public IComparableResources CostPerTurn { get; } = new Resources(10E9, 100E9, 100E6);
+        public IComparableResources CostPerTurn { get; } = new ReadOnlyResources(10E9, 100E9, 100E6);
         public int BuildingProgress { get; private set; }
 
         public event EventHandler<SpaceBuildingCompletedEventArgs> Completed;
@@ -16,16 +17,15 @@ namespace Logic.Buildings {
             this.habitatName = habitatName;
 
             this.BuildingProgress = 0;
-            this.buildingTarget = Habitat.BuildingTime;
         }
 
         public void OneTurnProgress(IMutableResources resources) {
-            if (resources.CanSubtract(this.CostPerTurn) && this.BuildingProgress < this.buildingTarget) {
+            if (resources.CanSubtract(this.CostPerTurn) && this.BuildingProgress < BuildingDuration) {
                 resources.Subtract(this.CostPerTurn);
                 this.BuildingProgress++;
             }
 
-            if (this.BuildingProgress == this.buildingTarget) {
+            if (this.BuildingProgress == BuildingDuration) {
                 this.OnCompleted();
             }
         }

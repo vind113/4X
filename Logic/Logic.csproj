@@ -43,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buildings\HabitatBuilder.cs" />
+    <Compile Include="Buildings\IBuilder.cs" />
+    <Compile Include="Buildings\RingWorld.cs" />
+    <Compile Include="Buildings\RingWorldBuilder.cs" />
     <Compile Include="Buildings\SystemBuildings.cs" />
     <Compile Include="GameClasses\Game.cs" />
     <Compile Include="GameClasses\PopulationChangedEventArgs.cs" />
@@ -62,10 +65,13 @@
     <Compile Include="Player\Ships\Ship.cs" />
     <Compile Include="Player\Stockpile.cs" />
     <Compile Include="Population\Population.cs" />
+    <Compile Include="Population\ReadOnlyPopualtion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource\IBasicResources.cs" />
     <Compile Include="Resource\IComparableResources.cs" />
+    <Compile Include="Resource\IMutableObservableResources.cs" />
     <Compile Include="Resource\IMutableResources.cs" />
+    <Compile Include="Resource\ReadOnlyResources.cs" />
     <Compile Include="Resource\Resources.cs" />
     <Compile Include="Space Objects\CelestialBody.cs" />
     <Compile Include="Buildings\Habitat.cs" />

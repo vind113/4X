@@ -45,7 +45,7 @@ namespace UnitTest4X {
         public void HabitatBuilderOneTurnProgress_EnoughResources_HabitatBuilt() {
             HabitatBuilder habitatBuilder = new HabitatBuilder("a");
 
-            double resourceFactor = Habitat.BuildingTime * 2;
+            double resourceFactor = HabitatBuilder.BuildingDuration * 2;
 
             Resources neededResources = new Resources(
                 resourceFactor * habitatBuilder.CostPerTurn.Hydrogen,
@@ -56,7 +56,7 @@ namespace UnitTest4X {
                 habitatBuilder.OneTurnProgress(neededResources);
             }
 
-            Assert.AreEqual(Habitat.BuildingTime, habitatBuilder.BuildingProgress);
+            Assert.AreEqual(HabitatBuilder.BuildingDuration, habitatBuilder.BuildingProgress);
         }
 
         [TestCase]

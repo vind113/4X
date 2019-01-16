@@ -26,7 +26,6 @@ namespace Logic.SpaceObjects {
         public static StarSystem GetStarSystem(string name) {
 
             List<Star> stars = GenerateSystemStars(name);
-
             List<Planet> planets = GenerateSystemPlanets(name, stars);
 
             return new StarSystem(name, stars, planets);
@@ -184,11 +183,11 @@ namespace Logic.SpaceObjects {
 
             PlanetType planetType;
 
-            if (probabilityIndex >= 90) {
+            if (probabilityIndex >= 80) {
                 planetType = new PlanetType(TemperatureClass.Temperate, VolatilesClass.Marine, SubstancesClass.Terra);
 
             }
-            else if (probabilityIndex >= 70) {
+            else if (probabilityIndex >= 60) {
                 planetType = new PlanetType(TemperatureClass.Cool, VolatilesClass.Marine, SubstancesClass.Terra);
 
             }

@@ -5,7 +5,7 @@ namespace Logic.PlayerClasses {
     /// Представляет космический корабль-колонизатор
     /// </summary>
     public class Colonizer : Ship {
-        private readonly static IComparableResources price = new Resources(1E9, 1E10, 1E6);
+        private readonly static IComparableResources price = new ReadOnlyResources(1E9, 1E10, 1E6);
         private const long colonists = 10_000_000;
 
         private long colonistsOnShip;
