@@ -5,24 +5,20 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace Logic.Buildings {
-    public enum Buildings : byte {
-        None, Habitat, Ringworld
-    }
-
     [Serializable]
     public class SystemBuildings : INotifyPropertyChanged {
         private ObservableCollection<SpaceBuilding> existing;
-        private List<HabitatBuilder> inConstruction;
+        private List<Builder> inConstruction;
 
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         public SystemBuildings() {
             this.existing = new ObservableCollection<SpaceBuilding>();
-            this.inConstruction = new List<HabitatBuilder>();
+            this.inConstruction = new List<Builder>();
         }
 
-        public void BuildNew(HabitatBuilder builder) {
+        public void BuildNew(Builder builder) {
             if (builder == null) {
                 throw new ArgumentNullException(nameof(builder));
             }
@@ -55,13 +51,13 @@ namespace Logic.Buildings {
             get => new ReadOnlyObservableCollection<SpaceBuilding>(this.existing);
         }
 
-        public ReadOnlyCollection<HabitatBuilder> InConstruction {
-            get => new ReadOnlyCollection<HabitatBuilder>(this.inConstruction);
+        public ReadOnlyCollection<Builder> InConstruction {
+            get => new ReadOnlyCollection<Builder>(this.inConstruction);
         }
 
         //MEMORY LEAK
-        //UPD: Fixed but I do not know how(smth related to foreach)
-        //UPD2: Try naive foreach implementation
+        // Утечка памяти из-за foreach(скорее всего)
+        // Заменил на for
         public long TotalPopulation {
             get {
                 long population = 0;
@@ -83,7 +79,7 @@ namespace Logic.Buildings {
         }
 
         private void AddCompleted(object sender, SpaceBuildingCompletedEventArgs e) {
-            if (sender is HabitatBuilder builder) {
+            if (sender is Builder builder) {
                 this.inConstruction.Remove(builder);
                 OnPropertyChanged(nameof(SystemBuildings.InConstructionCount));
 

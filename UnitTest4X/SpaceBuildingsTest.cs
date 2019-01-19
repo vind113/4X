@@ -29,11 +29,9 @@ namespace UnitTest4X {
 
             double resourceFactor = 5;
 
-            Resources neededResources = new Resources(
-                resourceFactor * habitatBuilder.CostPerTurn.Hydrogen,
-                resourceFactor * habitatBuilder.CostPerTurn.CommonMetals,
-                resourceFactor * habitatBuilder.CostPerTurn.RareEarthElements
-            );
+            Resources neededResources = new Resources(habitatBuilder.CostPerTurn);
+            neededResources.Multiply(resourceFactor);
+
             for (int i = 0; i < resourceFactor; i++) {
                 habitatBuilder.OneTurnProgress(neededResources);
             }
@@ -45,18 +43,16 @@ namespace UnitTest4X {
         public void HabitatBuilderOneTurnProgress_EnoughResources_HabitatBuilt() {
             HabitatBuilder habitatBuilder = new HabitatBuilder("a");
 
-            double resourceFactor = HabitatBuilder.BuildingDuration * 2;
+            double resourceFactor = habitatBuilder.BuildingDuration * 2;
 
-            Resources neededResources = new Resources(
-                resourceFactor * habitatBuilder.CostPerTurn.Hydrogen,
-                resourceFactor * habitatBuilder.CostPerTurn.CommonMetals,
-                resourceFactor * habitatBuilder.CostPerTurn.RareEarthElements
-            );
+            Resources neededResources = new Resources(habitatBuilder.CostPerTurn);
+            neededResources.Multiply(resourceFactor);
+
             for (int i = 0; i < resourceFactor; i++) {
                 habitatBuilder.OneTurnProgress(neededResources);
             }
 
-            Assert.AreEqual(HabitatBuilder.BuildingDuration, habitatBuilder.BuildingProgress);
+            Assert.AreEqual(habitatBuilder.BuildingDuration, habitatBuilder.BuildingProgress);
         }
 
         [TestCase]
