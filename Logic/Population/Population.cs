@@ -30,8 +30,10 @@ namespace Logic.PopulationClasses {
         public long Value {
             get { return this.value; }
             private set {
-                if (0 <= value && value <= this.MaxValue) this.value = value;
-                OnPropertyChanged();
+                if (0 <= value && value <= this.MaxValue) {
+                    this.value = value;
+                    OnPropertyChanged();
+                }
             }
         }
 

@@ -13,12 +13,10 @@ namespace Logic.SpaceObjects {
     /// </summary>
     [Serializable]
     public class Star : CelestialBody {
-        private LuminosityClass lumClass;
-
         /// <summary>
         /// Класс светимости этой звезды
         /// </summary>
-        public LuminosityClass LumClass { get => this.lumClass; }
+        public LuminosityClass LumClass { get; }
 
         /// <summary>
         /// Инициализирует экземпляр класса звезды
@@ -33,7 +31,7 @@ namespace Logic.SpaceObjects {
         ///     Класс светимости звезды
         /// </param>
         public Star(string name, double radius, LuminosityClass luminosityClass):base(name, radius) {
-            this.lumClass = luminosityClass;
+            this.LumClass = luminosityClass;
         }
 
         /// <summary>

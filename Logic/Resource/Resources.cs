@@ -184,7 +184,7 @@ namespace Logic.Resource {
         public double Hydrogen {
             get => this.hydrogen;
             set {
-                if (value >= 0) {
+                if (value >= 0 && this.hydrogen != value) {
                     this.hydrogen = value;
                     OnPropertyChanged();
                 }
@@ -194,7 +194,7 @@ namespace Logic.Resource {
         public double CommonMetals {
             get => this.commonMetals;
             set {
-                if (value >= 0) {
+                if (value >= 0 && this.commonMetals != value) {
                     this.commonMetals = value;
                     OnPropertyChanged();
                 }
@@ -204,7 +204,7 @@ namespace Logic.Resource {
         public double RareEarthElements {
             get => this.rareEarthElements;
             set {
-                if (value >= 0) {
+                if (value >= 0 && this.rareEarthElements != value) {
                     this.rareEarthElements = value;
                     OnPropertyChanged();
                 }

@@ -1,6 +1,7 @@
 ﻿using _4XGame.Serialization;
 using _4XGame.ViewModel.Commands;
 using Logic.GameClasses;
+using Logic.PlayerClasses;
 using Logic.Resource;
 using Microsoft.Win32;
 using System;
@@ -39,11 +40,19 @@ namespace _4XGame.ViewModel {
             this.CurrentGame = game;
 
             CurrentGame.Player.StockpileChanged += SetStockpile;
-            CurrentGame.Player.PopulationChanged += SetTotalPopulation;
+            CurrentGame.Player.PropertyChanged += this.Player_PropertyChanged;
 
             this.CurrentResources = this.CurrentGame.Player.OwnedResources;
             this.Money = this.CurrentGame.Player.Money;
             this.TotalPopulation = this.CurrentGame.Player.TotalPopulation;
+        }
+
+        private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+            if (sender is Player player) {
+                if (e.PropertyName == nameof(Player.TotalPopulation)) {
+                    this.TotalPopulation = player.TotalPopulation;
+                }
+            }
         }
 
         #region Commands
@@ -150,10 +159,6 @@ namespace _4XGame.ViewModel {
         private void SetStockpile(object sender, StockpileChangedEventArgs e) {
             Money = e.Money;
             CurrentResources = e.ArgResources;
-        }
-
-        private void SetTotalPopulation(object sender, PopulationChangedEventArgs e) {
-            TotalPopulation = e.Population;
         }
     }
 }

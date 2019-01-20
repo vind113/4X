@@ -8,7 +8,7 @@ namespace Logic.Buildings {
 
         IComparableResources CostPerTurn { get; }
 
-        event EventHandler<SpaceBuildingCompletedEventArgs> Completed;
+        event EventHandler<BuildingCompletedEventArgs> Completed;
 
         void OneTurnProgress(IMutableResources resources);
     }

@@ -7,6 +7,7 @@ using Logic.PlayerClasses;
 using Logic.Resource;
 using Logic.SupportClasses;
 using Logic.Buildings;
+using Logic.PopulationClasses;
 
 namespace Logic.SpaceObjects {
     /// <summary>
@@ -18,33 +19,20 @@ namespace Logic.SpaceObjects {
 
         private readonly List<Star> systemStars;
         private readonly List<Planet> systemPlanets;
-
-        private readonly SystemBuildings buildings;
-
         private MinerFleet systemMiners;
 
-        private Resources systemResources;
+        public SystemBuildings Buildings { get; }
+
+        /// <summary>
+        /// Возвращает ресурсы системы
+        /// </summary>
+        public IMutableResources SystemResources { get; private set; }
 
         private byte colonizedCount;
         private long population;
 
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void Planet_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            if(e.PropertyName == nameof(HabitablePlanet.IsColonized) && sender is HabitablePlanet planet) {
-                this.ColonizedCount += (byte)((planet.IsColonized) ? 1 : -1);
-            }
-        }
-
-        private void StarChangedHandler(object sender, PropertyChangedEventArgs e) {
-
-        }
 
         /// <summary>
         ///     Инициализирует экземпляр класса с значениями по умолчанию
@@ -69,7 +57,7 @@ namespace Logic.SpaceObjects {
 
             this.systemPlanets = new List<Planet>(planets) ?? throw new ArgumentNullException(nameof(planets));
 
-            this.buildings = new SystemBuildings();
+            this.Buildings = new SystemBuildings();
 
             this.systemMiners = new MinerFleet();
             SetMiners();
@@ -78,16 +66,15 @@ namespace Logic.SpaceObjects {
                 planet.PropertyChanged += this.Planet_PropertyChanged;
             }
 
-            this.SystemPopulation = this.SetSystemPopulation();
+            this.SetSystemPopulation();
 
             this.ColonizedCount = this.SetColonizedPlantes();
-            this.SystemResources = this.SetResources();
+            this.SystemResources = new StarSystemResourceGenerator().GenerateResources();
         }
 
         /// <summary>
         /// Возвращает ссылку на коллекцию объектов <see cref="Star"/> системы
         /// </summary>
-        //public List<Star> SystemStars { get => this.systemStars; }
         public ReadOnlyCollection<Star> SystemStars { get => new ReadOnlyCollection<Star>(this.systemStars); }
 
         /// <summary>
@@ -167,21 +154,11 @@ namespace Logic.SpaceObjects {
         }
 
         /// <summary>
-        /// Возвращает ресурсы системы
-        /// </summary>
-        public Resources SystemResources {
-            get => this.systemResources;
-            private set => this.systemResources = value;
-        }
-
-        /// <summary>
         /// Возвращает количество добывающих кораблей системы
         /// </summary>
         public int MinersCount {
             get => this.systemMiners.MinersCount;
         }
-
-        public SystemBuildings Buildings { get => this.buildings; }
 
         //TODO: переработать этот костыль
         public void SetMiners() {
@@ -199,10 +176,10 @@ namespace Logic.SpaceObjects {
             this.PlanetsNextTurn(player);
             this.StarsNextTurn();
 
-            this.SystemPopulation = this.SetSystemPopulation();
-
             this.MineSystemResources(player.OwnedResources);
             this.Buildings.NextTurn(player.OwnedResources);
+
+            this.SetSystemPopulation();
         }
 
         private void PlanetsNextTurn(Player player) {
@@ -225,18 +202,16 @@ namespace Logic.SpaceObjects {
             systemMiners.Mine(this.SystemResources, to);
         }
 
-        private long SetSystemPopulation() {
+        private void SetSystemPopulation() {
             long population = 0;
 
             foreach (var planet in this.SystemHabitablePlanets) {
-                if (planet.IsColonized) {
-                    population += planet.Population.Value;
-                }
+                population += planet.Population.Value;
             }
 
             population += this.Buildings.TotalPopulation;
 
-            return population;
+            this.SystemPopulation = population;
         }
 
         private byte SetColonizedPlantes() {
@@ -251,12 +226,20 @@ namespace Logic.SpaceObjects {
             return colonized;
         }
 
-        private Resources SetResources() {
-            double hydrogen = HelperRandomFunctions.GetRandomDouble() * 1E22;
-            double commonMetals = HelperRandomFunctions.GetRandomDouble() * 1E24;
-            double rareElements = HelperRandomFunctions.GetRandomDouble() * 1E20;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
-            return new Resources(hydrogen, commonMetals, rareElements);
+        private void Planet_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+            if (sender is HabitablePlanet planet) {
+                if (e.PropertyName == nameof(HabitablePlanet.IsColonized)) {
+                    this.ColonizedCount += (byte)((planet.IsColonized) ? 1 : -1);
+                }
+                else if (e.PropertyName == nameof(HabitablePlanet.Population.Value)) {
+                    this.SetSystemPopulation();
+                }
+            }
         }
     }
 }

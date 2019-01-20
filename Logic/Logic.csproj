@@ -43,13 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buildings\Builder.cs" />
+    <Compile Include="Buildings\BuildingCompletedEventArgs.cs" />
     <Compile Include="Buildings\HabitatBuilder.cs" />
     <Compile Include="Buildings\IBuilder.cs" />
     <Compile Include="Buildings\RingWorld.cs" />
     <Compile Include="Buildings\RingWorldBuilder.cs" />
     <Compile Include="Buildings\SystemBuildings.cs" />
     <Compile Include="GameClasses\Game.cs" />
-    <Compile Include="GameClasses\PopulationChangedEventArgs.cs" />
     <Compile Include="GameClasses\StockpileChangedEventArgs.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Player\CitizenHub.cs" />
@@ -82,16 +82,16 @@
     <Compile Include="Space Objects\Planet\IHabitablePlanet.cs" />
     <Compile Include="Space Objects\Planet\IPlanet.cs" />
     <Compile Include="Space Objects\Planet\Planet.cs" />
-    <Compile Include="Space Objects\PlanetFactory.cs" />
+    <Compile Include="Space Objects\Planet\PlanetFactory.cs" />
     <Compile Include="Buildings\SpaceBuilding.cs" />
-    <Compile Include="Buildings\SpaceBuildingCompletedEventArgs.cs" />
     <Compile Include="Space Objects\Planet\PlanetCharacteristicsHelper.cs" />
     <Compile Include="Space Objects\Planet\PlanetResourseGenerator.cs" />
     <Compile Include="Space Objects\Planet\PlanetType.cs" />
-    <Compile Include="Space Objects\Star.cs" />
-    <Compile Include="Space Objects\StarFactory.cs" />
-    <Compile Include="Space Objects\StarSystem.cs" />
-    <Compile Include="Space Objects\StarSystemFactory.cs" />
+    <Compile Include="Space Objects\Star System\StarSystemResourceGenerator.cs" />
+    <Compile Include="Space Objects\Star\Star.cs" />
+    <Compile Include="Space Objects\Star\StarFactory.cs" />
+    <Compile Include="Space Objects\Star System\StarSystem.cs" />
+    <Compile Include="Space Objects\Star System\StarSystemFactory.cs" />
     <Compile Include="SupportClasses\HelperMathFunctions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

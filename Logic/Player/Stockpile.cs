@@ -24,14 +24,7 @@ namespace Logic.PlayerClasses {
 
         public IMutableResources PlayerResources {
             get => playerResources;
-            set {
-                if (value.CommonMetals >= 0 &&
-                    value.Hydrogen >= 0 &&
-                    value.RareEarthElements >= 0) {
-
-                    playerResources = value;
-                }
-            }
+            set => playerResources = value;
         }
     }
 }

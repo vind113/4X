@@ -78,7 +78,7 @@ namespace Logic.Buildings {
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void AddCompleted(object sender, SpaceBuildingCompletedEventArgs e) {
+        private void AddCompleted(object sender, BuildingCompletedEventArgs e) {
             if (sender is Builder builder) {
                 this.inConstruction.Remove(builder);
                 OnPropertyChanged(nameof(SystemBuildings.InConstructionCount));

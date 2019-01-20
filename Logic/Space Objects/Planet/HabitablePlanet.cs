@@ -32,6 +32,7 @@ namespace Logic.SpaceObjects {
                 if (this.isColonized != value) {
                     this.isColonized = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(HabitablePlanet.Population.Value));
                 }
             }
         }
@@ -60,22 +61,19 @@ namespace Logic.SpaceObjects {
             }
 
             AddPopulation(Player.PopulationGrowthFactor * HelperRandomFunctions.GetRandomDouble());
-
             ConductMigration(player.Hub);
-
             ExtractResources(player.OwnedResources);
+        }
+
+        private void AddPopulation(double growthFactor) {
+            double growthPart = growthFactor * (this.Type.Quality / PlanetType.GoodWorldQuality);
+            double addedPopulation = this.Population.Value * growthPart;
+
+            this.Population.Add(addedPopulation);
         }
 
         private void ConductMigration(CitizenHub migrationHub) {
             migrationHub.ConductMigration(this.Population);
-        }
-                
-        private void AddPopulation(double growthFactor) {
-            double growthPart = growthFactor * (this.Type.Quality / PlanetType.GOOD_WORLD_QUALITY);
-
-            double addedPopulation = this.Population.Value * growthPart;
-
-            this.Population.Add(addedPopulation);
         }
 
         private void ExtractResources(IMutableResources extractTo) {

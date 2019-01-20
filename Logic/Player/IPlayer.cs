@@ -14,7 +14,7 @@ namespace Logic.PlayerClasses
 
         ReadOnlyObservableCollection<StarSystem> StarSystems { get; }
         Stockpile Stockpile { get; }
-        IMutableResources OwnedResources { get; set; }
+        IMutableResources OwnedResources { get; }
         CitizenHub Hub { get; }
         IShipsFactory Ships { get; }
 
@@ -25,7 +25,6 @@ namespace Logic.PlayerClasses
         int OwnedPlanets { get; }
         int ColonizedPlanets { get; }
 
-        event EventHandler<PopulationChangedEventArgs> PopulationChanged;
         event PropertyChangedEventHandler PropertyChanged;
         event EventHandler<StockpileChangedEventArgs> StockpileChanged;
 

@@ -20,10 +20,18 @@ namespace Logic.PlayerClasses {
 
         public double MaximumCount {
             get => maximumCount;
-            set {
+            private set {
                 if (value >= 0) {
                     maximumCount = value;
                 }
+            }
+        }
+
+        public void SetCitizenHubCapacity(long population) {
+            long newHubCapacity = population / 1000;
+
+            if (newHubCapacity > this.CitizensInHub) {
+                this.MaximumCount = newHubCapacity;
             }
         }
 

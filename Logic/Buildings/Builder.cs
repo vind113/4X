@@ -9,7 +9,7 @@ namespace Logic.Buildings {
         public IComparableResources CostPerTurn { get; }
         public SpaceBuilding BuildingBeingBuilt { get; }
 
-        public event EventHandler<SpaceBuildingCompletedEventArgs> Completed;
+        public event EventHandler<BuildingCompletedEventArgs> Completed;
 
         public Builder(int duration, IBasicResources costPerTurn, SpaceBuilding building) {
             this.BuildingDuration = duration;
@@ -30,7 +30,7 @@ namespace Logic.Buildings {
 
         private void OnCompleted() {
             var handler = this.Completed;
-            handler?.Invoke(this, new SpaceBuildingCompletedEventArgs(this.BuildingBeingBuilt));
+            handler?.Invoke(this, new BuildingCompletedEventArgs(this.BuildingBeingBuilt));
         }
     }
 }

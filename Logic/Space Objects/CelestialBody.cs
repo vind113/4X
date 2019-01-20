@@ -8,15 +8,16 @@ namespace Logic.SpaceObjects {
 
     [Serializable]
     public abstract class CelestialBody : INotifyPropertyChanged {
-        private string name;                
-        private double area;      
-        private double radius;    
-        private Resources bodyResource;
+        private string name;
+
+        public double Area { get; }
+        public double Radius { get; }
+        public IMutableObservableResources BodyResource { get; protected set; }
 
         public CelestialBody(string name, double radius) {
             this.name = name;
-            this.radius = radius;
-            this.area = Math.Floor(HelperMathFunctions.SphereArea(this.radius));
+            this.Radius = radius;
+            this.Area = Math.Floor(HelperMathFunctions.SphereArea(this.Radius));
         }
 
         public string Name {
@@ -25,14 +26,6 @@ namespace Logic.SpaceObjects {
                 this.name = value;
                 OnPropertyChanged();
             }
-        }
-        public double Area { get => this.area; }
-
-        public double Radius { get => this.radius; }
-
-        public Resources BodyResource {
-            get => this.bodyResource;
-            protected set => this.bodyResource = value;
         }
 
         [field: NonSerialized]

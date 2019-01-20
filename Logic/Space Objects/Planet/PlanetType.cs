@@ -4,7 +4,7 @@ using System;
 namespace Logic.SpaceObjects {
     [Serializable]
     public struct PlanetType {
-        public const double GOOD_WORLD_QUALITY = 100;
+        public const double GoodWorldQuality = 100;
 
         public string Name { get; }
         public double Quality { get; }
@@ -23,12 +23,12 @@ namespace Logic.SpaceObjects {
 
             double tempQuality = PlanetCharacteristicsHelper.GetPlanetTypeFactor(temperature, volatiles, substances);
 
-            this.Quality = tempQuality * GOOD_WORLD_QUALITY;
+            this.Quality = tempQuality * GoodWorldQuality;
             this.Name = $"{temperature}, {volatiles}, {substances}";
             this.ResourceAbundance = 100;
 
             double months = 12;
-            this.MiningDifficulty = (Quality / GOOD_WORLD_QUALITY) / months;
+            this.MiningDifficulty = (Quality / GoodWorldQuality) / months;
         }
     }
 
