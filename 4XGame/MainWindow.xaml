@@ -377,22 +377,22 @@
                         <Label ContentStringFormat="Colonized planets: {0}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding Path=CurrentGame.Player.ColonizedPlanets}"/>
+                               Content="{Binding Path=СolonizedCount}"/>
 
                         <Label ContentStringFormat="Owned planets: {0}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding Path=CurrentGame.Player.OwnedPlanets}"/>
+                               Content="{Binding Path=BodiesCount.Planets}"/>
 
                         <Label ContentStringFormat="Owned stars: {0}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding Path=CurrentGame.Player.OwnedStars}"/>
+                               Content="{Binding Path=BodiesCount.Stars}"/>
 
                         <Label ContentStringFormat="Owned Systems: {0}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding Path=CurrentGame.Player.StarSystems.Count}"/>
+                               Content="{Binding Path=BodiesCount.Systems}"/>
                     </WrapPanel>
                 </TabItem>
                 <TabItem Header="Debug Info" MinWidth="100">

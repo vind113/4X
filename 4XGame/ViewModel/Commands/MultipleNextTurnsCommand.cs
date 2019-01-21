@@ -1,8 +1,8 @@
-﻿using Logic.GameClasses;
+﻿using _4XGame.Updaters;
+using Logic.GameClasses;
 using System;
 using System.Diagnostics;
 using System.Windows.Threading;
-using System.ComponentModel;
 
 namespace _4XGame.ViewModel.Commands {
     public class MultipleNextTurnsCommand : CommandBase {
@@ -61,22 +61,26 @@ namespace _4XGame.ViewModel.Commands {
 
             uint turnsToMake = 0;
 
-            if (!UInt32.TryParse(turnsToMakeString, out turnsToMake)) {
+            if (!uint.TryParse(turnsToMakeString, out turnsToMake)) {
                 return;
             }
 
             CommandParts = (int)turnsToMake;
+            DispatcherPriority gameActionsPriority = DispatcherPriority.ContextIdle;
 
             for (int i = 0; i < turnsToMake; i++) {
-                Dispatcher.CurrentDispatcher.Invoke(()=> { game.NextTurn(); }, DispatcherPriority.Background);
-                //game.NextTurn();
+                Dispatcher.CurrentDispatcher.Invoke(()=> { game.NextTurn(); }, gameActionsPriority);
                 CommandProgress++;
             }
+
+            Dispatcher.CurrentDispatcher.Invoke(() => {
+                new PlayerInfoUpdater(game.Player).UpdatePopulation();
+            }, gameActionsPriority);
 
             CommandProgress = 0;
             CommandParts = 1;
 
-            Dispatcher.CurrentDispatcher.Invoke(() => { Console.Beep(); }, DispatcherPriority.Background);
+            Dispatcher.CurrentDispatcher.Invoke(() => { Console.Beep(); }, gameActionsPriority);
         }
     }
 }

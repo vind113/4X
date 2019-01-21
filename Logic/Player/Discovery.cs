@@ -29,11 +29,13 @@ namespace Logic.PlayerClasses {
                 StarSystem generatedSystem =
                     StarSystemFactory.GetStarSystem($"System {player.StarSystemsCount + 1} #{index}");
 
+                //Добавление системы игроку должно происходить перед колнизацией системы
+                //чтобы создалась подписка на события
+                player.AddStarSystem(generatedSystem);
+
                 if (isAutoColonizationEnabled) {
                     ColonizeSystem(player, generatedSystem);
                 }
-
-                player.AddStarSystem(generatedSystem);
             }
         }
 

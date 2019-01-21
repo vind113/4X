@@ -1,7 +1,6 @@
 ﻿using _4XGame.Serialization;
 using _4XGame.ViewModel.Commands;
 using Logic.GameClasses;
-using Logic.PlayerClasses;
 using Logic.Resource;
 using Microsoft.Win32;
 using System;
@@ -10,7 +9,6 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace _4XGame.ViewModel {
-    [Serializable]
     public class MainWindowViewModel : INotifyPropertyChanged {
         private Game currentGame;
 
@@ -18,10 +16,12 @@ namespace _4XGame.ViewModel {
         private double totalPopulation;
 
         private IMutableResources resources;
+        private BodiesCount bodiesCount = new BodiesCount();
+
+        private int сolonizedCount;
 
         private string gameEventsLog;
 
-        [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") {
@@ -41,18 +41,38 @@ namespace _4XGame.ViewModel {
 
             CurrentGame.Player.StockpileChanged += SetStockpile;
             CurrentGame.Player.PropertyChanged += this.Player_PropertyChanged;
+            CurrentGame.Player.PopulationChanged += this.Player_PopulationChanged;
+            CurrentGame.Player.BodiesCountChanged += this.Player_BodiesCountChanged;
+            CurrentGame.Player.ColonizedCountChanged += this.Player_ColonizedCountChanged;
 
             this.CurrentResources = this.CurrentGame.Player.OwnedResources;
             this.Money = this.CurrentGame.Player.Money;
             this.TotalPopulation = this.CurrentGame.Player.TotalPopulation;
+            this.BodiesCount.SetBodiesCount(
+                CurrentGame.Player.StarSystemsCount, CurrentGame.Player.OwnedStars, CurrentGame.Player.OwnedPlanets);
+            this.СolonizedCount = CurrentGame.Player.ColonizedPlanets;
+        }
+
+        private void Player_ColonizedCountChanged(object sender, EventArgs e) {
+            this.СolonizedCount = CurrentGame.Player.ColonizedPlanets;
+        }
+
+        private void Player_BodiesCountChanged(object sender, EventArgs e) {
+            this.BodiesCount.SetBodiesCount(
+                CurrentGame.Player.StarSystemsCount, CurrentGame.Player.OwnedStars, CurrentGame.Player.OwnedPlanets);
+        }
+
+        private void Player_PopulationChanged(object sender, EventArgs e) {
+            this.TotalPopulation = CurrentGame.Player.TotalPopulation;
         }
 
         private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            if (sender is Player player) {
-                if (e.PropertyName == nameof(Player.TotalPopulation)) {
-                    this.TotalPopulation = player.TotalPopulation;
-                }
-            }
+
+        }
+
+        private void SetStockpile(object sender, StockpileChangedEventArgs e) {
+            Money = e.Money;
+            CurrentResources = e.ArgResources;
         }
 
         #region Commands
@@ -116,7 +136,7 @@ namespace _4XGame.ViewModel {
         #region Properties
         public Game CurrentGame {
             get => this.currentGame;
-            set {
+            private set {
                 this.currentGame = value;
                 OnPropertyChanged();
             }
@@ -154,11 +174,16 @@ namespace _4XGame.ViewModel {
                 OnPropertyChanged();
             }
         }
-        #endregion
 
-        private void SetStockpile(object sender, StockpileChangedEventArgs e) {
-            Money = e.Money;
-            CurrentResources = e.ArgResources;
+        public BodiesCount BodiesCount { get => this.bodiesCount; }
+
+        public int СolonizedCount {
+            get => this.сolonizedCount;
+            private set {
+                this.сolonizedCount = value;
+                OnPropertyChanged();
+            }
         }
+        #endregion
     }
 }

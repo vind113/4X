@@ -57,8 +57,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\BodiesCount.cs" />
     <Compile Include="Serialization\Save.cs" />
     <Compile Include="Serialization\SaveFileException.cs" />
+    <Compile Include="Updaters\StarSystemUpdater.cs" />
     <Compile Include="ViewModel\Commands\BuildHabitatCommand.cs" />
     <Compile Include="ViewModel\Commands\ColonizePlanetCommand.cs" />
     <Compile Include="ViewModel\Commands\CommandBase.cs" />

@@ -148,7 +148,6 @@ namespace Logic.SpaceObjects {
             private set {
                 if (this.population != value) {
                     this.population = value;
-                    OnPropertyChanged();
                 }
             }
         }
@@ -210,8 +209,11 @@ namespace Logic.SpaceObjects {
             }
 
             population += this.Buildings.TotalPopulation;
-
             this.SystemPopulation = population;
+        }
+
+        public void UpdatePopulation() {
+            OnPropertyChanged(nameof(StarSystem.SystemPopulation));
         }
 
         private byte SetColonizedPlantes() {

@@ -56,7 +56,7 @@ namespace Logic.Buildings {
         }
 
         //MEMORY LEAK
-        // Утечка памяти из-за foreach(скорее всего)
+        // Утечка памяти из-за ObservableCollection(скорее всего)
         // Заменил на for
         public long TotalPopulation {
             get {

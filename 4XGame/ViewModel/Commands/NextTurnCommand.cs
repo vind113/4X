@@ -1,5 +1,5 @@
-﻿using Logic.GameClasses;
-using System;
+﻿using _4XGame.Updaters;
+using Logic.GameClasses;
 using System.Diagnostics;
 
 namespace _4XGame.ViewModel.Commands {
@@ -17,6 +17,7 @@ namespace _4XGame.ViewModel.Commands {
 
             if (parameter != null && parameter is Game game) {
                 game.NextTurn();
+                new PlayerInfoUpdater(game.Player).UpdatePopulation();
             }
         }
     }
