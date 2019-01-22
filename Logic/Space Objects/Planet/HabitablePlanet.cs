@@ -12,6 +12,9 @@ namespace Logic.SpaceObjects {
 
         public Population Population { get; }
 
+        public long PopulationValue { get => this.Population.Value; }
+        public long PopulationMaximumValue { get => this.Population.MaxValue; }
+
         private const double citizensPerSector = 100_000_000d;
 
         public HabitablePlanet(string name, double radius, PlanetType type, long population) : base(name, radius, type) {

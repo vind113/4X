@@ -1,6 +1,7 @@
 ﻿using _4XGame.Serialization;
 using _4XGame.ViewModel.Commands;
 using Logic.GameClasses;
+using Logic.PlayerClasses;
 using Logic.Resource;
 using Microsoft.Win32;
 using System;
@@ -39,18 +40,28 @@ namespace _4XGame.ViewModel {
         private void SetNewGame(Game game) {
             this.CurrentGame = game;
 
-            CurrentGame.Player.StockpileChanged += SetStockpile;
-            CurrentGame.Player.PropertyChanged += this.Player_PropertyChanged;
-            CurrentGame.Player.PopulationChanged += this.Player_PopulationChanged;
-            CurrentGame.Player.BodiesCountChanged += this.Player_BodiesCountChanged;
-            CurrentGame.Player.ColonizedCountChanged += this.Player_ColonizedCountChanged;
+            SetPlayerHandlers(CurrentGame.Player);
+            SetViewModelProperties(CurrentGame.Player);
+        }
 
-            this.CurrentResources = this.CurrentGame.Player.OwnedResources;
-            this.Money = this.CurrentGame.Player.Money;
-            this.TotalPopulation = this.CurrentGame.Player.TotalPopulation;
-            this.BodiesCount.SetBodiesCount(
-                CurrentGame.Player.StarSystemsCount, CurrentGame.Player.OwnedStars, CurrentGame.Player.OwnedPlanets);
-            this.СolonizedCount = CurrentGame.Player.ColonizedPlanets;
+        private void SetViewModelProperties(Player player) {
+            this.CurrentResources = player.OwnedResources;
+            this.Money = player.Money;
+            this.TotalPopulation = player.Population;
+            this.BodiesCount.SetBodiesCount(player.StarSystemsCount, player.OwnedStars, player.OwnedPlanets);
+            this.СolonizedCount = player.ColonizedPlanets;
+        }
+
+        private void SetPlayerHandlers(Player player) {
+            player.StockpileChanged += SetStockpile;
+            player.PropertyChanged += this.Player_PropertyChanged;
+            SetEmpireEventHandlers(player.Empire);
+        }
+
+        private void SetEmpireEventHandlers(Empire empire) {
+            empire.PopulationChanged += this.Player_PopulationChanged;
+            empire.BodiesCountChanged += this.Player_BodiesCountChanged;
+            empire.ColonizedCountChanged += this.Player_ColonizedCountChanged;
         }
 
         private void Player_ColonizedCountChanged(object sender, EventArgs e) {
@@ -63,7 +74,7 @@ namespace _4XGame.ViewModel {
         }
 
         private void Player_PopulationChanged(object sender, EventArgs e) {
-            this.TotalPopulation = CurrentGame.Player.TotalPopulation;
+            this.TotalPopulation = CurrentGame.Player.Population;
         }
 
         private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e) {

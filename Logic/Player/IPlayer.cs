@@ -18,7 +18,7 @@ namespace Logic.PlayerClasses
         CitizenHub Hub { get; }
         IShipsFactory Ships { get; }
 
-        long TotalPopulation { get; }
+        long Population { get; }
 
         int StarSystemsCount { get; }
         int OwnedStars { get; }
@@ -27,9 +27,6 @@ namespace Logic.PlayerClasses
 
         event PropertyChangedEventHandler PropertyChanged;
         event EventHandler<StockpileChangedEventArgs> StockpileChanged;
-
-        void AddStarSystem(StarSystem system);
-        void RemoveStarSystem(StarSystem system);
 
         void AddToColonizationQueue(HabitablePlanet planet);
         void NextTurn(bool isAutoColonizationEnabled, bool isDiscoveringNewStarSystems);

@@ -58,7 +58,7 @@ namespace Logic.Buildings {
         //MEMORY LEAK
         // Утечка памяти из-за ObservableCollection(скорее всего)
         // Заменил на for
-        public long TotalPopulation {
+        public long Population {
             get {
                 long population = 0;
                 /*foreach (var habitat in this.Existing) {

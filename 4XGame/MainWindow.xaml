@@ -198,7 +198,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}"/>
                                 <DataGridTextColumn Header="Colonized" Binding="{Binding ColonizedCount}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Population" Binding="{Binding SystemPopulation, StringFormat={}{0:#,#}}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Population" Binding="{Binding Population, StringFormat={}{0:#,#}}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Stars" Binding="{Binding StarsCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Planets" Binding="{Binding PlanetsCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Habitable" Binding="{Binding HabitablePlanetsCount}" IsReadOnly="True"/>
