@@ -60,17 +60,13 @@ namespace _4XGame.ViewModel {
 
         private void SetEmpireEventHandlers(Empire empire) {
             empire.PopulationChanged += this.Player_PopulationChanged;
-            empire.BodiesCountChanged += this.Player_BodiesCountChanged;
             empire.ColonizedCountChanged += this.Player_ColonizedCountChanged;
+
+            empire.Container.BodiesCountChanged += this.Container_BodiesCountChanged;
         }
 
         private void Player_ColonizedCountChanged(object sender, EventArgs e) {
             this.СolonizedCount = CurrentGame.Player.ColonizedPlanets;
-        }
-
-        private void Player_BodiesCountChanged(object sender, EventArgs e) {
-            this.BodiesCount.SetBodiesCount(
-                CurrentGame.Player.StarSystemsCount, CurrentGame.Player.OwnedStars, CurrentGame.Player.OwnedPlanets);
         }
 
         private void Player_PopulationChanged(object sender, EventArgs e) {
@@ -79,6 +75,11 @@ namespace _4XGame.ViewModel {
 
         private void Player_PropertyChanged(object sender, PropertyChangedEventArgs e) {
 
+        }
+
+        private void Container_BodiesCountChanged(object sender, EventArgs e) {
+            this.BodiesCount.SetBodiesCount(
+                CurrentGame.Player.StarSystemsCount, CurrentGame.Player.OwnedStars, CurrentGame.Player.OwnedPlanets);
         }
 
         private void SetStockpile(object sender, StockpileChangedEventArgs e) {

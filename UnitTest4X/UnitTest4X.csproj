@@ -90,6 +90,7 @@
     <Compile Include="SaveLoadTest.cs" />
     <Compile Include="ShipsTest.cs" />
     <Compile Include="SpaceBuildingsTest.cs" />
+    <Compile Include="StarSystemContainerTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
