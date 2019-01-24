@@ -29,7 +29,7 @@ namespace Logic.PlayerClasses
         event EventHandler<StockpileChangedEventArgs> StockpileChanged;
 
         void AddToColonizationQueue(HabitablePlanet planet);
-        void NextTurn(bool isAutoColonizationEnabled, bool isDiscoveringNewStarSystems);
+        void NextTurn();
         void TryToColonizeQueue();
     }
 }

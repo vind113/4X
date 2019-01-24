@@ -17,7 +17,7 @@ namespace _4XGame.ViewModel {
         private double totalPopulation;
 
         private IMutableResources resources;
-        private BodiesCount bodiesCount = new BodiesCount();
+        public BodiesCount BodiesCount { get; } = new BodiesCount();
 
         private int сolonizedCount;
 
@@ -59,17 +59,20 @@ namespace _4XGame.ViewModel {
         }
 
         private void SetEmpireEventHandlers(Empire empire) {
-            empire.PopulationChanged += this.Player_PopulationChanged;
-            empire.ColonizedCountChanged += this.Player_ColonizedCountChanged;
-
-            empire.Container.BodiesCountChanged += this.Container_BodiesCountChanged;
+            empire.PopulationChanged += this.Empire_PopulationChanged;
+            SetContainerHandlers(empire.Container);
         }
 
-        private void Player_ColonizedCountChanged(object sender, EventArgs e) {
+        private void SetContainerHandlers(StarSystemContainer container) {
+            container.ColonizedCountChanged += this.Container_ColonizedCountChanged;
+            container.BodiesCountChanged += this.Container_BodiesCountChanged;
+        }
+
+        private void Container_ColonizedCountChanged(object sender, EventArgs e) {
             this.СolonizedCount = CurrentGame.Player.ColonizedPlanets;
         }
 
-        private void Player_PopulationChanged(object sender, EventArgs e) {
+        private void Empire_PopulationChanged(object sender, EventArgs e) {
             this.TotalPopulation = CurrentGame.Player.Population;
         }
 
@@ -186,8 +189,6 @@ namespace _4XGame.ViewModel {
                 OnPropertyChanged();
             }
         }
-
-        public BodiesCount BodiesCount { get => this.bodiesCount; }
 
         public int СolonizedCount {
             get => this.сolonizedCount;

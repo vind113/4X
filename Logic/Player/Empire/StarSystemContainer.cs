@@ -1,6 +1,7 @@
 ﻿using Logic.SpaceObjects;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace Logic.PlayerClasses {
     [Serializable]
@@ -31,12 +32,21 @@ namespace Logic.PlayerClasses {
         [field: NonSerialized]
         public event EventHandler BodiesCountChanged;
 
+        [field: NonSerialized]
+        public event EventHandler ColonizedCountChanged;
+
         public StarSystemContainer() {
             starSystems = new ObservableCollection<StarSystem>();
         }
 
         public ReadOnlyObservableCollection<StarSystem> StarSystems {
             get => new ReadOnlyObservableCollection<StarSystem>(this.starSystems);
+        }
+
+        public void NextTurn(Player player) {
+            foreach (StarSystem system in this.StarSystems) {
+                system.NextTurn(player);
+            }
         }
 
         public void AddStarSystem(StarSystem system) {
@@ -47,6 +57,7 @@ namespace Logic.PlayerClasses {
             if (!this.StarSystems.Contains(system)) {
                 this.starSystems.Add(system);
                 this.AddBodiesCount(system);
+                system.PropertyChanged += System_ColonizedCountChangedListener;
                 OnBodiesCountChanged();
             }
         }
@@ -57,6 +68,18 @@ namespace Logic.PlayerClasses {
             this.ColonizedPlanets += system.ColonizedCount;
         }
 
+        private void System_ColonizedCountChangedListener(object sender, PropertyChangedEventArgs e) {
+            if (e.PropertyName == nameof(StarSystem.ColonizedCount)) {
+                SetColonized();
+                OnColonizedCountChanged();
+            }
+        }
+
+        private void OnBodiesCountChanged() {
+            var handler = BodiesCountChanged;
+            handler?.Invoke(this, null);
+        }
+
         public void RemoveStarSystem(StarSystem system) {
             if (system == null) {
                 throw new ArgumentNullException(nameof(system));
@@ -65,6 +88,7 @@ namespace Logic.PlayerClasses {
             if (this.starSystems.Contains(system)) {
                 this.starSystems.Remove(system);
                 SubtractBodiesCount(system);
+                system.PropertyChanged -= System_ColonizedCountChangedListener;
                 OnBodiesCountChanged();
             }
         }
@@ -75,12 +99,7 @@ namespace Logic.PlayerClasses {
             this.ColonizedPlanets -= system.ColonizedCount;
         }
 
-        private void OnBodiesCountChanged() {
-            var handler = BodiesCountChanged;
-            handler?.Invoke(this, null);
-        }
-
-        public void SetColonized() {
+        private void SetColonized() {
             int colonized = 0;
 
             foreach (var system in this.StarSystems) {
@@ -88,6 +107,11 @@ namespace Logic.PlayerClasses {
             }
 
             this.ColonizedPlanets = colonized;
+        }
+
+        private void OnColonizedCountChanged() {
+            var handler = ColonizedCountChanged;
+            handler?.Invoke(this, null);
         }
     }
 }

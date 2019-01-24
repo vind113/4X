@@ -438,7 +438,7 @@
             <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
                       HorizontalAlignment="Left" Margin="5"
                       VerticalAlignment="Top" MinHeight="20" MinWidth="100"
-                      IsChecked="{Binding Path=CurrentGame.IsAutoColonizationEnabled, Mode=TwoWay}"/>
+                      IsChecked="{Binding Path=CurrentGame.Player.IsAutoColonizationEnabled, Mode=TwoWay}"/>
         </Border>
     </Grid>
 </Window>

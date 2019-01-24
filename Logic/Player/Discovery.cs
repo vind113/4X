@@ -1,52 +1,45 @@
 ﻿using Logic.SpaceObjects;
 using Logic.SupportClasses;
 using System;
+using System.Collections.Generic;
 
 namespace Logic.PlayerClasses {
     public static class Discovery {
-        private const long PERSPECTIVE_COLONY_MIN_POPULATION = 10_000_000_000;
         //с такой вероятностью каждый ход будет открываться новая система
         //возможно добавить зависимость от уровня технологий
         //оптимальное значение - 0.15
-        const double DISCOVERY_PROBABILITY = 0.15;
+        private const double DiscoveryProbability = 0.15;
 
-        public static void TryToDiscoverNewStarSystem(bool isAutoColonizationEnabled, Player player) {
-            if (HelperRandomFunctions.ProbableBool(DISCOVERY_PROBABILITY)) {
-                DiscoverNewStarSystem(isAutoColonizationEnabled, player);
+        public static IList<StarSystem> TryToDiscoverNewStarSystem(int discoveredSystemsCount) {
+            if(discoveredSystemsCount <= 0) {
+                throw new ArgumentOutOfRangeException("discoveredSystems count must be greater than zero");
             }
+
+            IList<StarSystem> generatedSystems = new List<StarSystem>();
+
+            if (HelperRandomFunctions.ProbableBool(DiscoveryProbability)) {
+                generatedSystems = DiscoverNewStarSystem(discoveredSystemsCount);
+            }
+
+            return generatedSystems;
         }
 
-        private static void DiscoverNewStarSystem(bool isAutoColonizationEnabled, Player player) {
+        private static IList<StarSystem> DiscoverNewStarSystem(int discoveredSystemsCount) {
             int maxSystemsToGenerate = 0;
             int systemsToGenerate = 0;
+            IList<StarSystem> generatedSystems = new List<StarSystem>();
 
-            //checked {
-            maxSystemsToGenerate = (int)((Math.Sqrt(player.StarSystemsCount)) / 2);
+            maxSystemsToGenerate = (int)((Math.Sqrt(discoveredSystemsCount)) / 2);
             systemsToGenerate = HelperRandomFunctions.GetRandomInt(1, maxSystemsToGenerate + 1);
-            //}
 
             for (int index = 0; index < systemsToGenerate; index++) {
                 StarSystem generatedSystem =
-                    StarSystemFactory.GetStarSystem($"System {player.StarSystemsCount + 1} #{index}");
+                    StarSystemFactory.GetStarSystem($"System {discoveredSystemsCount + 1} #{index}");
 
-                //Добавление системы игроку должно происходить перед колнизацией системы
-                //чтобы создалась подписка на события
-                player.AddStarSystem(generatedSystem);
-
-                if (isAutoColonizationEnabled) {
-                    ColonizeSystem(player, generatedSystem);
-                }
+                generatedSystems.Add(generatedSystem);
             }
-        }
 
-        private static void ColonizeSystem(Player player, StarSystem generatedSystem) {
-            foreach (var planet in generatedSystem.SystemHabitablePlanets) {
-                if (planet.Population.MaxValue >= PERSPECTIVE_COLONY_MIN_POPULATION) {
-                    if (planet.Colonize(player.Ships.GetColonizer()) == ColonizationState.NotColonized) {
-                        player.AddToColonizationQueue(planet);
-                    }
-                }
-            }
+            return generatedSystems;
         }
     }
 }

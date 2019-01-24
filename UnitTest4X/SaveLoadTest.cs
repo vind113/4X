@@ -12,8 +12,6 @@ namespace UnitTest4X {
         public void SaveAndLoad_CorrectGame_SavedAndLoaded() {
             Game game = new Game();
 
-            game.IsAutoColonizationEnabled = true;
-
             for (int i = 0; i < 1200; i++) {
                 game.NextTurn();
             }

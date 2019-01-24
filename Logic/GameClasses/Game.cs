@@ -8,7 +8,6 @@ namespace Logic.GameClasses {
     public class Game : INotifyPropertyChanged {
         private Player player;
         private TurnDate gameDate;
-        private bool isAutoColonizationEnabled = false;
 
         [field:NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
@@ -24,10 +23,6 @@ namespace Logic.GameClasses {
         }
 
         #region Properties
-        public bool IsAutoColonizationEnabled {
-            get => isAutoColonizationEnabled;
-            set => isAutoColonizationEnabled = value;
-        }
 
         public Player Player {
             get => this.player;
@@ -52,7 +47,7 @@ namespace Logic.GameClasses {
         #region Next Turn Functionality
         public void NextTurn() {
             GameDate = GameDate.NextTurn();
-            player.NextTurn(IsAutoColonizationEnabled, true);
+            player.NextTurn();
         }
         #endregion
     }

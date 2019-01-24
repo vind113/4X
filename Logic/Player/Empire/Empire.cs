@@ -1,11 +1,14 @@
 ﻿using Logic.SpaceObjects;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace Logic.PlayerClasses {
     [Serializable]
     public class Empire {
+        private const long PerspectiveColonyMinimalPopulation = 10_000_000_000;
+
         public StarSystemContainer Container { get; }
         public Player Owner { get; }
         public CitizenHub Hub { get; }
@@ -21,9 +24,6 @@ namespace Logic.PlayerClasses {
         [field: NonSerialized]
         public event EventHandler PopulationChanged;
 
-        [field: NonSerialized]
-        public event EventHandler ColonizedCountChanged;
-
         public Empire(Player player) {
             this.Container = new StarSystemContainer();
             this.Owner = player;
@@ -31,7 +31,7 @@ namespace Logic.PlayerClasses {
 
             this.AddStarSystem(StarSystemFactory.GetSolarSystem());
 
-            this.SetTotalPopulation();
+            this.SetPopulation();
         }
 
         public ReadOnlyObservableCollection<StarSystem> StarSystems {
@@ -39,39 +39,55 @@ namespace Logic.PlayerClasses {
         }
 
         public void NextTurn(bool isAutoColonizationEnabled, bool isDiscoveringNewStarSystems) {
-            foreach (StarSystem system in this.StarSystems) {
-                system.NextTurn(this.Owner);
-            }
+            this.Container.NextTurn(this.Owner);
 
-            if (isDiscoveringNewStarSystems) {
-                Discovery.TryToDiscoverNewStarSystem(isAutoColonizationEnabled, this.Owner);
-            }
+            DiscoverNewSystems(isAutoColonizationEnabled, isDiscoveringNewStarSystems);
 
             this.Hub.SetCitizenHubCapacity(this.Population);
-            this.SetTotalPopulation();
+            this.SetPopulation();
+        }
+
+        private void DiscoverNewSystems(bool isAutoColonizationEnabled, bool isDiscoveringNewStarSystems) {
+            IList<StarSystem> generatedSystems = new List<StarSystem>();
+            if (isDiscoveringNewStarSystems) {
+                generatedSystems = Discovery.TryToDiscoverNewStarSystem(this.Owner.StarSystemsCount);
+            }
+
+            foreach (var system in generatedSystems) {
+                this.AddStarSystem(system);
+                if (isAutoColonizationEnabled) {
+                    ColonizeSystem(system);
+                }
+            }
+        }
+
+        private void ColonizeSystem(StarSystem system) {
+            foreach (var planet in system.SystemHabitablePlanets) {
+                if (planet.Population.MaxValue >= PerspectiveColonyMinimalPopulation) {
+                    if (planet.Colonize(Owner.Ships.GetColonizer()) == ColonizationState.NotColonized) {
+                        Owner.AddToColonizationQueue(planet);
+                    }
+                }
+            }
         }
 
         public void AddStarSystem(StarSystem system) {
             this.Container.AddStarSystem(system);
-            system.PropertyChanged += System_PropertyChanged;
+            system.PropertyChanged += System_PopulationChangedListener;
         }
 
         public void RemoveStarSystem(StarSystem system) {
             this.Container.RemoveStarSystem(system);
-            system.PropertyChanged -= System_PropertyChanged;
+            system.PropertyChanged -= System_PopulationChangedListener;
         }
 
-        private void System_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            if (e.PropertyName == nameof(StarSystem.ColonizedCount)) {
-                this.Container.SetColonized();
-                OnColonizedCountChanged();
-            }
-            else if (e.PropertyName == nameof(StarSystem.Population)) {
-                this.SetTotalPopulation();
+        private void System_PopulationChangedListener(object sender, PropertyChangedEventArgs e) {
+            if (e.PropertyName == nameof(StarSystem.Population)) {
+                this.SetPopulation();
             }
         }
 
-        private void SetTotalPopulation() {
+        private void SetPopulation() {
             long population = 0;
             foreach (var system in StarSystems) {
                 population += system.Population;
@@ -79,20 +95,11 @@ namespace Logic.PlayerClasses {
             population += this.Hub.CitizensInHub;
             this.Population = population;
 
-            UpdatePopulation();
-        }
-
-        private void UpdatePopulation() {
             OnPopulationChanged();
         }
 
         private void OnPopulationChanged() {
             var handler = PopulationChanged;
-            handler?.Invoke(this, null);
-        }
-
-        private void OnColonizedCountChanged() {
-            var handler = ColonizedCountChanged;
             handler?.Invoke(this, null);
         }
     }
