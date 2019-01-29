@@ -4,8 +4,8 @@ using Logic.Resource;
 namespace Logic.PlayerClasses {
     [Serializable]
     public class Stockpile {
-        private double money = 0;            //деньги, доступные игроку
-        private IMutableResources playerResources;  //ресурсы на складе
+        public double Money { get; set; } = 0;
+        public IMutableResources PlayerResources { get; }
 
         public Stockpile() {
             this.Money = 111_222_333_444;
@@ -13,18 +13,8 @@ namespace Logic.PlayerClasses {
         }
 
         public Stockpile(double money, IMutableResources playerResources) {
-            this.money = money;
-            this.playerResources = playerResources ?? throw new ArgumentNullException(nameof(playerResources));
-        }
-
-        public double Money {
-            get => money;
-            set => money = value;
-        }
-
-        public IMutableResources PlayerResources {
-            get => playerResources;
-            set => playerResources = value;
+            this.Money = money;
+            this.PlayerResources = playerResources ?? throw new ArgumentNullException(nameof(playerResources));
         }
     }
 }

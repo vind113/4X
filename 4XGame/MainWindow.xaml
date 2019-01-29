@@ -371,8 +371,12 @@
                         </TabControl>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Info" MinWidth="100">
+                <TabItem Header="Empire" MinWidth="100">
                     <WrapPanel Orientation="Vertical">
+                        <Label ContentStringFormat="Population: {0:#,#}"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Content="{Binding Path=TotalPopulation}"/>
 
                         <Label ContentStringFormat="Colonized planets: {0}"
                                HorizontalAlignment="Left"
@@ -435,10 +439,17 @@
         <Border Grid.Column="1" Grid.Row="2" Margin="5"
                 BorderBrush="Red" BorderThickness="1"
                 Background="Aqua">
-            <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
+            <StackPanel>
+                <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
                       HorizontalAlignment="Left" Margin="5"
-                      VerticalAlignment="Top" MinHeight="20" MinWidth="100"
+                      VerticalAlignment="Top"
                       IsChecked="{Binding Path=CurrentGame.Player.IsAutoColonizationEnabled, Mode=TwoWay}"/>
+                <StackPanel Margin="5">
+                    <RadioButton Content="None" />
+                    <RadioButton Content="Auto" />
+                    <RadioButton Content="All" IsChecked="True"/>
+                </StackPanel>
+            </StackPanel>
         </Border>
     </Grid>
 </Window>

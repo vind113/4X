@@ -38,7 +38,7 @@ namespace Logic.PlayerClasses {
             this.Stockpile = new Stockpile();
             this.Stockpile.PlayerResources.Add(new Resources(1_000_000_000, 10_000_000_000, 10_000_000));
 
-            this.Empire = new Empire(this);
+            this.Empire = new Empire();
 
             this.Ships = new ShipsFactory(this.OwnedResources);
         }
@@ -78,7 +78,7 @@ namespace Logic.PlayerClasses {
 
         public IMutableResources OwnedResources {
             get => this.Stockpile.PlayerResources;
-            private set => this.Stockpile.PlayerResources = value;
+            //private set => this.Stockpile.PlayerResources = value;
         }
 
         public double Money {
@@ -89,9 +89,10 @@ namespace Logic.PlayerClasses {
 
         public void NextTurn() {
             CivilProduction.SustainPopulationNeeds(this.Population, this.OwnedResources);
+            new StarSystemsExplorer(this).DiscoverNewSystems();
             this.TryToColonizeQueue();
 
-            this.Empire.NextTurn(IsAutoColonizationEnabled, IsDiscoveringNewStarSystems);
+            this.Empire.NextTurn(this);
 
             OnStockpileChanged();
         }

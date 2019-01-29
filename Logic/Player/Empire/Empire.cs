@@ -7,10 +7,9 @@ using System.ComponentModel;
 namespace Logic.PlayerClasses {
     [Serializable]
     public class Empire {
-        private const long PerspectiveColonyMinimalPopulation = 10_000_000_000;
+        public const long PerspectiveColonyMinimalPopulation = 10_000_000_000;
 
         public StarSystemContainer Container { get; }
-        public Player Owner { get; }
         public CitizenHub Hub { get; }
 
         public int StarSystemsCount { get => this.Container.StarSystemsCount; }
@@ -24,9 +23,8 @@ namespace Logic.PlayerClasses {
         [field: NonSerialized]
         public event EventHandler PopulationChanged;
 
-        public Empire(Player player) {
+        public Empire() {
             this.Container = new StarSystemContainer();
-            this.Owner = player;
             this.Hub = new CitizenHub();
 
             this.AddStarSystem(StarSystemFactory.GetSolarSystem());
@@ -38,37 +36,11 @@ namespace Logic.PlayerClasses {
             get => this.Container.StarSystems;
         }
 
-        public void NextTurn(bool isAutoColonizationEnabled, bool isDiscoveringNewStarSystems) {
-            this.Container.NextTurn(this.Owner);
-
-            DiscoverNewSystems(isAutoColonizationEnabled, isDiscoveringNewStarSystems);
+        public void NextTurn(Player owner) {
+            this.Container.NextTurn(owner);
 
             this.Hub.SetCitizenHubCapacity(this.Population);
             this.SetPopulation();
-        }
-
-        private void DiscoverNewSystems(bool isAutoColonizationEnabled, bool isDiscoveringNewStarSystems) {
-            IList<StarSystem> generatedSystems = new List<StarSystem>();
-            if (isDiscoveringNewStarSystems) {
-                generatedSystems = Discovery.TryToDiscoverNewStarSystem(this.Owner.StarSystemsCount);
-            }
-
-            foreach (var system in generatedSystems) {
-                this.AddStarSystem(system);
-                if (isAutoColonizationEnabled) {
-                    ColonizeSystem(system);
-                }
-            }
-        }
-
-        private void ColonizeSystem(StarSystem system) {
-            foreach (var planet in system.SystemHabitablePlanets) {
-                if (planet.Population.MaxValue >= PerspectiveColonyMinimalPopulation) {
-                    if (planet.Colonize(Owner.Ships.GetColonizer()) == ColonizationState.NotColonized) {
-                        Owner.AddToColonizationQueue(planet);
-                    }
-                }
-            }
         }
 
         public void AddStarSystem(StarSystem system) {
