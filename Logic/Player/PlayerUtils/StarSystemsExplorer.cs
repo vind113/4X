@@ -25,11 +25,9 @@ namespace Logic.PlayerClasses {
 
         private void ColonizeSystem(StarSystem system) {
             foreach (var planet in system.SystemHabitablePlanets) {
-                if (planet.Population.MaxValue >= Empire.PerspectiveColonyMinimalPopulation) {
-                    if (planet.Colonize(owner.Ships.GetColonizer()) == ColonizationState.NotColonized) {
-                        owner.AddToColonizationQueue(planet);
-                    }
-                }
+                if (planet.Colonize(owner.Ships.GetColonizer()) == ColonizationState.NotColonized) {
+                    owner.AddToColonizationQueue(planet);
+                } 
             }
         }
     }

@@ -16,8 +16,10 @@ namespace Logic.PlayerClasses {
         public Empire Empire { get; }
 
         public bool IsDiscoveringNewStarSystems { get; set; } = true;
-        public bool IsAutoColonizationEnabled { get; set; } = true;
+        public bool IsAutoColonizationEnabled { get; private set; }
 
+        public ColonizationMode ColonizationMode { get; set; } = ColonizationMode.None;
+ 
         public Stockpile Stockpile { get; }
 
         public CitizenHub Hub { get => this.Empire.Hub; }
@@ -41,6 +43,9 @@ namespace Logic.PlayerClasses {
             this.Empire = new Empire();
 
             this.Ships = new ShipsFactory(this.OwnedResources);
+
+            this.IsAutoColonizationEnabled =
+                new ColonizationModeProcessor(this).DetermineAutoColonizationState(this.ColonizationMode);
         }
 
         [field: NonSerialized]
@@ -88,6 +93,9 @@ namespace Logic.PlayerClasses {
         #endregion
 
         public void NextTurn() {
+            this.IsAutoColonizationEnabled =
+                new ColonizationModeProcessor(this).DetermineAutoColonizationState(this.ColonizationMode);
+
             CivilProduction.SustainPopulationNeeds(this.Population, this.OwnedResources);
             new StarSystemsExplorer(this).DiscoverNewSystems();
             this.TryToColonizeQueue();

@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:_4XGame.ViewModel.Converters"
+        xmlns:logic="clr-namespace:Logic.PlayerClasses;assembly=Logic"
         mc:Ignorable="d"
         Title="MainWindow"
         MinHeight="690"
@@ -16,6 +17,7 @@
     <Window.Resources>
         <converters:TurnNumberConverter x:Key="TurnNumberConverterResource"/>
         <converters:ColonizePlanetConverter x:Key="ColonizePlanetConverterResource"/>
+        <converters:ColonizationModeConverter x:Key="ColonizationModeConverterResource"/>
 
         <Style x:Key="ListBoxStyle" TargetType="ListBox">
             <Setter Property="VerticalAlignment" Value="Top"/>
@@ -440,14 +442,21 @@
                 BorderBrush="Red" BorderThickness="1"
                 Background="Aqua">
             <StackPanel>
-                <CheckBox x:Name="AutoColonizeCheckBox" Content="Auto colonize"
-                      HorizontalAlignment="Left" Margin="5"
-                      VerticalAlignment="Top"
-                      IsChecked="{Binding Path=CurrentGame.Player.IsAutoColonizationEnabled, Mode=TwoWay}"/>
                 <StackPanel Margin="5">
-                    <RadioButton Content="None" />
-                    <RadioButton Content="Auto" />
-                    <RadioButton Content="All" IsChecked="True"/>
+                    <RadioButton Content="None"
+                                 IsChecked="{Binding Path=CurrentGame.Player.ColonizationMode,
+                        Converter={StaticResource ColonizationModeConverterResource},
+                        ConverterParameter={x:Static logic:ColonizationMode.None}}" />
+                    
+                    <RadioButton Content="Auto"
+                                 IsChecked="{Binding Path=CurrentGame.Player.ColonizationMode,
+                        Converter={StaticResource ColonizationModeConverterResource},
+                        ConverterParameter={x:Static logic:ColonizationMode.Auto}}"/>
+                    
+                    <RadioButton Content="All"
+                                 IsChecked="{Binding Path=CurrentGame.Player.ColonizationMode,
+                        Converter={StaticResource ColonizationModeConverterResource},
+                        ConverterParameter={x:Static logic:ColonizationMode.All}}"/>
                 </StackPanel>
             </StackPanel>
         </Border>

@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Logic.PlayerClasses {
-    public enum ColonizatonModes {
+    public enum ColonizationMode {
         None,
         Auto,
         All
@@ -20,13 +20,13 @@ namespace Logic.PlayerClasses {
             this.player = player;
         }
 
-        public bool GetAutoColoniztionState(ColonizatonModes mode) {
+        public bool DetermineAutoColonizationState(ColonizationMode mode) {
             switch (mode) {
-                case ColonizatonModes.None:
+                case ColonizationMode.None:
                     return false;
-                case ColonizatonModes.Auto:
+                case ColonizationMode.Auto:
                     return IsPopulationDensitySufficent();
-                case ColonizatonModes.All:
+                case ColonizationMode.All:
                     return true;
                 default:
                     throw new ArgumentException("Incorrect colonization mode");
@@ -34,7 +34,7 @@ namespace Logic.PlayerClasses {
         }
 
         private bool IsPopulationDensitySufficent() {
-            return this.player.Population / this.player.ColonizedPlanets > MinimumPlanetPopulation;
+            return (this.player.Population / this.player.ColonizedPlanets) > MinimumPlanetPopulation;
         }
     }
 }

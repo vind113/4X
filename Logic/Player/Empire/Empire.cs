@@ -7,8 +7,6 @@ using System.ComponentModel;
 namespace Logic.PlayerClasses {
     [Serializable]
     public class Empire {
-        public const long PerspectiveColonyMinimalPopulation = 10_000_000_000;
-
         public StarSystemContainer Container { get; }
         public CitizenHub Hub { get; }
 

@@ -11,39 +11,47 @@ namespace UnitTest4X {
     [TestFixture]
     public class ColonizationModeProcessorTest {
         [TestCase]
-        public void GetAutoColoniztionState_ModeIsNone_ReturnsFalse() {
+        public void DetermineAutoColonizationState_ModeIsNone_ReturnsFalse() {
             var playerMock = new Mock<IPlayer>();
             var modeDeifner = new ColonizationModeProcessor(playerMock.Object);
-            Assert.IsFalse(modeDeifner.GetAutoColoniztionState(ColonizatonModes.None));
+            Assert.IsFalse(modeDeifner.DetermineAutoColonizationState(ColonizationMode.None));
         }
 
         [TestCase]
-        public void GetAutoColoniztionState_ModeIsAll_ReturnsTrue() {
+        public void DetermineAutoColonizationState_ModeIsAll_ReturnsTrue() {
             var playerMock = new Mock<IPlayer>();
             var modeDeifner = new ColonizationModeProcessor(playerMock.Object);
-            Assert.IsTrue(modeDeifner.GetAutoColoniztionState(ColonizatonModes.All));
+            Assert.IsTrue(modeDeifner.DetermineAutoColonizationState(ColonizationMode.All));
         }
 
         [TestCase]
-        public void GetAutoColoniztionState_ModeIsAutoAndDensityOK_ReturnsTrue() {
+        public void DetermineAutoColonizationState_ModeIsAutoAndDensityIsOK_ReturnsTrue() {
             var playerMock = new Mock<IPlayer>();
-            playerMock.SetupGet(x => x.Population).Returns(6_000_000_000);
-            playerMock.SetupGet(x => x.ColonizedPlanets).Returns(1);
+
+            const long population = 6_000_000_000;
+            const int planetCount = 1;
+
+            playerMock.SetupGet(x => x.Population).Returns(population);
+            playerMock.SetupGet(x => x.ColonizedPlanets).Returns(planetCount);
 
             var modeDefiner = new ColonizationModeProcessor(playerMock.Object);
 
-            Assert.IsTrue(modeDefiner.GetAutoColoniztionState(ColonizatonModes.Auto));
+            Assert.IsTrue(modeDefiner.DetermineAutoColonizationState(ColonizationMode.Auto));
         }
 
         [TestCase]
-        public void GetAutoColoniztionState_ModeIsAutoAndDensityNotOk_ReturnsFalse() {
+        public void DetermineAutoColonizationState_ModeIsAutoAndDensityIsNotOk_ReturnsFalse() {
             var playerMock = new Mock<IPlayer>();
-            playerMock.SetupGet(x => x.Population).Returns(9_000_000_000);
-            playerMock.SetupGet(x => x.ColonizedPlanets).Returns(2);
+
+            const long population = 9_000_000_000;
+            const int planetCount = 2;
+
+            playerMock.SetupGet(x => x.Population).Returns(population);
+            playerMock.SetupGet(x => x.ColonizedPlanets).Returns(planetCount);
 
             var modeDefiner = new ColonizationModeProcessor(playerMock.Object);
 
-            Assert.IsFalse(modeDefiner.GetAutoColoniztionState(ColonizatonModes.Auto));
+            Assert.IsFalse(modeDefiner.DetermineAutoColonizationState(ColonizationMode.Auto));
         }
     }
 }

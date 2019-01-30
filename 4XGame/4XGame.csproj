@@ -67,6 +67,7 @@
     <Compile Include="ViewModel\Commands\RelayCommand\RelayCommand.cs" />
     <Compile Include="ViewModel\Commands\MultipleNextTurnsCommand.cs" />
     <Compile Include="ViewModel\Commands\NextTurnCommand.cs" />
+    <Compile Include="ViewModel\Converters\ColonizationModeConverter.cs" />
     <Compile Include="ViewModel\Converters\ColonizePlanetConverter.cs" />
     <Compile Include="ViewModel\Converters\TurnNumberConverter.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />

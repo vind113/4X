@@ -54,12 +54,12 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Player\CitizenHub.cs" />
     <Compile Include="GameClasses\CurrentDate.cs" />
-    <Compile Include="Player\ColonizationModeProcessor.cs" />
-    <Compile Include="Player\ColoniztionQueue.cs" />
-    <Compile Include="Player\Discovery.cs" />
+    <Compile Include="Player\PlayerUtils\ColonizationModeProcessor.cs" />
+    <Compile Include="Player\PlayerUtils\ColoniztionQueue.cs" />
+    <Compile Include="Player\PlayerUtils\Discovery.cs" />
     <Compile Include="Player\Empire\Empire.cs" />
     <Compile Include="Player\Empire\StarSystemContainer.cs" />
-    <Compile Include="Player\StarSystemsExplorer.cs" />
+    <Compile Include="Player\PlayerUtils\StarSystemsExplorer.cs" />
     <Compile Include="Player\Goods.cs" />
     <Compile Include="Player\IPlayer.cs" />
     <Compile Include="Player\Ships\IShipsFactory.cs" />
