@@ -97,6 +97,12 @@
     <Compile Include="Space Objects\Star System\StarSystem.cs" />
     <Compile Include="Space Objects\Star System\StarSystemFactory.cs" />
     <Compile Include="SupportClasses\HelperMathFunctions.cs" />
+    <Compile Include="Technology\ResearchCompletedEventArgs.cs" />
+    <Compile Include="Technology\ResearchQueue.cs" />
+    <Compile Include="Technology\TechnologyChoice.cs" />
+    <Compile Include="Technology\TechnologyResearch.cs" />
+    <Compile Include="Technology\Tecnology.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

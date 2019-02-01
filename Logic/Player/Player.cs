@@ -9,6 +9,9 @@ using Logic.GameClasses;
 namespace Logic.PlayerClasses {
     [Serializable]
     public class Player : INotifyPropertyChanged, IPlayer {
+        /// <summary>
+        /// Доля, на которую примерно будет увеличиваться население каждый ход
+        /// </summary>
         public const double PopulationGrowthFactor = 0.001;
 
         private string name;
@@ -64,15 +67,27 @@ namespace Logic.PlayerClasses {
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void AddToColonizationQueue(HabitablePlanet planet) {
+        /// <summary>
+        /// Добавляет в очередь на колонизацию обитаемую планету
+        /// </summary>
+        /// <param name="planet">
+        /// Планета, которая добавляется в очередь
+        /// </param>
+        public void AddToColonizationQueue(IHabitablePlanet planet) {
             coloniztionQueue.Add(planet);
         }
 
+        /// <summary>
+        /// Колонизирует очередь планет, пока имеется достаточно ресурсов
+        /// </summary>
         public void TryToColonizeQueue() {
             coloniztionQueue.ColonizeWhilePossible(this.Ships);
         }
 
         #region Properties
+        /// <summary>
+        /// Имя игрока
+        /// </summary>
         public string Name {
             get => this.name;
             set {
@@ -81,17 +96,26 @@ namespace Logic.PlayerClasses {
             }
         }
 
+        /// <summary>
+        /// Возвращает ресурсы, имеющиеся у игрока
+        /// </summary>
         public IMutableResources OwnedResources {
             get => this.Stockpile.PlayerResources;
             //private set => this.Stockpile.PlayerResources = value;
         }
 
+        /// <summary>
+        /// Возвращает деньги, имеющиеся у игрока
+        /// </summary>
         public double Money {
             get => this.Stockpile.Money;
             private set => this.Stockpile.Money = value;
         }
         #endregion
 
+        /// <summary>
+        /// Выполняет все операции по переводу игрока на новый ход
+        /// </summary>
         public void NextTurn() {
             this.IsAutoColonizationEnabled =
                 new ColonizationModeProcessor(this).DetermineAutoColonizationState(this.ColonizationMode);
@@ -105,10 +129,22 @@ namespace Logic.PlayerClasses {
             OnStockpileChanged();
         }
 
+        /// <summary>
+        /// Добавляет звездную систему игроку
+        /// </summary>
+        /// <param name="system">
+        /// Система, которая добавляется
+        /// </param>
         public void AddStarSystem(StarSystem system) {
             this.Empire.AddStarSystem(system);
         }
 
+        /// <summary>
+        /// Удаляет звездную систему игрока
+        /// </summary>
+        /// <param name="system">
+        /// Система, которая удаляется
+        /// </param>
         public void RemoveStarSystem(StarSystem system) {
             this.Empire.RemoveStarSystem(system);
         }

@@ -28,7 +28,7 @@ namespace Logic.PlayerClasses
         event PropertyChangedEventHandler PropertyChanged;
         event EventHandler<StockpileChangedEventArgs> StockpileChanged;
 
-        void AddToColonizationQueue(HabitablePlanet planet);
+        void AddToColonizationQueue(IHabitablePlanet planet);
         void NextTurn();
         void TryToColonizeQueue();
     }
