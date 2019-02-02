@@ -97,11 +97,17 @@
     <Compile Include="Space Objects\Star System\StarSystem.cs" />
     <Compile Include="Space Objects\Star System\StarSystemFactory.cs" />
     <Compile Include="SupportClasses\HelperMathFunctions.cs" />
+    <Compile Include="Technology\AvailableResearch.cs" />
+    <Compile Include="Technology\ResearchArchive.cs" />
+    <Compile Include="Technology\ResearchCenter.cs" />
+    <Compile Include="Technology\Technologies\EmptyTechnology.cs" />
+    <Compile Include="Technology\Technologies\PopulationGrowthTechnology.cs" />
     <Compile Include="Technology\ResearchCompletedEventArgs.cs" />
+    <Compile Include="Technology\ResearchLabs.cs" />
     <Compile Include="Technology\ResearchQueue.cs" />
     <Compile Include="Technology\TechnologyChoice.cs" />
     <Compile Include="Technology\TechnologyResearch.cs" />
-    <Compile Include="Technology\Tecnology.cs" />
+    <Compile Include="Technology\Technologies\Tecnology.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

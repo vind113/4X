@@ -11,7 +11,7 @@ namespace Logic.Buildings {
 
         public event EventHandler<BuildingCompletedEventArgs> Completed;
 
-        public Builder(int duration, IBasicResources costPerTurn, SpaceBuilding building) {
+        protected Builder(int duration, IBasicResources costPerTurn, SpaceBuilding building) {
             this.BuildingDuration = duration;
             this.CostPerTurn = new ReadOnlyResources(costPerTurn);
             this.BuildingBeingBuilt = building;

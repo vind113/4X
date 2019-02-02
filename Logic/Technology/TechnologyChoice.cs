@@ -1,14 +1,27 @@
-﻿namespace Logic.TechnologyClasses {
+﻿using System;
+
+namespace Logic.TechnologyClasses {
+    public enum Technologies {
+        Empty,
+        PopulationGrowth
+    }
+
     public class TechnologyChoice {
-        private Technology technology;
+        private readonly Technology technology;
 
-        //Потом удали
-        public TechnologyChoice() {
-
+        public TechnologyChoice(Technologies technology) {
+            this.technology = this.GetTechnology(technology);
         }
 
-        public TechnologyChoice(Technology technology) {
-            this.technology = technology;
+        private Technology GetTechnology(Technologies choice) {
+            switch (choice) {
+                case Technologies.Empty:
+                    return null;
+                case Technologies.PopulationGrowth:
+                    return new PopulationGrowthTechnology(1);
+                default:
+                    throw new ArgumentException("Incorrect argument: no such technology");
+            }
         }
     }
 }

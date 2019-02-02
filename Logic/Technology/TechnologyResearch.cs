@@ -2,16 +2,16 @@
 using Logic.Resource;
 
 namespace Logic.TechnologyClasses {
-    public class TechnologyResearch {
+    public class TechnologyResearcher {
         public int ResearchProgress { get; private set; }
         public int ResearchDuration { get; }
         public IComparableResources CostPerTurn { get; }
 
-        private TechnologyChoice technologyBeingResearched;
+        private readonly Technology technologyBeingResearched;
 
         public event EventHandler<ResearchCompletedEventArgs> ResearchCompleted;
 
-        public TechnologyResearch(TechnologyChoice tecnology, IBasicResources costPerTurn, int researchDuration) {
+        public TechnologyResearcher(Technology tecnology, IBasicResources costPerTurn, int researchDuration) {
             if (costPerTurn == null) {
                 throw new ArgumentNullException(nameof(costPerTurn));
             }

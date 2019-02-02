@@ -87,6 +87,7 @@
     <Compile Include="HabitablePlanetTest.cs" />
     <Compile Include="PlanetTest.cs" />
     <Compile Include="PopulationTest.cs" />
+    <Compile Include="ResearchQueueTest.cs" />
     <Compile Include="ResoursesTest.cs" />
     <Compile Include="SaveLoadTest.cs" />
     <Compile Include="ShipsTest.cs" />

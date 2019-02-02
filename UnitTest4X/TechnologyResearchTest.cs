@@ -10,7 +10,7 @@ namespace UnitTest4X {
         [TestCase]
         public void OneTurnProgress_ResourcesObjectIsNull_ExceptionThrown() {
             var research =
-                new TechnologyResearch(new TechnologyChoice(), new ReadOnlyResources(), 10);
+                new TechnologyResearcher(new EmptyTechnology(), new ReadOnlyResources(), 10);
 
             Assert.Throws<ArgumentNullException>(() => research.OneTurnProgress(null));
         }
@@ -21,7 +21,7 @@ namespace UnitTest4X {
             resourcesMock.Setup(x => x.CanSubtract(It.IsNotNull<IBasicResources>())).Returns(false);
 
             var research =
-                new TechnologyResearch(new TechnologyChoice(), new ReadOnlyResources(), 10);
+                new TechnologyResearcher(new EmptyTechnology(), new ReadOnlyResources(), 10);
 
             research.OneTurnProgress(resourcesMock.Object);
             research.OneTurnProgress(resourcesMock.Object);
@@ -36,7 +36,7 @@ namespace UnitTest4X {
             resourcesMock.Setup(x => x.Subtract(It.IsNotNull<IBasicResources>()));
 
             var research =
-                new TechnologyResearch(new TechnologyChoice(), new ReadOnlyResources(), 10);
+                new TechnologyResearcher(new EmptyTechnology(), new ReadOnlyResources(), 10);
 
             research.OneTurnProgress(resourcesMock.Object);
             research.OneTurnProgress(resourcesMock.Object);
@@ -57,7 +57,7 @@ namespace UnitTest4X {
 
             const int researchDuration = 10;
             var research =
-                new TechnologyResearch(new TechnologyChoice(), new ReadOnlyResources(), researchDuration);
+                new TechnologyResearcher(new EmptyTechnology(), new ReadOnlyResources(), researchDuration);
 
             bool eventRaised = false;
             research.ResearchCompleted += (sender, args) => eventRaised = true;
